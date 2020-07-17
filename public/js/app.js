@@ -71599,7 +71599,7 @@ function Header() {
     className: "dropdown-menu-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "media fs-14 p-2",
-    href: "pages/prebuilt-pages/default-login.html"
+    href: "/logout"
   }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "flaticon-shut-down mr-2"
   }), " Logout"), " "))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -74557,7 +74557,7 @@ function Header() {
     className: "dropdown-menu-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "media fs-14 p-2",
-    href: "pages/prebuilt-pages/default-login.html"
+    href: "/logout"
   }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "flaticon-shut-down mr-2"
   }), " Logout"), " "))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -77515,7 +77515,7 @@ function Header() {
     className: "dropdown-menu-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "media fs-14 p-2",
-    href: "pages/prebuilt-pages/default-login.html"
+    href: "/logout"
   }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "flaticon-shut-down mr-2"
   }), " Logout"), " "))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
