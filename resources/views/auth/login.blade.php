@@ -47,6 +47,7 @@
                         <button type="submit" class="btn btn-warning">Sign In</button>
                     </div>
                 </form>
+                <a href="/">Back to Home</a>
             </div>
         </div>
         <div class="col-sm-6">
@@ -54,7 +55,7 @@
                 <div class="bannerText">
                     <h2>Hello There, Join Us</h2>
                     <p>Enter your personal detail and join the traveljet community for better experience</p>
-                    <a href="#" class="btn btn-primary">Sign Up</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
                 </div>
             </div>
         </div>

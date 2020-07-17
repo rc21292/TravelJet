@@ -35,7 +35,7 @@
                         </div>
                         <div class="form-group required">
                             <label>Email</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Email">
                             @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -47,7 +47,7 @@
                             <div class="row">
                                 <div class="col-sm-7 col-sm-offset-1">
                                     <div class="form-group required">
-                                        <input type="number" name="number" class="form-control" placeholder="+91-9876543210">
+                                        <input type="number" name="phone" class="form-control" placeholder="Mobile No." Required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -85,6 +85,7 @@
                             <button type="submit" class="btn btn-warning">Sign Up</button>
                         </div>
                     </form>
+                    <a href="/">Back to Home</a>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -92,7 +93,7 @@
                     <div class="bannerText">
                         <h2>Hello There</h2>
                         <p>Already have an account, enter your login details and explore all your activity</p>
-                        <a href="#" class="btn btn-primary">Sign In</a>
+                        <a href="/login" class="btn btn-primary">Sign In</a>
                     </div>
                 </div>
             </div>
