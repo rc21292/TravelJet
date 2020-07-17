@@ -126,7 +126,7 @@ return (
           <a className="media fs-14 p-2" href="pages/prebuilt-pages/lock-screen.html"> <span><i className="flaticon-security mr-2" /> Lock</span> </a>
         </li>
         <li className="dropdown-menu-footer">
-          <a className="media fs-14 p-2" href="pages/prebuilt-pages/default-login.html"> <span><i className="flaticon-shut-down mr-2" /> Logout</span> </a>
+          <a className="media fs-14 p-2" href="/logout"> <span><i className="flaticon-shut-down mr-2" /> Logout</span> </a>
         </li>
       </ul>
     </li>
