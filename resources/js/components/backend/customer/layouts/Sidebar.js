@@ -8,7 +8,7 @@ return (
 <aside id="ms-side-nav" className="side-nav fixed ms-aside-scrollable ms-aside-left">
   {/* Logo */}
   <div className="logo-sn ms-d-block-lg">
-    <a className="pl-0 ml-0 text-center" href="index.html"> <img src="https://via.placeholder.com/216x62" alt="logo" /> </a>
+    <a className="pl-0 ml-0 text-center" href="/"> <img src="https://via.placeholder.com/216x62" alt="logo" /> </a>
   </div>
   {/* Navigation */}
   <ul className="accordion ms-main-aside fs-14" id="side-nav-accordion">
@@ -18,7 +18,7 @@ return (
         <span><i className="material-icons fs-16">dashboard</i>Dashboard </span>
       </a>
       <ul id="dashboard" className="collapse" aria-labelledby="dashboard" data-parent="#side-nav-accordion">
-        <li> <a href="index.html">Greendash</a> </li>
+        <li> <a href="/">Dashboard</a> </li>
       </ul>
     </li>
     {/* /Dashboard */}

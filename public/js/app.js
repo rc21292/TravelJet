@@ -72702,7 +72702,7 @@ function Sidebar() {
     className: "logo-sn ms-d-block-lg"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "pl-0 ml-0 text-center",
-    href: "index.html"
+    href: "/"
   }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
     src: "https://via.placeholder.com/216x62",
     alt: "logo"
@@ -72726,8 +72726,8 @@ function Sidebar() {
     "aria-labelledby": "dashboard",
     "data-parent": "#side-nav-accordion"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-    href: "index.html"
-  }, "Greendash"), " "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    href: "/"
+  }, "Dashboard"), " "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "menu-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "#",
@@ -75660,7 +75660,7 @@ function Sidebar() {
     className: "logo-sn ms-d-block-lg"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "pl-0 ml-0 text-center",
-    href: "index.html"
+    href: "/"
   }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
     src: "https://via.placeholder.com/216x62",
     alt: "logo"
@@ -75684,8 +75684,8 @@ function Sidebar() {
     "aria-labelledby": "dashboard",
     "data-parent": "#side-nav-accordion"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-    href: "index.html"
-  }, "Greendash"), " "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    href: "/"
+  }, "Dashboard"), " "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "menu-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "#",
@@ -78618,7 +78618,7 @@ function Sidebar() {
     className: "logo-sn ms-d-block-lg"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "pl-0 ml-0 text-center",
-    href: "index.html"
+    href: "/"
   }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
     src: "https://via.placeholder.com/216x62",
     alt: "logo"
@@ -78642,8 +78642,8 @@ function Sidebar() {
     "aria-labelledby": "dashboard",
     "data-parent": "#side-nav-accordion"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-    href: "index.html"
-  }, "Greendash"), " "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    href: "/"
+  }, "Dashboard"), " "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "menu-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "#",
