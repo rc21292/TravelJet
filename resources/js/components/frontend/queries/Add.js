@@ -37,12 +37,12 @@ export default class Add extends Component {
 componentDidMount(){
 	var loadScript = function(src) {
   var tag = document.createElement('script');
-  tag.async = false;
+  tag.async = true;
   tag.src = src;
   document.body.appendChild(tag);
 }
-loadScript('/assets/js/main/book.js')
-loadScript('/assets/js/main/map.js')
+loadScript('/frontend/js/main/book.js')
+loadScript('/frontend/js/main/map.js')
 loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&callback=initAutocomplete&libraries=places&v=weekly')
 }
 

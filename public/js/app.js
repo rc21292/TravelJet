@@ -81062,9 +81062,9 @@ function Header() {
     to: "/CompanyInfo"
   }, "Company Info")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "calltoAction"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "btn btn-primary",
-    href: "/query/add"
+    to: "/query/add"
   }, "Book Now")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/login"
   }, "Login")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
@@ -81221,13 +81221,13 @@ var Add = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var loadScript = function loadScript(src) {
         var tag = document.createElement('script');
-        tag.async = false;
+        tag.async = true;
         tag.src = src;
         document.body.appendChild(tag);
       };
 
-      loadScript('/assets/js/main/book.js');
-      loadScript('/assets/js/main/map.js');
+      loadScript('/frontend/js/main/book.js');
+      loadScript('/frontend/js/main/map.js');
       loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&callback=initAutocomplete&libraries=places&v=weekly');
     }
   }, {

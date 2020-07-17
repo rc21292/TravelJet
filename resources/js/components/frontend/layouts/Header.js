@@ -29,7 +29,7 @@ function Header() {
     </li>
     <li><Link to="/CompanyInfo">Company Info</Link>
     </li>
-    <li className="calltoAction"><a className="btn btn-primary" href="/query/add">Book Now</a>
+    <li className="calltoAction"><Link className="btn btn-primary" to="/query/add">Book Now</Link>
     </li>
         <li><a href="/login">Login</a></li>
         <li ><a href="/register">Register</a></li>
