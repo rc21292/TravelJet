@@ -21,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-     public static function  redirectTo(){
+     public static function redirectTo(){
         
     // User role
     $role = Auth::user()->role; 
