@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -21,7 +21,27 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/admin';
+     public static function  redirectTo(){
+        
+    // User role
+    $role = Auth::user()->role; 
+    
+    // Check user role
+    switch ($role) {
+        case 'admin':
+                return '/admin';
+            break;
+        case 'agent':
+                return '/agent';
+            break; 
+        case 'customer':
+            return '/customer';
+        break;
+        default:
+                return '/login'; 
+            break;
+    }
+}
 
     /**
      * Define your route model bindings, pattern filters, etc.

@@ -81221,7 +81221,7 @@ var Add = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var loadScript = function loadScript(src) {
         var tag = document.createElement('script');
-        tag.async = true;
+        tag.async = false;
         tag.src = src;
         document.body.appendChild(tag);
       };
@@ -81367,7 +81367,7 @@ var Add = /*#__PURE__*/function (_Component) {
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "alert alert-success hide"
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-lg-6"
+        className: "col-lg-7"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         id: "regiration_form",
         noValidate: true

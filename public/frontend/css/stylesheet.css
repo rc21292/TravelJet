@@ -677,6 +677,10 @@ background: #428bca;
     color: #fff;
     margin-top: 0;
 }
+#regiration_form {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
 .booking-form {
     border-radius: 6px;
     padding: 18px 20px;
@@ -684,6 +688,11 @@ background: #428bca;
     box-shadow: 0 1px 8px 0 rgba(0,0,0,0.12), 0 1px 4px 0 rgba(0,0,0,0.06);
     max-width: 80%;
     margin: 50px auto 50px;
+}
+.mapspace{
+    padding-top: 400px;
+    margin-top: 40px;
+    margin-bottom: 20px;
 }
 .booking-form .bookbutton {
     margin-top: 20px;

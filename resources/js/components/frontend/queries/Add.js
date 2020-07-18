@@ -37,7 +37,7 @@ export default class Add extends Component {
 componentDidMount(){
 	var loadScript = function(src) {
   var tag = document.createElement('script');
-  tag.async = true;
+  tag.async = false;
   tag.src = src;
   document.body.appendChild(tag);
 }
@@ -155,7 +155,7 @@ loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7f
 <div className="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin={0} aria-valuemax={100} />
 </div>
 <div className="alert alert-success hide" />
-<div className="col-lg-6">
+<div className="col-lg-7">
 <form id="regiration_form" noValidate>
 <fieldset>
 <div className="field-title">

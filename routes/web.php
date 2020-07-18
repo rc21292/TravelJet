@@ -22,19 +22,30 @@ Route::get('/query/add', function () { return view('welcome'); });
 
 
 // Admin Dashboard View Route
+Route::group(['middleware' => 'App\Http\Middleware\Admin'], function()
+{
 Route::get('/admin/{path?}', function () { return view('admin'); });
 Route::get('/admin', 'HomeController@admin')->name('adminhome');
+});
+
 // Agent Dashboard View Route
+Route::group(['middleware' => 'App\Http\Middleware\Agent'], function()
+{
 Route::get('/agent/{path?}', function () { return view('agent'); });
 Route::get('/agent', 'HomeController@agent')->name('agenthome');
+});
 
 // Customer Dashboard View Route
+Route::group(['middleware' => 'App\Http\Middleware\Customer'], function()
+{
 Route::get('/customer/{path?}', function () { return view('customer'); });
 Route::get('/customer', 'HomeController@customer')->name('customerhome');
+});
 
 Auth::routes();
 
 Route::get('/logout', 'HomeController@logout');
+
 
 
 
