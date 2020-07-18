@@ -22,25 +22,29 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function admin()
     {
 
         if(Auth::User()->role == 'admin'){
-        return view('admin');
+            return view('admin');
         }
+    }
 
+    public function agent()
+    {
         if(Auth::User()->role == 'agent'){
-        return view('agent');
+            return view('agent');
         }
+    }
 
+    public function customer()
+    {
         if(Auth::User()->role == 'customer'){
-        return view('customer');
+            return view('customer');
         }
     }
     public function logout () {
-    //logout user
-    Auth()->logout();
-    // redirect to homepage
-    return redirect('/');
-}
+        Auth()->logout();
+        return redirect('/');
+    }
 }
