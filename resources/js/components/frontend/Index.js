@@ -11,11 +11,7 @@ class Index extends Component {
         <div>
         <Topbar/>
         <Header/>        
-            <div className="row justify-content-center">
-                <div className="col-md-10">
-                    
-                </div>
-            </div>
+            
         <Footer/>
         </div>
     );
