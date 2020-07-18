@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 class LoginController extends Controller
 {
     /*
@@ -26,27 +27,37 @@ class LoginController extends Controller
      *
      * @var string
      */
+
     public function redirectTo(){
         
-    // User role
-    $role = Auth::user()->role; 
-    
-    // Check user role
-    switch ($role) {
-        case 'admin':
-                return '/admin';
-            break;
-        case 'agent':
-                return '/agent';
-            break; 
-        case 'customer':
+        $urlintended = null;
+
+        $urlintended = Session::get('url.intended'); 
+        
+        $role = Auth::user()->role;
+
+        if($role == "admin"){
+
+            return '/admin';
+
+        }else if($role == "agent"){
+
+            return '/agent';
+
+        }else if($role == "customer" && isset($urlintended)){
+
+            return $urlintended;
+
+        }else if($role == "customer"){
+
             return '/customer';
-        break;
-        default:
-                return '/login'; 
-            break;
+
+        }else{
+
+            return '/login'; 
+        }
+
     }
-}
 
 
     /**

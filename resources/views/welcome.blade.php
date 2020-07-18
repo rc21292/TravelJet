@@ -4,6 +4,7 @@
     @include('layouts.front-head')
 </head>
 <body>
+	{{ Session::get('url.intended') }}
     <div id="root">
 
     </div>

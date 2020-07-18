@@ -52,7 +52,7 @@ class HomeController extends Controller
             return view('welcome');
         }else
         {
-            return redirect()->route('login');
+            return redirect()->guest('login');
         }
     }
     public function logout () {
