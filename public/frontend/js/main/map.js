@@ -41,7 +41,6 @@
                 submitdestination();
             });
 
-
         }
 
         function displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay) {

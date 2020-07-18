@@ -13,13 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Front End View Routes
+Route::get('/', function () { return view('welcome'); });
+Route::get('/CompanyInfo', function () { return view('welcome'); });
+Route::get('/DriveWithUs', function () { return view('welcome'); });
+Route::get('/HowitWorks', function () { return view('welcome'); });
+Route::get('/query/add', function () { return view('welcome'); });
+
+
+// Admin Dashboard View Route
+Route::get('/admin/{path?}', function () { return view('admin'); });
+Route::get('/admin', 'HomeController@admin')->name('adminhome');
+// Agent Dashboard View Route
+Route::get('/agent/{path?}', function () { return view('agent'); });
+Route::get('/agent', 'HomeController@agent')->name('agenthome');
+
+// Customer Dashboard View Route
+Route::get('/customer/{path?}', function () { return view('customer'); });
+Route::get('/customer', 'HomeController@customer')->name('customerhome');
 
 Auth::routes();
+
 Route::get('/logout', 'HomeController@logout');
-Route::get('/admin', 'HomeController@admin')->name('adminhome');
-Route::get('/agent', 'HomeController@agent')->name('agenthome');
-Route::get('/customer', 'HomeController@customer')->name('customerhome');
+
+
 
