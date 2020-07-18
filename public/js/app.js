@@ -82129,7 +82129,7 @@ var Add = /*#__PURE__*/function (_Component) {
         className: "col-lg-5 mapspace",
         id: "map",
         style: {
-          width: '50%',
+          width: '41%',
           height: '100%',
           "float": 'right'
         }
