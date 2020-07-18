@@ -679,7 +679,7 @@ When would you like to book your cab ?
 </fieldset>
 </form>
 </div>
-<div className="col-lg-5 mapspace" id="map" style={{width:'50%',height:'100%',float:'right'}}>
+<div className="col-lg-5 mapspace" id="map" style={{width:'41%',height:'100%',float:'right'}}>
 </div>
 </div>
 </div>

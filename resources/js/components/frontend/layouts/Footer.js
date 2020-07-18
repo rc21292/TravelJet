@@ -15,13 +15,13 @@ function Footer() {
                   <ul className="list-inline">
                     <li>
                       <a href="#">
-                        <i className="fab fa-facebook-f icon" /></a>
+                        <i className="fa fa-facebook-f icon" /></a>
                     </li>
                     <li>
-                      <a href="#"><i className="fab fa-twitter icon" /></a>
+                      <a href="#"><i className="fa fa-twitter icon" /></a>
                     </li>
                     <li>
-                      <a href="#"><i className="fab fa-instagram icon" /></a></li>
+                      <a href="#"><i className="fa fa-instagram icon" /></a></li>
                   </ul>
                 </div>
               </div>
