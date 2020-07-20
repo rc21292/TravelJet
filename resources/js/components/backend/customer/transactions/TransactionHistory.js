@@ -116,7 +116,7 @@ const onChangeSearchTransactionType = e => {
                     </div>
                     <div className="col-md-4" style={{ marginTop:'-19px'}}>
                     <button type="button" onClick={findByFilter} className="btn btn-pill btn-gradient-success">Filter</button>
-                    <button type="button" onClick={findByFilter} className="btn btn-pill btn-gradient-danger">Reset Filter</button>
+                    <button type="button" onClick={resetFilter} className="btn btn-pill btn-gradient-danger">Reset Filter</button>
                    </div>
                 </div>
                 <br></br>
