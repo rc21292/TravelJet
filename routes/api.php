@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('queries','Api\QueryController@index');
+Route::post('queries/store','Api\QueryController@store');
+Route::delete('queries/delete/{id}','Api\QueryController@destroy');
+Route::get('queries/edit/{id}','Api\QueryController@edit');
+Route::get('queries/show/{id}','Api\QueryController@show');
+Route::post('queries/update/{id}','Api\QueryController@update');
+Route::get('transaction_history', 'UserTransactionController@index');
+
+Route::get('/users/getbalance/{id}','UserController@balance');
+Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');
+Route::get('users/show/{id}','UserController@show');
