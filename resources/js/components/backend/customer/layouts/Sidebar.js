@@ -35,6 +35,11 @@ return (
       </Link>
     </li>
     <li className="menu-item">
+    <Link to={'/customer/notifications'}>
+        <span><i className="fas fa-dollar-sign" />Notifications</span>
+      </Link>
+    </li>
+    <li className="menu-item">
     <Link to={'/customer/profile'}>
         <span><i className="fas fa-dollar-sign" />Profile</span>
       </Link>

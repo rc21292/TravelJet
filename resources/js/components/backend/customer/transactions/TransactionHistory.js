@@ -121,7 +121,7 @@ const onChangeSearchTransactionType = e => {
                 </div>
                 <br></br>
                     <div className="table-responsive">  
-   <table className="table table-hover table-striped">
+                      <table className="table table-hover table-striped">
                         <thead>  
                             <tr>  
                                 <th scope="col">#</th>

@@ -20,6 +20,9 @@ Route::get('/DriveWithUs', function () { return view('welcome'); });
 Route::get('/HowitWorks', function () { return view('welcome'); });
 Route::get('/customer/transactions', function () { return view('customer'); });
 Route::get('/customer/wallet', function () { return view('customer'); });
+Route::get('/customer/profile', function () { return view('customer'); });
+Route::get('/customer/notifications', function () { return view('customer'); });
+Route::get('/customer/profile/edit', function () { return view('customer'); });
 
 
 // Admin Dashboard View Route

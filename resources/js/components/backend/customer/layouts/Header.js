@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react'
 import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 import Home from '../Home';
 import Wallet from '../Wallet';
+import Notifications from '../Notifications';
 import TransactionHistory from '../transactions/TransactionHistory';
+import Profile from '../users/Profile';
+import EditProfile from '../users/EditProfile';
 
 
 function Header() {
@@ -43,6 +46,9 @@ return (
 </nav>
         <Route exact path="/customer/transactions" component={TransactionHistory} />
         <Route exact path="/customer/wallet" component={Wallet} />
+        <Route exact path="/customer/profile" component={Profile} />
+        <Route exact path="/customer/profile/edit" component={EditProfile} />
+        <Route exact path="/customer/notifications" component={Notifications} />
 </div>
 
   );
