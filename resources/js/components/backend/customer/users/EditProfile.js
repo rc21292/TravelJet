@@ -21,6 +21,7 @@ class EditProfile extends Component {
       fileData : null,
       avtar : 'profile.png',
       phone: '',
+      isUpdated : false,
       errors: {
         name: '',
         email: '',
@@ -103,12 +104,10 @@ class EditProfile extends Component {
         phone:this.state.phone,
         avtar:this.state.avtar
       }
+      let user_id = this.state.user.id;
       axios.post('/api/users/update/'+this.state.user.id,query).then(res=>
       {
-
-        axios.get("/api/users/show/"+this.state.user_id).then(response => {
-          return response;
-        }).then(json => {
+        axios.get("/api/users/show/"+user_id).then(json => {
           if (json.data) {
             let userData = {
               id: json.data.id,
@@ -121,10 +120,19 @@ class EditProfile extends Component {
               isLoggedIn: true,
               user: userData
             };
-            localStorage["appState"] = JSON.stringify(appState);
+            // localStorage["appState"] = JSON.stringify(appState);
+            localStorage.setItem('appState', JSON.stringify(appState));
           }
         });
-        this.props.history.push("/customer");
+
+        this.setState({isUpdated: true});
+
+        window.scrollTo(0, 0);
+
+        // window.location.reload(false);
+
+        // this.props.history.push("/customer/profile/edit");
+
         // window.location.reload(false);
       }
       );
@@ -138,6 +146,9 @@ class EditProfile extends Component {
     return (
        <div className="ms-content-wrapper">
         <div className="row">
+        { this.state.isUpdated ? <div class="alert alert-success alert-solid" role="alert">
+                <strong>Well done!</strong> Profile Updated sucessfully!.
+              </div> : ''}
           <div className="col-xl-12 col-md-12 col-xs-12">
             <div className="ms-panel">
               <div className="ms-panel-header">
