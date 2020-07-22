@@ -25,24 +25,29 @@ return (
    
     {/* Transaction */}
     <li className="menu-item">
-    <Link to={'/customer/transactions'}>
+    <a href={'/customer/bookings'}>
+        <span><i className="fas fa-dollar-sign" />Bookings</span>
+      </a>
+    </li>
+    <li className="menu-item">
+    <a href={'/customer/transactions'}>
         <span><i className="fas fa-dollar-sign" />Transaction History</span>
-      </Link>
+      </a>
     </li>
     <li className="menu-item">
-    <Link to={'/customer/wallet'}>
+    <a href={'/customer/wallet'}>
         <span><i className="fas fa-dollar-sign" />Wallet</span>
-      </Link>
+      </a>
     </li>
     <li className="menu-item">
-    <Link to={'/customer/notifications'}>
+    <a href={'/customer/notifications'}>
         <span><i className="fas fa-dollar-sign" />Notifications</span>
-      </Link>
+      </a>
     </li>
     <li className="menu-item">
-    <Link to={'/customer/profile'}>
+    <a href={'/customer/profile'}>
         <span><i className="fas fa-dollar-sign" />Profile</span>
-      </Link>
+      </a>
     </li>
     <li className="menu-item">
     <a href="/logout">

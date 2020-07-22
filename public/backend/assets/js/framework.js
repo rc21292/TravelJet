@@ -116,17 +116,32 @@
     /* Sets the active class to the currently viewed page */
     function setActiveMenuItem(){
       var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
-      $('.ms-main-aside .menu-item a', $('#ms-side-nav')).each(function() {
+
+       $('.ms-main-aside .menu-item a', $('#ms-side-nav')).each(function(i) {
         var $this = $(this);
-        if (current === "" || current === "index.html") {
+        if (current === "" || current === "customer") {
           //for root url
-          if ($this.attr('href').indexOf("index.html") !== -1) {
+          if ($this.attr('href').indexOf("customer") !== -1) {
+            if (i==1) {
+              $(this).addClass('active');
+              $(this).parents('.collapse').prev().addClass('active');
+              if ($(this).parents('.collapse').length) {
+                $(this).closest('.collapse').addClass('show');
+              }
+            }            
+          }
+
+     /* $('.ms-main-aside .menu-item a', $('#ms-side-nav')).each(function() {
+        var $this = $(this);
+        if (current === "" || current === "customer") {
+          //for root url
+          if ($this.attr('href').indexOf("customer") !== -1) {
             $(this).addClass('active');
             $(this).parents('.collapse').prev().addClass('active');
             if ($(this).parents('.collapse').length) {
               $(this).closest('.collapse').addClass('show');
             }
-          }
+          }*/
         } else {
           //for other url
           if ($this.attr('href').indexOf(current) !== -1) {

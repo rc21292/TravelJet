@@ -11,9 +11,13 @@ function Home() {
 	const [user, setUser] = useState(false);
 	const [balance, setBalance] = useState(0);
 	 const [noticeData, setNoticeData] = useState([]);  
+	 const [bookingData, setBookingData] = useState([]);  
 
 	useEffect(() => {
+
+
 		let stateqq = localStorage["appState"];
+		// console.log(stateqq);
 		if (stateqq) {
 			let AppState = JSON.parse(stateqq);
 			setUser(AppState.user);
@@ -27,6 +31,10 @@ function Home() {
 			axios.get('/api/notifications/'+AppState.user.id)
 		  		.then(result=>{
 		  			setNoticeData(result.data);
+	  		});
+		  	axios.get('/api/queries')
+		  		.then(result=>{
+		  			setBookingData(result.data.data);
 	  		});
 		}   
 
@@ -83,26 +91,57 @@ function Home() {
 		            <i className="fas fa-cannabis" />
 		         </div>
 		      </div>
-		      <div className="col-xl-8 col-md-12">
+		      <div className="col-xl-9 col-md-12">
 		         <div className="ms-panel">
 		            <div className="ms-panel-header  ms-panel-custom">
 		               <div className="col-sm-6">
-		                  <h6>Recent Projects</h6>
+		                  <h6>Recent Bookings</h6>
 		               </div>
 		               <div className="col-sm-6">
 		                  <div style={{ float:'right'}}>
-		                     <button type="button" className="btn btn-gradient-info">More</button>
+		                     <Link to={'customer/bookings'} className="btn btn-gradient-info">More</Link>
 		                  </div>
 		               </div>
 		            </div>
 		            <div className="ms-panel-body">
-		               <Bookings/>
+		               <div className="table-responsive">
+			               <table className="table table-hover table-striped">
+			                  <thead>
+			                     <tr>
+			                        <th scope="col">Booking Type</th>
+			                        <th scope="col">Start Date</th>
+			                        <th scope="col">End Date</th>
+			                        <th scope="col">Pick Up</th>
+			                        <th scope="col">Destination</th>
+			                        <th scope="col">Sight Seeing</th>
+			                        <th scope="col">Cab Type</th>
+			                        <th scope="col">Persons</th>
+			                     </tr>
+			                  </thead>
+			                  <tbody>
+			                     {bookingData.map((query,i)=>{
+			                     return(
+			                     <tr key={i}>
+			                        <td>{query.booking_type}</td>
+			                        <td>{query.start_at}</td>
+			                        <td>{query.end_on}</td>
+			                        <td>{query.pick_up}</td>
+			                        <td>{query.destination}</td>
+			                        <td>{query.sightseeing}</td>
+			                        <td>{query.cab_type}</td>
+			                        <td>{query.persons}</td>
+			                     </tr>
+			                     )
+			                     })
+			                     }
+			                  </tbody>
+			               </table>
 		            </div>
 		         </div>
 		      </div>
-		      <div className="col-xl-4 col-md-12">
-		         <div className="col-xl-12 col-md-12">
-		            <a href="#">
+		      </div>
+		      <div className="col-xl-3 col-md-12">
+		         <div className="">
 		               <div className="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
 		                  <div className="ms-panel-body media">
 		                     <div className="media-body">
@@ -113,10 +152,8 @@ function Home() {
 		                     </div>
 		                  </div>
 		               </div>
-		            </a>
 		         </div>
-		         <div className="col-xl-12 col-md-12">
-		            <a href="#">
+		         <div className="">
 		               <div className="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
 		                  <div className="ms-panel-body media">
 		                     <div className="media-body">
@@ -130,10 +167,9 @@ function Home() {
 		                     </div>
 		                  </div>
 		               </div>
-		            </a>
 		         </div>
 		      </div>
-		      <div className="col-xl-8 col-md-12">
+		      <div className="col-xl-9 col-md-12">
 	            <div className="ms-panel">
 	              <div className="ms-panel-header  ms-panel-custom">
 	                <div className="ms-heading">

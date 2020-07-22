@@ -59,56 +59,65 @@ onDelete(query_id){
 
 render() {
   return (
-   <div className="table-responsive">  
-   <table className="table table-hover table-striped">
-  <thead>
-   <tr>
-   <th scope="col">Booking Type</th>
-   <th scope="col">Start Date</th>
-   <th scope="col">End Date</th>
-   <th scope="col">Pick Up</th>
-   <th scope="col">Destination</th>
-   <th scope="col">Sight Seeing</th>
-   <th scope="col">Cab Type</th>
-   <th scope="col">Persons</th>
-   </tr>
-   </thead>
-   <tbody>
-   {this.state.queries.map((query,i)=>{
-     return(
-      <tr key={i}>
-      <td>{query.booking_type}</td>
-      <td>{query.start_at}</td>
-      <td>{query.end_on}</td>
-      <td>{query.pick_up}</td>
-      <td>{query.destination}</td>
-      <td>{query.sightseeing}</td>
-      <td>{query.cab_type}</td>
-      <td>{query.persons}</td>
-      </tr>
-      )
-   })
- }
- </tbody>
- </table>
-  <div className="d-flex justify-content-center">
- <Pagination
- activePage={this.state.activePage}
- itemsCountPerPage={this.state.itemsCountPerPage}
- totalItemsCount={this.state.totalItemsCount}
- pageRangeDisplayed={this.state.pageRangeDisplayed}
- onChange={this.handlePageChange.bind(this)}
- itemClass="page-item"
- linkClass="page-link"
- prevPageText="Prev"
- nextPageText="Next"
- lastPageText="Last"
- firstPageText="First"
-
- />
- </div>
-    </div>  
-
- );
+      <div className="col-xl-12 col-md-12">
+         <div className="ms-panel">
+            <div className="ms-panel-header  ms-panel-custom">
+               <div className="col-sm-12">
+                  <h6>Bookings</h6>
+               </div>
+            </div>
+            <div className="ms-panel-body">
+               <div className="table-responsive">
+                  <table className="table table-hover table-striped">
+                     <thead>
+                        <tr>
+                           <th scope="col">Booking Type</th>
+                           <th scope="col">Start Date</th>
+                           <th scope="col">End Date</th>
+                           <th scope="col">Pick Up</th>
+                           <th scope="col">Destination</th>
+                           <th scope="col">Sight Seeing</th>
+                           <th scope="col">Cab Type</th>
+                           <th scope="col">Persons</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {this.state.queries.map((query,i)=>{
+                           return(
+                           <tr key={i}>
+                              <td>{query.booking_type}</td>
+                              <td>{query.start_at}</td>
+                              <td>{query.end_on}</td>
+                              <td>{query.pick_up}</td>
+                              <td>{query.destination}</td>
+                              <td>{query.sightseeing}</td>
+                              <td>{query.cab_type}</td>
+                              <td>{query.persons}</td>
+                           </tr>
+                           )
+                        })
+                     }
+                  </tbody>
+                  </table>
+                  <div className="d-flex justify-content-center">
+                     <Pagination
+                     activePage={this.state.activePage}
+                     itemsCountPerPage={this.state.itemsCountPerPage}
+                     totalItemsCount={this.state.totalItemsCount}
+                     pageRangeDisplayed={this.state.pageRangeDisplayed}
+                     onChange={this.handlePageChange.bind(this)}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   );
 }
 }

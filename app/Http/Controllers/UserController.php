@@ -254,6 +254,29 @@ class UserController extends Controller
     }
 
     /**
+      $old_path = '/uploads/users/temp';
+        if (!empty($request['avtar'])) {
+            // $filename = $request['avtar'];
+
+            if (Storage::disk('public')->exists($old_path . '/' . $request['avtar'])) {
+                $new_path = '/uploads/users/' . $id;
+                if (!file_exists($new_path)) {
+                    File::makeDirectory($new_path, 0755, true, true);
+                }
+                $filename = time() . '-' . $request['avtar'];
+
+                Storage::disk('public')->move($old_path . '/' . $request['avtar'], $new_path . '/' . $filename);
+                Storage::disk('public')->move($old_path . '/small-' . $request['avtar'], $new_path . '/small-' . $filename);
+                Storage::disk('public')->move($old_path . '/medium-small-' . $request['avtar'], $new_path . '/medium-small-' . $filename);
+                Storage::disk('public')->move($old_path . '/medium-' . $request['avtar'], $new_path . '/medium-' . $filename);
+                if (file_exists($old_path . '/listing-' . $request['avtar'])) {
+                    Storage::disk('public')->move($old_path . '/listing-' . $request['avtar'], $new_path . '/listing-' . $filename);
+                $profile->avater = filter_var($filename, FILTER_SANITIZE_STRING);
+                }
+            }
+        } else {
+            $profile->avater = null;
+        }
      * Remove the specified resource from storage.
      *
      * @param  int  $id

@@ -4,11 +4,24 @@ import Home from '../Home';
 import Wallet from '../Wallet';
 import Notifications from '../Notifications';
 import TransactionHistory from '../transactions/TransactionHistory';
+import Bookings from '../bookings/Bookings';
 import Profile from '../users/Profile';
 import EditProfile from '../users/EditProfile';
 
-
 function Header() {
+
+    const [user, setUser] = useState(false);
+
+
+    useEffect(() => {
+
+      let stateqq = localStorage["appState"];
+      if (stateqq) {
+        let AppState = JSON.parse(stateqq);
+        setUser(AppState.user);
+      }   
+    },[]); 
+
 return (
   <div>
   <nav className="navbar ms-navbar">
@@ -25,11 +38,11 @@ return (
       <a href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img className="ms-user-img ms-img-round float-right" src="https://via.placeholder.com/270x270" alt="people" /> </a>
       <ul className="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
         <li className="dropdown-menu-header">
-          <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Welcome, Anny Farisha</span></h6>
+          <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Welcome, {user.name}</span></h6>
         </li>
         <li className="dropdown-divider" />
         <li className="ms-dropdown-list">
-          <a className="media fs-14 p-2" href="pages/prebuilt-pages/user-profile.html"> <span><i className="flaticon-gear mr-2" /> Account Settings</span> </a>
+          <a className="media fs-14 p-2" href="customer/profile"> <span><i className="flaticon-gear mr-2" /> Account Settings</span> </a>
         </li>
         <li className="dropdown-divider" />
         <li className="dropdown-menu-footer">
@@ -44,6 +57,7 @@ return (
     <span className="ms-toggler-bar bg-primary" />
   </div>
 </nav>
+        <Route exact path="/customer/bookings" component={Bookings} />
         <Route exact path="/customer/transactions" component={TransactionHistory} />
         <Route exact path="/customer/wallet" component={Wallet} />
         <Route exact path="/customer/profile" component={Profile} />
