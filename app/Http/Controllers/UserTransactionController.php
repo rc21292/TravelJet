@@ -42,7 +42,7 @@ class UserTransactionController extends Controller
 
     }
 
-    public function index(Request $request)
+    public function index(Request $request,$id)
     {
         $transation_type = $request->input('transation_type');
         $from_date = $request->input('from_date');
@@ -51,7 +51,7 @@ class UserTransactionController extends Controller
         $symbol = !empty($currency) && !empty($currency[0]['currency']) ? Helper::currencyList($currency[0]['currency']) : array();
 
         DB::connection()->enableQueryLog();
-        $user_transaction_s = $this->user_transactions::where('user_id' ,1)->latest();
+        $user_transaction_s = $this->user_transactions::where('user_id', $id)->latest();
 
         if ($request->has('transation_type') && !empty($request->transation_type)) {
             $transation_type = $request->transation_type;
@@ -71,7 +71,7 @@ class UserTransactionController extends Controller
             $user_transaction_s->where('created_at','LIKE', '%'.$to_date.'%');
         }
 
-        $user_transactions = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->paginate(10);
+        $user_transactions = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->paginate(1);
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         

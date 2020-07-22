@@ -12,7 +12,6 @@ function Header() {
 
     const [user, setUser] = useState(false);
 
-
     useEffect(() => {
 
       let stateqq = localStorage["appState"];
@@ -33,12 +32,24 @@ return (
   <div className="logo-sn logo-sm ms-d-block-sm">
     <a className="pl-0 ml-0 text-center navbar-brand mr-0" href="index.html"><img src="https://via.placeholder.com/84x41" alt="logo" /> </a>
   </div>
+
   <ul className="ms-nav-list ms-inline mb-0" id="ms-nav-options">
+
+  <li className="ms-nav-item ms-nav-user dropdown" style={{ marginTop:'-10px', marginBottom:'-10px' }}>
+    <a href={'customer/bookings'}  class="btn btn-pill btn-gradient-secondary">My Bookings</a>
+    </li>
+    <li className="ms-nav-item ms-nav-user dropdown"  style={{ marginTop:'-10px', marginBottom:'-10px' }}>
+    <a href={'/query/add'} class="btn btn-pill btn-gradient-secondary">Book Now</a>
+    </li>
+
+      <li className="ms-nav-item ms-nav-user dropdown">    
+    <a href="#" className="text-disabled ms-has-notification" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flaticon-bell"></i></a>
+    </li>
     <li className="ms-nav-item ms-nav-user dropdown">
       <a href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img className="ms-user-img ms-img-round float-right" src="https://via.placeholder.com/270x270" alt="people" /> </a>
       <ul className="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
         <li className="dropdown-menu-header">
-          <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Welcome, {user.name}</span></h6>
+          <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Welcome, {user.name} ({user.role})</span></h6>
         </li>
         <li className="dropdown-divider" />
         <li className="ms-dropdown-list">

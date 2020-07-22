@@ -25,7 +25,7 @@ Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::post('queries/update/{id}','Api\QueryController@update');
 Route::post('users/update/{id}','UserController@update');
-Route::get('transaction_history', 'UserTransactionController@index');
+Route::get('transaction_history/{id}', 'UserTransactionController@index');
 
 Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');

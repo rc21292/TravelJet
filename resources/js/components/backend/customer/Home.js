@@ -136,6 +136,10 @@ function Home() {
 			                     }
 			                  </tbody>
 			               </table>
+			               <hr/>
+	                  <center>
+	                     <Link to="/customer/bookings" className="btn btn-pill btn-gradient-info">More Bookings</Link>
+	                  </center>
 		            </div>
 		         </div>
 		      </div>
@@ -173,7 +177,7 @@ function Home() {
 	            <div className="ms-panel">
 	              <div className="ms-panel-header  ms-panel-custom">
 	                <div className="ms-heading">
-	                  <h6>News Feed</h6>
+	                  <h6>Recent Activity</h6>
 	                </div>
 	              </div>
 	              <div className="ms-panel-body">

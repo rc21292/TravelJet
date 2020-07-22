@@ -3,12 +3,13 @@ import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
-
-
 import { useState, useEffect } from 'react'  
+
 function TransactionHistory(props) { 
 
   const history = useHistory()
+
+   const [user, setUser] = useState(false);
 
   const [bookingData, setBookingData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
@@ -20,20 +21,24 @@ function TransactionHistory(props) {
   const [searchDateTo, setSearchDateTo] = useState("");
 
   useEffect(() => {  
-    const GetData = async () => {  
-      const result = await axios('/api/transaction_history/');  
+
+    let stateqq = localStorage["appState"];
+      if (stateqq) {
+        let AppState = JSON.parse(stateqq);
+        setUser(AppState.user);
+         axios('/api/transaction_history/'+AppState.user.id).then(result=>{
       setBookingData(result.data.user_transactions.data);  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);  
-    };  
-  
-    GetData();  
+      setActivePage(result.data.user_transactions.current_page);
+    });
+      }   
+
   }, []);  
 
 
   const handlePageChange = (pageNumber) => {
-  axios.get('/api/transaction_history?page='+pageNumber)
+  axios.get('/api/transaction_history/'+user.id+'?page='+pageNumber)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
@@ -69,7 +74,7 @@ const onChangeSearchTransactionType = e => {
  setSearchTransactionType("");
        setSearchDateTo("");
       setSearchDateFrom("");
-    axios.get('/api/transaction_history')
+    axios.get('/api/transaction_history/'+user.id)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
@@ -81,7 +86,7 @@ const onChangeSearchTransactionType = e => {
   }
   const findByFilter = () => {
 
-    axios(`/api/transaction_history?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
+    axios(`/api/transaction_history/${user.id}?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
     .then(result => {
       setBookingData(result.data.user_transactions.data);  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
