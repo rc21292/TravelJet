@@ -36,10 +36,10 @@ return (
   <ul className="ms-nav-list ms-inline mb-0" id="ms-nav-options">
 
   <li className="ms-nav-item ms-nav-user dropdown" style={{ marginTop:'-10px', marginBottom:'-10px' }}>
-    <a href={'customer/bookings'}  class="btn btn-pill btn-gradient-secondary">My Bookings</a>
+    <a href="/customer/bookings"  className="btn btn-pill btn-gradient-secondary">My Bookings</a>
     </li>
     <li className="ms-nav-item ms-nav-user dropdown"  style={{ marginTop:'-10px', marginBottom:'-10px' }}>
-    <a href={'/query/add'} class="btn btn-pill btn-gradient-secondary">Book Now</a>
+    <a href="/query/add" className="btn btn-pill btn-gradient-secondary">Book Now</a>
     </li>
 
       <li className="ms-nav-item ms-nav-user dropdown">    
