@@ -26,7 +26,7 @@ return (
     {/* Transaction */}
     <li className="menu-item">
     <a href={'/customer/bookings'}>
-        <span><i className="fas fa-dollar-sign" />Bookings</span>
+        <span><i className="fa fa-ticket" aria-hidden="true"></i>Bookings</span>
       </a>
     </li>
     <li className="menu-item">
@@ -41,17 +41,17 @@ return (
     </li>
     <li className="menu-item">
     <a href={'/customer/notifications'}>
-        <span><i className="fas fa-dollar-sign" />Notifications</span>
+        <span><i className="fa fa-bell" aria-hidden="true"></i>Notifications</span>
       </a>
     </li>
     <li className="menu-item">
     <a href={'/customer/profile'}>
-        <span><i className="fas fa-dollar-sign" />Profile</span>
+        <span><i className="fa fa-user" aria-hidden="true"></i>Profile</span>
       </a>
     </li>
     <li className="menu-item">
     <a href="/logout">
-        <span><i className="fas fa-dollar-sign" />Logout</span>
+        <span><i className="flaticon-shut-down mr-2"></i>Logout</span>
       </a>
     </li>
     {/* /Pricing */}
