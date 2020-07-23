@@ -30,6 +30,11 @@ return (
       </a>
     </li>
     <li className="menu-item">
+    <a href={'/admin/users'}>
+        <span><i className="fa fa-user" aria-hidden="true"></i>Users</span>
+      </a>
+    </li>
+    <li className="menu-item">
     <a href={'/admin/transactions'}>
         <span><i className="fas fa-dollar-sign" />Transaction History</span>
       </a>

@@ -24,7 +24,7 @@ export default class Footer extends Component {
     { src: "/backend/assets/js/d3.v3.min.js" },
     { src: "/backend/assets/js/topojson.v1.min.js" },
     { src: "/backend/assets/js/datamaps.all.min.js" },
-    { src: "/backend/assets/js/index-map.js" },
+    // { src: "/backend/assets/js/index-map.js" },
     { src: "/backend/assets/js/framework.js" },
     { src: "/backend/assets/js/settings.js" }
 

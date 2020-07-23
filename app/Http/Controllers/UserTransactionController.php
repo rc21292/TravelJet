@@ -71,7 +71,7 @@ class UserTransactionController extends Controller
             $user_transaction_s->where('created_at','LIKE', '%'.$to_date.'%');
         }
 
-        $user_transactions = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->paginate(1);
+        $user_transactions = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->paginate(10);
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         

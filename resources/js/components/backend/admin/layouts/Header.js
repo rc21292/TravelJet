@@ -5,6 +5,8 @@ import Wallet from '../Wallet';
 import Notifications from '../Notifications';
 import TransactionHistory from '../transactions/TransactionHistory';
 import Bookings from '../bookings/Bookings';
+import Users from '../users/Users';
+import User from '../users/User';
 import Profile from '../users/Profile';
 import EditProfile from '../users/EditProfile';
 
@@ -34,16 +36,8 @@ return (
   </div>
 
   <ul className="ms-nav-list ms-inline mb-0" id="ms-nav-options">
-
-  <li className="ms-nav-item ms-nav-user dropdown" style={{ marginTop:'-10px', marginBottom:'-10px' }}>
-    <a href="/admin/bookings"  className="btn btn-pill btn-gradient-secondary">My Bookings</a>
-    </li>
-    <li className="ms-nav-item ms-nav-user dropdown"  style={{ marginTop:'-10px', marginBottom:'-10px' }}>
-    <a href="/query/add" className="btn btn-pill btn-gradient-secondary">Book Now</a>
-    </li>
-
       <li className="ms-nav-item ms-nav-user dropdown">    
-    <a href="#" className="text-disabled ms-has-notification" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flaticon-bell"></i></a>
+    <a href="#" className="text-disabled ms-has-notification" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="flaticon-bell"></i></a>
     </li>
     <li className="ms-nav-item ms-nav-user dropdown">
       <a href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img className="ms-user-img ms-img-round float-right" src="https://via.placeholder.com/270x270" alt="people" /> </a>
@@ -69,6 +63,8 @@ return (
   </div>
 </nav>
         <Route exact path="/admin/bookings" component={Bookings} />
+        <Route exact path="/admin/users" component={Users} />
+        <Route exact path="/admin/user/:id" component={User} />
         <Route exact path="/admin/transactions" component={TransactionHistory} />
         <Route exact path="/admin/wallet" component={Wallet} />
         <Route exact path="/admin/profile" component={Profile} />

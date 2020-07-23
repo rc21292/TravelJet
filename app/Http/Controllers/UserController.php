@@ -30,19 +30,12 @@ class UserController extends Controller
 
     public function index()
     {
-        $customer_count = User::join('roles','roles.id','=','users.role')->where('roles.id','=',2)->count();
-        $agent_count = User::join('roles','roles.id','=','users.role')->where('roles.id','=',3)->count();
-        $job_posted_count = Query::where('status','!=','cancelled')->count();
-        $users = User::join('roles','roles.id','=','users.role')
-        ->select("users.*",'roles.name as role_name', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as created"))
-        ->latest('users.created_at')->paginate(1);
+        $users = User::select("users.*",'role', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as created"))
+        ->latest('users.created_at')->paginate(5);
 
          return response()->json([
             'success' => true,
-            'users' => $users,
-            'customer_count' => $customer_count,
-            'agent_count' => $agent_count,
-            'job_posted_count' => $job_posted_count,
+            'users' => $users
         ], 201);    
     }
 

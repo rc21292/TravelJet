@@ -1,14 +1,47 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Topbar from './layouts/Topbar'
 import Header from './layouts/Header'
 import Footer from './layouts/Footer'
 import Sidebar from './layouts/Sidebar'
 import RightSidebar from './layouts/RightSidebar'
 import Home from './Home'
+import Routes from './Routes'
 
 class Index extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            user_id : props.user_id
+        }
+    }
+
+
+    componentDidMount(){
+
+        axios.get("/api/users/show/"+this.state.user_id).then(response => {
+            return response;
+        }).then(json => {
+            if (json.data) {
+                let userData = {
+                    id: json.data.id,
+                    name: json.data.name,
+                    email: json.data.email,
+                    phone: json.data.phone,
+                    role: json.data.role,
+                };
+                let appState = {
+                    isLoggedIn: true,
+                    user: userData
+                };
+                localStorage["appState"] = JSON.stringify(appState);
+            }
+        })
+    }
+
+
   render() {
     return (
         <div>
@@ -31,17 +64,22 @@ class Index extends Component {
     {/* Overlays */}
     <div className="ms-aside-overlay ms-overlay-left ms-toggler" data-target="#ms-side-nav" data-toggle="slideLeft" />
     <div className="ms-aside-overlay ms-overlay-right ms-toggler" data-target="#ms-recent-activity" data-toggle="slideRight" />
+    <Router>
+    <Routes/>
     <Sidebar/>
   <main className="body-content">
 <Header/>
+<Route exact path="/agent">
 <Home/>
+    </Route>
   </main>
     <RightSidebar/>
   <Footer/>
+  </Router>
     </div>
     );
 }
 }
 if ( document.getElementById('agent-app') ) {
-    ReactDOM.render(<Index/>, document.getElementById('agent-app'));
+    ReactDOM.render(<Index user_id={user_id}/>, document.getElementById('agent-app'));
 }

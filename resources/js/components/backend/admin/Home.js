@@ -12,11 +12,11 @@ function Home() {
 	const [user, setUser] = useState(false);
 	const [traderCount, setTraderCount] = useState(false);
 	const [customerCount, setCustomerCount] = useState(false);
-	const [userssData, setUserssData] = useState(false);
 	const [bookingsData, setBookingsData] = useState(false);
 	const [confirmedBookingsData, setConfirmedBookingsData] = useState(false);
 	const [balance, setBalance] = useState(0);
 	const [transactionsData, setTransactionsData] = useState([]);  
+	const [userssData, setUserssData] = useState([]);
 	const [noticeData, setNoticeData] = useState([]);  
 	const [bookingData, setBookingData] = useState([]);  
 
@@ -35,10 +35,6 @@ function Home() {
 				.then(response=>{
 					setBalance(response.data.balance);
 			});
-			axios.get('/api/notifications/'+AppState.user.id)
-		  		.then(result=>{
-		  			setNoticeData(result.data);
-	  		});
 
 		  	axios.get('/api/getdashboardData/'+AppState.user.id)
 		  	.then(result=>{
@@ -48,7 +44,7 @@ function Home() {
 		  		setConfirmedBookingsData(result.data.confirmed_bookings)
 		  		setTransactionsData(result.data.transactions.data)
 		  		setUserssData(result.data.users_data.data)
-		  		console.log('fgfg'+userssData);
+		  		setNoticeData(result.data.notices.data);
 		  	});
 
 		  	axios.get('/api/queries')
@@ -112,7 +108,7 @@ function Home() {
 		         <div className="ms-panel">
 		            <div className="ms-panel-header  ms-panel-custom">
 		               <div className="col-sm-6">
-		                  <h6>Recent Bookings</h6>
+		                  <h6>Recent Transactions</h6>
 		               </div>
 		               <div className="col-sm-6">
 		                  <div style={{ float:'right'}}>
@@ -145,26 +141,49 @@ function Home() {
 			               </table>
 			               <hr/>
 	                  <center>
-	                     <Link to="/admin/bookings" className="btn btn-pill btn-gradient-info">More Bookings</Link>
+	                     <Link to="/admin/transactions" className="btn btn-pill btn-gradient-info">More Transactions</Link>
 	                  </center>
 		            </div>
 		         </div>
 		      </div>
 		      </div>
 		      <div className="col-xl-4 col-md-12">
-		         <div className="">
+		         <div className="ms-panel">
+		            <div className="ms-panel-header  ms-panel-custom">
+		               <div >
+		                  <h6>Latest Users</h6>
+		               </div>
+		            </div>
 		               <div className="ms-panel-body">
-		               <div className="table-responsive">
-			              <Users/>
+			              <table className="table table-hover table-striped">
+			                  <thead>
+			                     <tr>
+			                        <th scope="col">Name</th>
+			                        <th scope="col">Role</th>
+			                        <th scope="col">Action</th>
+			                     </tr>
+			                  </thead>
+			                  <tbody>
+			                     {userssData.map((query,i)=>{
+			                     return(
+			                     <tr key={i}>
+			                        <td><img src="http://worksheriff.com/images/user.jpg"/></td>
+			                        <td>{query.name}<br/>{query.role}</td>
+			                        <td><Link to={'/admin/user/'+query.id} className="btn btn-sm btn-warning">View</Link></td>
+			                     </tr>
+			                     )
+			                     })
+			                     }
+			                  </tbody>
+			               </table>
 			               <hr/>
 	                  <center>
-	                     <Link to="/admin/bookings" className="btn btn-pill btn-gradient-info">More Bookings</Link>
+	                     <Link to="/admin/users" className="btn btn-pill btn-gradient-info">More Users</Link>
 	                  </center>
-		            </div>
 		         </div>
 		         </div>
 		      </div>
-		       <div className="col-xl-9 col-md-12">
+		       <div className="col-xl-8 col-md-12">
 		         <div className="ms-panel">
 		            <div className="ms-panel-header  ms-panel-custom">
 		               <div className="col-sm-6">
@@ -177,7 +196,6 @@ function Home() {
 		               </div>
 		            </div>
 		            <div className="ms-panel-body">
-		               <div className="table-responsive">
 			               <table className="table table-hover table-striped">
 			                  <thead>
 			                     <tr>
@@ -188,7 +206,6 @@ function Home() {
 			                        <th scope="col">Destination</th>
 			                        <th scope="col">Sight Seeing</th>
 			                        <th scope="col">Cab Type</th>
-			                        <th scope="col">Persons</th>
 			                     </tr>
 			                  </thead>
 			                  <tbody>
@@ -202,7 +219,6 @@ function Home() {
 			                        <td>{query.destination}</td>
 			                        <td>{query.sightseeing}</td>
 			                        <td>{query.cab_type}</td>
-			                        <td>{query.persons}</td>
 			                     </tr>
 			                     )
 			                     })
@@ -213,11 +229,10 @@ function Home() {
 	                  <center>
 	                     <Link to="/admin/bookings" className="btn btn-pill btn-gradient-info">More Bookings</Link>
 	                  </center>
-		            </div>
 		         </div>
 		      </div>
 		      </div>
-		      <div className="col-xl-3 col-md-12">
+		      <div className="col-xl-4 col-md-12">
 		         <div className="">
 		               <div className="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
 		                  <div className="ms-panel-body media">
@@ -230,23 +245,8 @@ function Home() {
 		                  </div>
 		               </div>
 		         </div>
-		         <div className="">
-		               <div className="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
-		                  <div className="ms-panel-body media">
-		                     <div className="media-body">
-		                        <h6>Account balance</h6>
-		                        <hr/>
-		                        <span>Rs. {balance}</span>
-		                        <p>
-		                           <Link className="btn btn-pill btn-gradient-info" to={'/admin/wallet'}>
-		                           Deposit Fund</Link>
-		                        </p>
-		                     </div>
-		                  </div>
-		               </div>
-		         </div>
 		      </div>
-		      <div className="col-xl-9 col-md-12">
+		      <div className="col-xl-10 col-md-12">
 	            <div className="ms-panel">
 	              <div className="ms-panel-header  ms-panel-custom">
 	                <div className="ms-heading">
@@ -256,8 +256,16 @@ function Home() {
 	              <div className="ms-panel-body">
 	                <div className="table-responsive">
 	                  <table className="table table-hover table-striped thead-primary">
-	                    <tbody>
-	                     
+	                     <tbody>
+	                      {  
+	                        noticeData.map((query, idx) => {  
+	                        return  <tr key={idx}>
+	                          <td className="ms-table-f-w"><span dangerouslySetInnerHTML={{__html: query.data}} ></span>
+	                            <div style={{ marginLeft : '50px' }}><b>{query.created_at}</b>
+	                            </div>
+	                          </td>
+	                        </tr>  
+	                      })}  
 	                    </tbody>
 	                  </table>
 	                   <hr/>

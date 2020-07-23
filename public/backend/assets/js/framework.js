@@ -24,7 +24,7 @@
 
       customScrollbar();
 
-      tooltipsInit();
+      // tooltipsInit();
       resetPopperPositioning();
 
       initRoundedProgress();
@@ -119,7 +119,7 @@
 
        $('.ms-main-aside .menu-item a', $('#ms-side-nav')).each(function(i) {
         var $this = $(this);
-        if (current === "" || current === "customer" || current === "admin") {
+        if (current === "" || current === "customer" || current === "admin" || current === "agent") {
           //for root url
           if ($this.attr('href').indexOf("customer") !== -1) {
             if (i==1) {
@@ -355,13 +355,13 @@
     }
 
     /* Bootstrap Tooltips */
-    function tooltipsInit(){
-      $('body').tooltip({
-        selector: '[data-toggle="tooltip"]',
-        trigger: 'hover',
-        template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>'
-      });
-    }
+    // function tooltipsInit(){
+    //   $('body').tooltip({
+    //     selector: '[data-toggle="tooltip"]',
+    //     trigger: 'hover',
+    //     template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>'
+    //   });
+    // }
 
     /* Prevent Popper from using its own X-placement for placing Dropdowns */
     function resetPopperPositioning(){

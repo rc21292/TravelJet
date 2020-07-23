@@ -71,54 +71,61 @@ export default class Listing extends Component {
 
 	render() {
 		return (
-         <div className="container">         
-        <table className="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Role</th>
-      <th scope="col">Email</th>
-      <th scope="col">Phone</th>
-      <th scope="col">Created At</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-  {this.state.users.map((user,i)=>{
-  	return(
-      <tr key={i}>
-        <th scope="row">{user.id}</th>
-        <td>{user.name}</td>
-        <td>{user.role_name}</td>
-        <td>{user.email}</td>
-        <td>{user.phone}</td>
-        <td>{user.created}</td>
-        <td><a href="#" onClick={this.onDelete.bind(this,user.id)}>Delete</a></td>
-        <td><Link to={'/user/'+user.id}>View</Link></td>
-        
-      </tr>
-)
-})
-  }
-  </tbody>
-</table>
-<div className="d-flex justify-content-center">
- <Pagination
- activePage={this.state.activePage}
- itemsCountPerPage={this.state.itemsCountPerPage}
- totalItemsCount={this.state.totalItemsCount}
- pageRangeDisplayed={this.state.pageRangeDisplayed}
- onChange={this.handlePageChange.bind(this)}
- itemClass="page-item"
- linkClass="page-link"
- prevPageText="Prev"
- nextPageText="Next"
- lastPageText="Last"
- firstPageText="First"/>
- </div>
- </div>       
-
+          <div className="ms-panel">
+                <div className="ms-panel-header  ms-panel-custom">
+                   <div className="col-sm-12">
+                      <h6>Users List</h6>
+                   </div>
+                </div>
+                <div className="ms-panel-body">
+             <table className="table table-hover table-striped">
+                <thead>
+                   <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Created At</th>
+                      <th scope="col">Actions</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   {this.state.users.map((user,i)=>{
+                   return(
+                   <tr key={i}>
+                      <th scope="row">{user.id}</th>
+                      <td>{user.name}</td>
+                      <td>{user.role}</td>
+                      <td>{user.email}</td>
+                      <td>{user.phone}</td>
+                      <td>{user.created}</td>
+                      <td><button onClick={this.onDelete.bind(this,user.id)} class="btn btn-sm btn-danger">Delete</button>
+                         <Link class="btn btn-sm btn-info" to={'/admin/user/'+user.id}>
+                         View</Link>
+                      </td>
+                   </tr>
+                   )
+                   })
+                   }
+                </tbody>
+             </table>
+             <div className="d-flex justify-content-center">
+                <Pagination
+                   activePage={this.state.activePage}
+                   itemsCountPerPage={this.state.itemsCountPerPage}
+                   totalItemsCount={this.state.totalItemsCount}
+                   pageRangeDisplayed={this.state.pageRangeDisplayed}
+                   onChange={this.handlePageChange.bind(this)}
+                   itemClass="page-item"
+                   linkClass="page-link"
+                   prevPageText="Prev"
+                   nextPageText="Next"
+                   lastPageText="Last"
+                   firstPageText="First"/>
+             </div>
+          </div>
+        </div>
 		);
 	}
 }

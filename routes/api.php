@@ -32,6 +32,7 @@ Route::post('/users/save_razorpay_details','UserController@save_razorpay_details
 Route::get('users/show/{id}','UserController@show');
 Route::get('users/getprofile/{id}','UserController@getProfile');
 Route::post('users/insertImages','UserController@insertImages');
+Route::get('users','UserController@index');
 
 Route::get('getdashboardData/{id}','HomeController@index');
 
