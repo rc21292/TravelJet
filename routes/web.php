@@ -26,6 +26,15 @@ Route::get('/customer/notifications', function () { return view('customer'); });
 Route::get('/customer/profile/edit', function () { return view('customer'); });
 
 
+Route::get('/admin/transactions', function () { return view('admin'); });
+Route::get('/admin/bookings', function () { return view('admin'); });
+Route::get('/admin/wallet', function () { return view('admin'); });
+Route::get('/admin/profile', function () { return view('admin'); });
+Route::get('/admin/notifications', function () { return view('admin'); }	);
+Route::get('/admin/profile/edit', function () { return view('admin'); });
+
+
+
 // Admin Dashboard View Route
 Route::group(['middleware' => 'App\Http\Middleware\Admin'], function()
 {

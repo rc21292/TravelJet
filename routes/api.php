@@ -33,6 +33,8 @@ Route::get('users/show/{id}','UserController@show');
 Route::get('users/getprofile/{id}','UserController@getProfile');
 Route::post('users/insertImages','UserController@insertImages');
 
+Route::get('getdashboardData/{id}','HomeController@index');
+
 
 
 Route::get('notifications/{id}', 'NoticeController@index');

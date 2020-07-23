@@ -119,9 +119,29 @@
 
        $('.ms-main-aside .menu-item a', $('#ms-side-nav')).each(function(i) {
         var $this = $(this);
-        if (current === "" || current === "customer") {
+        if (current === "" || current === "customer" || current === "admin") {
           //for root url
           if ($this.attr('href').indexOf("customer") !== -1) {
+            if (i==1) {
+              $(this).addClass('active');
+              $(this).parents('.collapse').prev().addClass('active');
+              if ($(this).parents('.collapse').length) {
+                $(this).closest('.collapse').addClass('show');
+              }
+            }            
+          }
+
+          if ($this.attr('href').indexOf("admin") !== -1) {
+            if (i==1) {
+              $(this).addClass('active');
+              $(this).parents('.collapse').prev().addClass('active');
+              if ($(this).parents('.collapse').length) {
+                $(this).closest('.collapse').addClass('show');
+              }
+            }            
+          }
+
+          if ($this.attr('href').indexOf("agent") !== -1) {
             if (i==1) {
               $(this).addClass('active');
               $(this).parents('.collapse').prev().addClass('active');
