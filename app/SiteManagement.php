@@ -759,6 +759,46 @@ class SiteManagement extends Model
      *
      * @return \Illuminate\Http\Response
      */
+    public static function saveCommissionSettings($request)
+    {
+    	if (!empty($request)) {
+    		$commission_settings = $request['commission_settings'];
+    		$existing_data = SiteManagement::getMetaValue('commission_settings');
+    		if (!empty($existing_data)) {
+    			DB::table('site_managements')->where('meta_key', '=', 'commission_settings')->delete();
+    		}
+    		DB::table('site_managements')->insert(
+    			[
+    				'meta_key' => 'commission_settings', 'meta_value' => serialize($commission_settings),
+    				"created_at" => Carbon::now(), "updated_at" => Carbon::now()
+    			]
+    		);
+    		return 'success';
+    	} else {
+    		return 'error';
+    	}
+    }
+
+    public static function saveCoinSettings($request)
+    {
+    	if (!empty($request)) {
+    		$coin_settings = $request['coin_settings'];
+    		$existing_data = SiteManagement::getMetaValue('coin_settings');
+    		if (!empty($existing_data)) {
+    			DB::table('site_managements')->where('meta_key', '=', 'coin_settings')->delete();
+    		}
+    		DB::table('site_managements')->insert(
+    			[
+    				'meta_key' => 'coin_settings', 'meta_value' => serialize($coin_settings),
+    				"created_at" => Carbon::now(), "updated_at" => Carbon::now()
+    			]
+    		);
+    		return 'success';
+    	} else {
+    		return 'error';
+    	}
+    }
+
     public static function saveSectionSettings($section_settings, $request)
     {
         if (!empty($section_settings) || !empty($request)) {

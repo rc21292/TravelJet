@@ -7,7 +7,6 @@ import Pagination from "react-js-pagination";
 export default class Bookings extends Component {
   constructor(props){
     super(props);
-    console.log(props);
     this.state={
       queries:[],
      activePage:1,

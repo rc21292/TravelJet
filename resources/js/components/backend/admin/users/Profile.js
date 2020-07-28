@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useHistory, useLocation } from 'react-router-dom'
+import Portfolio from './Portfolio';
 
 import { useState, useEffect } from 'react'
 import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
@@ -30,6 +31,10 @@ function Profile() {
 
 	 const handleClick = () => {  
         history.push('/admin/profile/edit')   
+  };  
+
+  	 const handlePortfolioClick = () => {  
+        history.push('/admin/portfolio/edit')   
   };  
 
 	return (
@@ -67,9 +72,14 @@ function Profile() {
                       <td>Rs. {balance}</td>
                     </tr>
                   </tbody>
-                </table>
+                </table>                
                 <div className="edit-form text-right">
                   <a onClick={handleClick} className="btn btn-primary">Edit</a>
+                </div>
+                <h2 className="section-title">Portfolio :</h2>
+                <Portfolio/>
+                <div className="edit-form text-right">
+                  <a onClick={handlePortfolioClick} className="btn btn-primary">Edit</a>
                 </div>
               </div>
             </div>

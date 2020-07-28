@@ -4,11 +4,13 @@ import Home from '../Home';
 import Wallet from '../Wallet';
 import Notifications from '../Notifications';
 import TransactionHistory from '../transactions/TransactionHistory';
+import CoinSetting from '../settings/CoinSetting';
 import Bookings from '../bookings/Bookings';
 import Users from '../users/Users';
 import User from '../users/User';
 import Profile from '../users/Profile';
 import EditProfile from '../users/EditProfile';
+import EditPortfolio from '../users/EditPortfolio';
 
 function Header() {
 
@@ -63,12 +65,14 @@ return (
   </div>
 </nav>
         <Route exact path="/admin/bookings" component={Bookings} />
+        <Route exact path="/admin/settings" component={CoinSetting} />
         <Route exact path="/admin/users" component={Users} />
         <Route exact path="/admin/user/:id" component={User} />
         <Route exact path="/admin/transactions" component={TransactionHistory} />
         <Route exact path="/admin/wallet" component={Wallet} />
         <Route exact path="/admin/profile" component={Profile} />
         <Route exact path="/admin/profile/edit" component={EditProfile} />
+        <Route exact path="/admin/portfolio/edit" component={EditPortfolio} />
         <Route exact path="/admin/notifications" component={Notifications} />
 </div>
 

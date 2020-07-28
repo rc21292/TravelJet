@@ -47,6 +47,13 @@ class UserController extends Controller
     }
 
 
+    function getProfilePortfolio($id)
+    {
+    	$user = DB::table('profile_portfolio_images')->where('user_id',$id)->get();
+        return response()->json($user);
+    }
+
+
     public function insertImages11(Request $request)
     {
         if (!empty($request['image'])) 
@@ -57,6 +64,59 @@ class UserController extends Controller
         }
     }
 
+    public function insertPortfolioImages(Request $request)
+    {
+    	$path = Helper::PublicPath() . '/uploads/users/portfolios/'.$request['user_id'];
+    	if (!empty($request['image'])) {
+    		$profile_image = $request['image'];
+    		$image_size = array(
+    			'medium' => array(
+    				'width' => 400,
+    				'height' => 300,
+    			),    			
+    		);
+    		Helper::uploadTempImageWithSize($path, $profile_image, '', $image_size);
+    		$image_name = $profile_image->getClientOriginalName();
+
+    		$user = DB::table('profile_portfolios')->where('user_id',$request->user_id)->first();
+
+
+
+    		if(!$user){
+    			$id = DB::table('profile_portfolios')->insertGetId(
+    				[
+    					'user_id' => $request->user_id,
+    					'link' => $request->link,
+    					"created_at" => \Carbon\Carbon::now(), 
+    					'updated_at' => \Carbon\Carbon::now()
+    				]
+    			);
+
+    			DB::table('profile_portfolio_images')->insert(
+    				[
+    					'user_id' => $request->user_id,
+    					'image' => $image_name,
+    					'profile_portfolio_id' => $id,
+    					"created_at" => \Carbon\Carbon::now(), 
+    					'updated_at' => \Carbon\Carbon::now()
+    				]
+    			);
+
+    		}
+    		if($user){
+    			DB::table('profile_portfolio_images')->insert(
+    				[
+    					'user_id' => $request->user_id,
+    					'image' => $image_name,
+    					'profile_portfolio_id' => $user->id,
+    					"created_at" => \Carbon\Carbon::now(), 
+    					'updated_at' => \Carbon\Carbon::now()
+    				]
+    			);
+
+    		}
+    	} 
+    }
 
     public function insertImages(Request $request, $type = '')
     {
@@ -92,6 +152,12 @@ class UserController extends Controller
             Helper::uploadTempImage($path, $request->image);
             return $request->image->getClientOriginalName();;
         }
+    }
+
+    public function deletePortfolioImage($id)
+    {
+    	DB::table('profile_portfolio_images')->where('id', $id)->delete();
+
     }
 
 

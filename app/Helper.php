@@ -352,6 +352,8 @@ class Helper extends Model
      */
     public static function uploadTempImageWithSize($temp_path, $image, $file_name = "", $image_size = array())
     {
+
+    	#echo $temp_path; exit();
         $json = array();
         if (!empty($image)) {
             $file_original_name = $image->getClientOriginalName();
@@ -364,6 +366,8 @@ class Helper extends Model
                 if (!file_exists($temp_path)) {
                     File::makeDirectory($temp_path, 0755, true, true);
                 }
+
+                
                 if (!empty($image_size)) {
                     foreach ($image_size as $key => $size) {
                         $small_img = Image::make($image);
@@ -374,12 +378,11 @@ class Helper extends Model
                                 $constraint->upsize();
                             }
                         );
-                        $small_img->save($temp_path . $key . '-' . $file_original_name);
+                        #echo $temp_path . $key . '-' . $file_original_name; exit;
+                        $result = $small_img->save($temp_path.'/' . $file_original_name);
                     }
                 }
                 // save original image size
-                $img = Image::make($image);
-                $img->save($temp_path . '/' . $file_original_name);
                 $json['message'] = trans('lang.img_uploaded');
                 $json['type'] = 'success';
                 return $json;
