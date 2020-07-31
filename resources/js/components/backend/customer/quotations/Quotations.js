@@ -56,7 +56,7 @@ export default class Quotations extends Component {
       </div>
       <div className="roundtrip">Quotes for round trip Delhi to Himachal (3N / 4D)</div>
       <figure className="wt-userlistingimg">
-        <img src="image/icons/chat-profile.png" alt="image description" />
+        <img src="frontend/image/icons/chat-profile.png" alt="image description" />
       </figure>
       <div className="wt-userlistingcontent">
         <div className="wt-contenthead">
