@@ -55,29 +55,21 @@ onDelete(query_id){
   });
 
 }
-
+ 
 render() {
   return (
-      <div className="col-xl-12 col-md-12">
-         <div className="ms-panel">
-            <div className="ms-panel-header  ms-panel-custom">
-               <div className="col-sm-12">
-                  <h6>Bookings</h6>
-               </div>
-            </div>
-            <div className="ms-panel-body">
-               <div className="table-responsive">
-                  <table className="table table-hover table-striped">
-                     <thead>
+       <div className="booking-page">
+            <h1>Upcoming Booking</h1>
+                  <table className="table table-bordered booking">
+                     <thead class="thead-primary">
                         <tr>
                            <th scope="col">Booking Type</th>
                            <th scope="col">Start Date</th>
                            <th scope="col">End Date</th>
-                           <th scope="col">Pick Up</th>
+                           <th scope="col">Source</th>
                            <th scope="col">Destination</th>
-                           <th scope="col">Sight Seeing</th>
-                           <th scope="col">Cab Type</th>
                            <th scope="col">Persons</th>
+                           <th scope="col">Action</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -89,9 +81,8 @@ render() {
                               <td>{query.end_on}</td>
                               <td>{query.pick_up}</td>
                               <td>{query.destination}</td>
-                              <td>{query.sightseeing}</td>
-                              <td>{query.cab_type}</td>
                               <td>{query.persons}</td>
+                              <td><a href="#" class="btn btn-default">View More</a></td>
                            </tr>
                            )
                         })
@@ -113,10 +104,7 @@ render() {
                      firstPageText="First"
                      />
                   </div>
-               </div>
-            </div>
-         </div>
-      </div>
+                  </div>
    );
 }
 }

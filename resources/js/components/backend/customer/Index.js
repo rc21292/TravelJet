@@ -3,9 +3,14 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Topbar from './layouts/Topbar'
 import Header from './layouts/Header'
+import Bookings from './bookings/Bookings'
+import Quotations from './quotations/Quotations'
+import Address from './address/Address'
+import Profile from './profile/Profile'
+import Wallet from './wallet/Wallet'
+import Inbox from './inbox/Inbox'
 import Footer from './layouts/Footer'
 import Sidebar from './layouts/Sidebar'
-import RightSidebar from './layouts/RightSidebar'
 import Home from './Home'
 import Routes from './Routes'
 
@@ -42,43 +47,52 @@ class Index extends Component {
     }
 
 
-  render() {
-    return (
-        <div>
-        <div id="preloader-wrap">
-        <div className="spinner spinner-8">
-        <div className="ms-circle1 ms-child" />
-        <div className="ms-circle2 ms-child" />
-        <div className="ms-circle3 ms-child" />
-        <div className="ms-circle4 ms-child" />
-        <div className="ms-circle5 ms-child" />
-        <div className="ms-circle6 ms-child" />
-        <div className="ms-circle7 ms-child" />
-        <div className="ms-circle8 ms-child" />
-        <div className="ms-circle9 ms-child" />
-        <div className="ms-circle10 ms-child" />
-        <div className="ms-circle11 ms-child" />
-        <div className="ms-circle12 ms-child" />
-        </div>
-        </div>
-    {/* Overlays */}
-    <div className="ms-aside-overlay ms-overlay-left ms-toggler" data-target="#ms-side-nav" data-toggle="slideLeft" />
-    <div className="ms-aside-overlay ms-overlay-right ms-toggler" data-target="#ms-recent-activity" data-toggle="slideRight" />
-    <Router>
-    <Routes/>
-    <Sidebar/>
-  <main className="body-content">
-<Header/>
-<Route exact path="/customer">
-<Home/>
-    </Route>
-  </main>
-    <RightSidebar/>
-  <Footer/>
-  </Router>
-    </div>
-    );
-}
+    render() {
+        return (
+            <div>
+                  <Topbar/>
+                  <Header/> 
+                  <div className="container">
+                        <div id="wrapper">
+                              <Sidebar/>
+                              <div id="content-wrapper">
+                                    <div id="content">
+                                          <div className="container-fluid">
+                                                <Router>
+                                                      <Switch>
+                                                            <Route exact path="/customer">
+                                                                  <Home/>
+                                                            </Route>
+                                                            <Route path="/customer/bookings">
+                                                                  <Bookings/>
+                                                            </Route>
+                                                            <Route path="/customer/quotations">
+                                                                  <Quotations/>
+                                                            </Route>
+                                                            <Route path="/customer/manage-address">
+                                                                  <Address/>
+                                                            </Route>
+                                                            <Route path="/customer/personal-information">
+                                                                  <Profile/>
+                                                            </Route>
+                                                            <Route path="/customer/wallet">
+                                                                  <Wallet/>
+                                                            </Route>
+                                                            <Route path="/customer/inbox">
+                                                                  <Inbox/>
+                                                            </Route>
+                                                            
+                                                      </Switch>
+                                                </Router>
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>            
+                  <Footer/>
+            </div>
+            );
+    }
 }
 
 if ( document.getElementById('customer-app') ) {
