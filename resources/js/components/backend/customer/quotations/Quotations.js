@@ -29,7 +29,7 @@ export default class Quotations extends Component {
             <a href="#"><i className="fa fa-pencil" /></a>
             <a href="#"><i className="fa fa-trash" /></a>
           </td>
-          <td><a href="JavaScript:void(0)" className="btn btn-default btn_click">View Quotation</a></td>
+          <td><a href="#" className="btn btn-default btn_click">View Quotation</a></td>
         </tr>
         <tr>
           <td>22-June-20</td>
@@ -39,7 +39,7 @@ export default class Quotations extends Component {
             <a href="#"><i className="fa fa-pencil" /></a>
             <a href="#"><i className="fa fa-trash" /></a>
           </td>
-          <td><a href="JavaScript:void(0)" className="btn btn-default btn_click">View Quotation</a></td>
+          <td><a href="#" className="btn btn-default btn_click">View Quotation</a></td>
         </tr>
       </tbody>
     </table>
@@ -56,7 +56,7 @@ export default class Quotations extends Component {
       </div>
       <div className="roundtrip">Quotes for round trip Delhi to Himachal (3N / 4D)</div>
       <figure className="wt-userlistingimg">
-        <img src="frontend/image/icons/chat-profile.png" alt="image description" />
+        <img src="/frontend/image/icons/chat-profile.png" alt="image description" />
       </figure>
       <div className="wt-userlistingcontent">
         <div className="wt-contenthead">

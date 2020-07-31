@@ -20,12 +20,12 @@ export default class Inbox extends Component {
             </div>
           </div>
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
         </div>
         <div className="main-message-box chatnow pull-left">
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
           <div className="message-dt">
             <div className="message-inner-dt">
@@ -40,12 +40,12 @@ export default class Inbox extends Component {
             </div>
           </div>
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
         </div>
         <div className="main-message-box chatnow pull-left">
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
           <div className="message-dt">
             <div className="message-inner-dt">
@@ -60,12 +60,12 @@ export default class Inbox extends Component {
             </div>
           </div>
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
         </div>
         <div className="main-message-box chatnow pull-left">
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
           <div className="message-dt">
             <div className="message-inner-dt">
@@ -80,12 +80,12 @@ export default class Inbox extends Component {
             </div>
           </div>
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
         </div>
         <div className="main-message-box chatnow pull-left">
           <div className="messg-usr-img">
-            <img src="frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
+            <img src="/frontend/image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
           <div className="message-dt">
             <div className="message-inner-dt">
@@ -112,7 +112,7 @@ export default class Inbox extends Component {
               <a href="#">
                 <div className="usr-msg-details">
                   <div className="usr-ms-img">
-                    <img src="frontend/image/icons/chat-profile.png" alt="chat-profile" />
+                    <img src="/frontend/image/icons/chat-profile.png" alt="chat-profile" />
                     <span className="msg-status" />
                   </div>
                   <div className="usr-mg-info">
@@ -126,7 +126,7 @@ export default class Inbox extends Component {
               <a href="#">
                 <div className="usr-msg-details">
                   <div className="usr-ms-img">
-                    <img src="frontend/image/icons/chat-profile.png" alt="chat-profile" />
+                    <img src="/frontend/image/icons/chat-profile.png" alt="chat-profile" />
                   </div>
                   <div className="usr-mg-info">
                     <div className="user-name">Lorem Ipsum</div>
@@ -139,7 +139,7 @@ export default class Inbox extends Component {
               <a href="#">
                 <div className="usr-msg-details">
                   <div className="usr-ms-img">
-                    <img src="frontend/image/icons/chat-profile.png" alt="chat-profile" />
+                    <img src="/frontend/image/icons/chat-profile.png" alt="chat-profile" />
                   </div>
                   <div className="usr-mg-info">
                     <div className="user-name">Lorem Ipsum</div>
@@ -152,7 +152,7 @@ export default class Inbox extends Component {
               <a href="#">
                 <div className="usr-msg-details">
                   <div className="usr-ms-img">
-                    <img src="frontend/image/icons/chat-profile.png" alt="chat-profile" />
+                    <img src="/frontend/image/icons/chat-profile.png" alt="chat-profile" />
                     <span className="msg-status" />
                   </div>
                   <div className="usr-mg-info">
