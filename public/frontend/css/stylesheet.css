@@ -685,6 +685,11 @@ background: #428bca;
     max-width: 80%;
     margin: 50px auto 50px;
 }
+.mapspace{
+    padding-top: 400px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
 .booking-form .bookbutton {
     margin-top: 20px;
     display: inline-block;
