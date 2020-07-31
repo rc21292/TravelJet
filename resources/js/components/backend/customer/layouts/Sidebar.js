@@ -53,7 +53,7 @@ function Sidebar() {
 <span>Notification</span></a>
 </li>
 <li className="nav-item">
-<a className="nav-link" href="#">
+<a className="nav-link" href="/logout">
 <span>Logout</span></a>
 </li>
 <hr className="sidebar-divider d-none d-md-block" />

@@ -13,101 +13,157 @@ export default class Inbox extends Component {
   <div className="row">
     <div className="col-sm-9">
       <div className="main-conversation-box">
-        <div className="message-dt">
-          <span> 17 Dec 2019, 1:08 PM</span>
-        </div>
-        <div className="conversation-card">
-          <div className="heading">Lorem Ipsum is simply dummy text</div>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-          <a href="#" className="btn btn-primary btn-block">Create</a>
-        </div>
-        <div className="main-message-box">
+        <div className="main-message-box pull-right">
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Thank you for contact with me. What can I help you.</p>
+            </div>
+          </div>
           <div className="messg-usr-img">
-            <img src="images/chat-img.png" alt="" className="chat-image" />
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
+        </div>
+        <div className="main-message-box chatnow pull-left">
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
           </div>
           <div className="message-dt">
             <div className="message-inner-dt">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             </div>
           </div>
         </div>
-        <div className="message-box">
-          <div className="heading">Lorem ipsum dolor</div>
-          <p>Lorem ipsum: "80% Completion"</p>
-          <span><i className="fa fa-pound-sign" /> 1500.00</span>
+        <div className="main-message-box pull-right">
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+          </div>
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
         </div>
-        <div className="message-box">
-          <div className="heading">Lorem ipsum dolor</div>
-          <p>Lorem ipsum: "80% Completion"</p>
-          <span><i className="fa fa-pound-sign" /> 1500.00</span>
+        <div className="main-message-box chatnow pull-left">
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+          </div>
+        </div>
+        <div className="main-message-box pull-right">
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+          </div>
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
+        </div>
+        <div className="main-message-box chatnow pull-left">
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+          </div>
+        </div>
+        <div className="main-message-box pull-right">
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+          </div>
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
+        </div>
+        <div className="main-message-box chatnow pull-left">
+          <div className="messg-usr-img">
+            <img src="image/icons/chat-profile.png" alt="" className="chat-image" />
+          </div>
+          <div className="message-dt">
+            <div className="message-inner-dt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+          </div>
         </div>
       </div>
       <div className="mf-field">
-        <input type="text" name="message" placeholder="Type a message here" className="form-control" />
+        <textarea name="w3review" rows={4} cols={50} placeholder="Type a message here" className="form-control" defaultValue={""} />
       </div>
-      <div className="pull-right">
+      <div className="pull-right messagesend">
         <a href="#" className="btn btn-primary">Send</a>
       </div>
     </div>
     <div className="col-sm-3">
-      <div className="messages-list">
-        <ul>
-          <li className="active">
-            <a href="#">
-              <div className="usr-msg-details">
-                <div className="usr-ms-img">
-                  <img src="images/chat-profile.png" alt="chat-profile" />
-                  <span className="msg-status" />
-                </div>
-                <div className="usr-mg-info">
-                  <div className="user-name">Lorem Ipsum</div>
-                  <p>Lorem Ipsum...</p>
-                </div>{/*usr-mg-info end*/}
-                <div className="msg-notifc">2</div>
-              </div>{/*usr-msg-details end*/}
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <div className="usr-msg-details">
-                <div className="usr-ms-img">
-                  <img src="images/chat-profile.png" alt="chat-profile" />
-                </div>
-                <div className="usr-mg-info">
-                  <div className="user-name">Lorem Ipsum</div>
-                  <p>Lorem Ipsum...</p>
-                </div>{/*usr-mg-info end*/}
-              </div>{/*usr-msg-details end*/}
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <div className="usr-msg-details">
-                <div className="usr-ms-img">
-                  <img src="images/chat-profile.png" alt="chat-profile" />
-                </div>
-                <div className="usr-mg-info">
-                  <div className="user-name">Lorem Ipsum</div>
-                  <p>Lorem Ipsum is simply...</p>
-                </div>{/*usr-mg-info end*/}
-              </div>{/*usr-msg-details end*/}
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <div className="usr-msg-details">
-                <div className="usr-ms-img">
-                  <img src="images/chat-profile.png" alt="chat-profile" />
-                  <span className="msg-status" />
-                </div>
-                <div className="usr-mg-info">
-                  <div className="user-name">Lorem Ipsum</div>
-                  <p>Lorem Ipsum is simply...</p>
-                </div>{/*usr-mg-info end*/}
-              </div>{/*usr-msg-details end*/}
-            </a>
-          </li>
-        </ul>
+      <div className="chatrightside">
+        <div className="mesg-title">
+          <h2>Inbox</h2>
+        </div>
+        <div className="messages-list">
+          <ul>
+            <li className="active">
+              <a href="#">
+                <div className="usr-msg-details">
+                  <div className="usr-ms-img">
+                    <img src="image/icons/chat-profile.png" alt="chat-profile" />
+                    <span className="msg-status" />
+                  </div>
+                  <div className="usr-mg-info">
+                    <div className="user-name">Lorem Ipsum</div>
+                    <p>Lorem Ipsum...</p>
+                  </div>{/*usr-mg-info end*/}
+                </div>{/*usr-msg-details end*/}
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <div className="usr-msg-details">
+                  <div className="usr-ms-img">
+                    <img src="image/icons/chat-profile.png" alt="chat-profile" />
+                  </div>
+                  <div className="usr-mg-info">
+                    <div className="user-name">Lorem Ipsum</div>
+                    <p>Lorem Ipsum...</p>
+                  </div>{/*usr-mg-info end*/}
+                </div>{/*usr-msg-details end*/}
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <div className="usr-msg-details">
+                  <div className="usr-ms-img">
+                    <img src="image/icons/chat-profile.png" alt="chat-profile" />
+                  </div>
+                  <div className="usr-mg-info">
+                    <div className="user-name">Lorem Ipsum</div>
+                    <p>Lorem Ipsum is simply...</p>
+                  </div>{/*usr-mg-info end*/}
+                </div>{/*usr-msg-details end*/}
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <div className="usr-msg-details">
+                  <div className="usr-ms-img">
+                    <img src="image/icons/chat-profile.png" alt="chat-profile" />
+                    <span className="msg-status" />
+                  </div>
+                  <div className="usr-mg-info">
+                    <div className="user-name">Lorem Ipsum</div>
+                    <p>Lorem Ipsum is simply...</p>
+                  </div>{/*usr-mg-info end*/}
+                </div>{/*usr-msg-details end*/}
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

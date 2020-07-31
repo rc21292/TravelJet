@@ -1547,10 +1547,337 @@ background: #428bca;
 }
 .mf-field {
     position: relative;
+    margin-bottom: 15px;
+    padding-right: 15px;
+}
+.messagesend{
+    padding-right: 15px;
 }
 .mf-field input {
     width: 100%;
     margin-top: 20px;
 }
+.main-message-box {
+    display: flex;
+    padding-right: 30px;
+}
+.message-inner-dt {
+    margin-top: 11px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.chatnow {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.chatrightside {
+    background: #0b1b2f;
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-top: -107px;
+    margin-bottom: -15px;
+    min-height: 100vh;
+}
+.mesg-title h2 {
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 25px;
+}
+.inbox-page .col-sm-3 {
+    padding-left: 0;
+    padding-right: 0;
+}
+.messages-list ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.usr-msg-details {
+    display: flex;
+}
+.messages-list ul li {
+    border-bottom: 1px solid #2c3d52;
+}
+.usr-mg-info {
+    margin: 10px;
+    margin-bottom: 0;
+    color: #fff;
+}
+.usr-ms-img img {
+    margin: 10px;
+}
+.usr-mg-info p {
+    margin-bottom: 0;
+    color: #909090;
+    font-size: 12px;
+}
+.viewquotation h3 {
+    font-size: 20px;
+    color: #111;
+    margin-bottom: 20px;
+}
+.wt-userlistinghold {
+    float: left;
+    width: 100%;
+    padding: 30px;
+    background: #fff;
+    border-radius: 4px;
+}
+.wt-featuredtag {
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    border-right: 40px solid transparent;
+}
+.wt-userlistingimg {
+    width: auto;
+    float: left;
+    border-radius: 4px;
+    max-height: 100px;
+    max-width: 100px;
+    margin: 0 20px 30px 0;
+}
+.wt-userlistingimg img {
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+}
+.wt-userlistingcontent {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.wt-contenthead {
+    float: left;
+    width: auto;
+    max-width: 420px;
+}
+.wt-title {
+    float: left;
+    width: 100%;
+}
+.wt-contenthead .wt-title a {
+    display: inline-flex;
+    color: #323232;
+    margin: 0 0 9px;
+    font: 400 20px/16px 'Poppins', Arial, Helvetica, sans-serif;
+}
+.wt-contenthead .wt-title a i {
+    color: #157af6;
+}
+.wt-contenthead .wt-title h2 {
+    margin: 0;
+    font-weight: 400;
+    margin: 0 0 0px;
+    font-size: 12px;
+    line-height: 22px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.wt-contenthead .wt-title h2 a {
+    font-size: 12px;
+    display: inline-flex;
+    color: #157af6;
+}
+.wt-userlisting-breadcrumb {
+    float: left;
+    width: 100%;
+    line-height: 15px;
+    display: contents;
+}
+.chatbtn{
+    padding:7px 30px;
+}
+.wt-userlisting-breadcrumb li:first-child {
+    padding-left: 0;
+}
+.wt-userlisting-breadcrumb li {
+    width: auto;
+    padding: 0 12px;
+    line-height: inherit;
+    list-style-type: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+.wt-userlisting-breadcrumb li span, .wt-userlisting-breadcrumb li a {
+    display: block;
+    color: #767676;
+    font-size: 13px;
+    line-height: inherit;
+}
+.wt-rightarea {
+    float: right;
+    font-size: 40px;
+    color: #111;
+}
+.wt-rightarea i {
+    font-size: 30px;
+}
+.wt-starsvtwo {
+    display: block;
+    line-height: 16px;
+}
+.wt-starsvtwo i.fill {
+    color: #e5e5e5;
+}
+.wt-starsvtwo i.fill {
+    color: #e5e5e5;
+}
+.wt-description {
+    width: 100%;
+    float: left;
+}
+.wt-userlistinghold .wt-description p {
+    font-size: 14px;
+    line-height: 24px;
+}
+.roundtrip {
+    font-size: 22px;
+    color: #111;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+.wt-description .table>tbody>tr>td{
+    border:none;
+}
+.wt-description .table>tbody>tr>td.bookdetail {
+    font-size: 30px;
+}
+.thead-dark {
+    border: 1px solid #ddd;
+}
+.bookbody {
+    border: 1px solid #ddd;
+    width: 100%;
+    position: relative;
+    z-index: 99999;
+}
+.triproute {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+.bookdetail {
+    font-size: 30px;
+}
+.bookdetail a {
+    font-size: 14px;
+}
+.edit {
+    float: right;
+}
+.booktrip {
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.wizard-inner .nav-tabs {
+    border-bottom: none;
+    justify-content: center;
+    display: block;
+    width: 32%;
+}
+.wizard-inner {
+        position: relative;
+    }
 
+.connecting-line {
+    height: 1px;
+    background: #e5e5e5;
+    position: absolute;
+    width: 24%;
+    left: 32px;
+    right: 47px;
+    top: 50%;
+}
+.wizard .nav-tabs {
+    position: relative;
+    margin: 40px auto;
+    margin-bottom: 0;
+    border-bottom-color: #e0e0e0;
+}
+.wizard-inner .nav-tabs>li>a {
+    border: none;
+    border-radius: 50px;
+    min-width: 0px;
+    height: 10px;
+    padding: 4px 5px;
+    color: #333;
+}
+.wizard-inner .nav-tabs li {
+    padding: 0 25px;
+}
+.triplocation {
+    margin-left: 5px;
+    margin-top: 5px;
+}
+.triplocation li {
+    padding: 0 8px;
+}
+.inclusion .vendor {
+    font-size: 16px;
+    padding-top: 12px;
+}
+.inclusion .booktrip {
+    font-size: 16px;
+    line-height: 26px;
+}
+.inclusion {
+    margin-top: 20px;
+}
+.cabdetail {
+    margin-top: 20px;
+}
+.cabdetail tr td {
+    width: 25%;
+}
+.bookid span {
+    margin-right: 25px;
+}
+.rating {
+    margin-left: 7px;
+}
+.reviews-profile .heading {
+    background: #fc8c14;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.reviews-profile span.fa.fa-star {
+    color: #fc8c14;
+    font-size: 17px;
+}
+.btn-default.focus, .btn-default:focus {
+    color: #333;
+    background-color: #000;
+    border-color: #000;
+}
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none;
+    outline: 0px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+.btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+    color: #333;
+    background-color: #000;
+    border-color: #000;
+}
+.nav.nav-pills {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+.nav-pills>li>a {
+    border-radius: 0px;
+    font-size: 22px;
+    border: 1px solid #ddd;
+    margin-right: -3px;
+}
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: #007bff;
+}
 /******end***************/
