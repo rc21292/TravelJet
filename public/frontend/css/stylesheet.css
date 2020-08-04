@@ -677,6 +677,10 @@ background: #428bca;
     color: #fff;
     margin-top: 0;
 }
+#regiration_form {
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
 .booking-form {
     border-radius: 6px;
     padding: 18px 20px;
