@@ -1,6 +1,78 @@
 import React, { Component, useState, useEffect, Fragment } from 'react';
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Link, Route, useHistory} from 'react-router-dom';
 const Add = () => {
+	 const initialProductState = {
+    id: null,
+    pickupstate: "",
+    destinationstate: "",
+    pickup: "",
+    origin:"",
+    drop:"",
+    depart:"",
+    arrival:"",
+    pickup:"",
+    name:""
+  };
+  const [tutorial, setProduct] = useState(initialProductState);
+  const [submitted, setSubmitted] = useState(false);
+
+  const saveProduct = () => {
+    var data = {
+      pickupstate: tutorial.pickupstate,
+      destinationstate: tutorial.destinationstate,
+      pickup: tutorial.from_places,
+      origin: tutorial.origin,
+      depart: tutorial.depart,
+      arrival: tutorial.arrival,
+      pickup: tutorial.pickup_time,
+      name: tutorial.name
+    };
+
+
+
+axios({
+    method: 'post',
+    url: '/queries/store',
+    data: data,
+    })
+     .then(response => {
+        setProduct({
+          id: response.data.id,
+          pickupstate: response.data.pickupstate,
+          destinationstate: response.data.destinationstate  ,
+          pickup: response.data.pickup,
+          origin: response.data.origin,
+          drop: response.data.drop,
+          depart: response.data.depart,
+          arrival: response.data.arrival,
+          pickup: response.data.pickup,
+          name: response.data.name
+        });
+        setSubmitted(true);
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  const newProduct = () => {
+    setProduct(initialProductState);
+    setSubmitted(false);
+  };
+
+  const handleInputChanges = event => {
+  	console.log(event.target.value)
+    const { name, value } = event.target;
+    setProduct({ ...tutorial, [name]: value });
+  };
+
+
+  const history = useHistory();
+
+  const gotoProducts = () => {
+    history.push('/products')
+  };
 
 			useEffect(()=>{
 
@@ -46,7 +118,7 @@ const Add = () => {
 			};
 
 			const handleRemoveFields = index => {
-
+                e.preventDefault();
 				const values = [...inputFields];
 				values.splice(index, 1);
 				setInputFields(values);
@@ -95,7 +167,14 @@ const Add = () => {
 											<h5>Enter pickup location</h5>
 										</div>
 										<div className="selectAddress">
-											<select className="select-state" placeholder="Pick a state..." id="selectstate">
+											<select
+									              className="select-state"
+									              id="pickupstate"
+									              placeholder="Pick a state..."
+									              required
+									              value={tutorial.selectstate}
+									              onChange={handleInputChanges}
+									              name="pickupstate">
 												<option value="Andhra Pradesh">Pick a state...</option>
 												<option value="Andhra Pradesh">Andhra Pradesh</option>
 												<option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -134,8 +213,24 @@ const Add = () => {
 												<option value="Uttarakhand">Uttarakhand</option>
 												<option value="West Bengal">West Bengal</option>
 											</select>
-											<input className="form-control force-focus startpoint" id="from_places" placeholder="Enter Pick Up Location"/>
-											<input id="origin" name="origin" required="" type="hidden"/>
+											<input
+											  type="text"
+								              className="form-control force-focus startpoint"
+								              id="from_places"
+								              placeholder="Enter Pick Up Location"
+								              required
+								              value={tutorial.from_places || ""}
+								              onChange={handleInputChanges}
+								              name="from_places"/>
+											<input 
+											  type="hidden"
+											  className="form-control"
+											  id="origin" 
+											  name="origin" 
+											  required="" 
+											  value={tutorial.origin || ""}
+								              onChange={handleInputChanges}
+								              />
 
 										</div>
 										<div className="add-stop">
@@ -172,7 +267,14 @@ const Add = () => {
 											<h5>Enter destination location</h5>
 										</div>
 										<div className="selectAddress">
-											<select className="select-state" placeholder="Pick a state...">
+											<select
+									              className="select-state"
+									              id="destinationstate"
+									              placeholder="Pick a state..."
+									              required
+									              value={tutorial.selectdestinationstate}
+									              onChange={handleInputChanges}
+									              name="destinationstate">
 												<option value="Andhra Pradesh">Pick a state...</option>
 												<option value="Andhra Pradesh">Andhra Pradesh</option>
 												<option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -211,7 +313,15 @@ const Add = () => {
 												<option value="Uttarakhand">Uttarakhand</option>
 												<option value="West Bengal">West Bengal</option>
 											</select>
-											<input className="form-control force-focus startpoint" id="to_places" placeholder="Enter Destination"/>
+											<input
+											  type="text"
+								              className="form-control force-focus startpoint"
+								              id="to_places"
+								              placeholder="Enter Destination"
+								              required
+								              value={tutorial.to_places || ""}
+								              onChange={handleInputChanges}
+								              name="to_places"/>
 											<input id="destination" name="destination" required="" type="hidden"/></div>
 										</div>
 									</div>
@@ -254,19 +364,43 @@ const Add = () => {
 							<div className="col-sm-4">
 								<label className="control-label">Depart</label>
 								<div className="form-group book-timing greybg">
-									<input type="date" name="depart" className="form-control" placeholder="Depart" />
+									<input 
+										type="date" 
+										id="depart"
+										name="depart" 
+										className="form-control" 
+										placeholder="Depart"
+										value={tutorial.depart || ""}
+									    onChange={handleInputChanges} 
+									    />
 								</div>
 							</div>
 							<div className="col-sm-4">
 								<label className="control-label">Arrival</label>
 								<div className="form-group book-timing greybg">
-									<input type="date" name="arrival" className="form-control" placeholder="Arrival" />
+									<input 
+									    type="date" 
+										id="arrival"
+										name="arrival" 
+										className="form-control" 
+										placeholder="Arrival"
+										value={tutorial.arrival || ""}
+									    onChange={handleInputChanges}
+									     />
 								</div>
 							</div>
 							<div className="col-sm-4">
 								<label className="control-label">Pickup Time</label>
 								<div className="form-group book-timing greybg">
-									<input type="time" name="arrival" className="form-control" placeholder="Arrival" />
+									<input 
+									    type="time" 
+										id="pickup_time"
+										name="pickup_time" 
+										className="form-control" 
+										placeholder="Pickup Time"
+										value={tutorial.pickup_time || ""}
+									    onChange={handleInputChanges}
+									/>
 								</div>
 							</div>
 						</div>
@@ -283,7 +417,15 @@ const Add = () => {
 				<div className="row">
 					<div className="col-sm-12 col-xs-12">
 						<div className="form-group booking-title">
-							<input type="text" name="booking-location" className="form-control" placeholder="Booking Name" />
+							<input 
+							type="text" 
+							id="name"
+							name="name" 
+							className="form-control" 
+							placeholder="Booking Name" 
+							value={tutorial.name || ""}
+							onChange={handleInputChanges}
+							/>
 						</div>
 					</div>
 				</div>

@@ -102735,6 +102735,10 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -102747,10 +102751,89 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
 var Add = function Add() {
+  var _initialProductState;
+
+  var initialProductState = (_initialProductState = {
+    id: null,
+    pickupstate: "",
+    destinationstate: "",
+    pickup: "",
+    origin: "",
+    drop: "",
+    depart: "",
+    arrival: ""
+  }, _defineProperty(_initialProductState, "pickup", ""), _defineProperty(_initialProductState, "name", ""), _initialProductState);
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(initialProductState),
+      _useState2 = _slicedToArray(_useState, 2),
+      tutorial = _useState2[0],
+      setProduct = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      submitted = _useState4[0],
+      setSubmitted = _useState4[1];
+
+  var saveProduct = function saveProduct() {
+    var _data;
+
+    var data = (_data = {
+      pickupstate: tutorial.pickupstate,
+      destinationstate: tutorial.destinationstate,
+      pickup: tutorial.from_places,
+      origin: tutorial.origin,
+      depart: tutorial.depart,
+      arrival: tutorial.arrival
+    }, _defineProperty(_data, "pickup", tutorial.pickup_time), _defineProperty(_data, "name", tutorial.name), _data);
+    axios({
+      method: 'post',
+      url: '/queries/store',
+      data: data
+    }).then(function (response) {
+      var _setProduct;
+
+      setProduct((_setProduct = {
+        id: response.data.id,
+        pickupstate: response.data.pickupstate,
+        destinationstate: response.data.destinationstate,
+        pickup: response.data.pickup,
+        origin: response.data.origin,
+        drop: response.data.drop,
+        depart: response.data.depart,
+        arrival: response.data.arrival
+      }, _defineProperty(_setProduct, "pickup", response.data.pickup), _defineProperty(_setProduct, "name", response.data.name), _setProduct));
+      setSubmitted(true);
+      console.log(response.data);
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  };
+
+  var newProduct = function newProduct() {
+    setProduct(initialProductState);
+    setSubmitted(false);
+  };
+
+  var handleInputChanges = function handleInputChanges(event) {
+    console.log(event.target.value);
+    var _event$target = event.target,
+        name = _event$target.name,
+        value = _event$target.value;
+    setProduct(_objectSpread(_objectSpread({}, tutorial), {}, _defineProperty({}, name, value)));
+  };
+
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useHistory"])();
+
+  var gotoProducts = function gotoProducts() {
+    history.push('/products');
+  };
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var loadScript = function loadScript(src) {
       var tag = document.createElement('script');
@@ -102764,12 +102847,12 @@ var Add = function Add() {
     loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&callback=initAutocomplete&libraries=places&v=weekly');
   }, []);
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{
     stopage: ''
   }]),
-      _useState2 = _slicedToArray(_useState, 2),
-      inputFields = _useState2[0],
-      setInputFields = _useState2[1];
+      _useState6 = _slicedToArray(_useState5, 2),
+      inputFields = _useState6[0],
+      setInputFields = _useState6[1];
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
@@ -102798,6 +102881,8 @@ var Add = function Add() {
   };
 
   var handleRemoveFields = function handleRemoveFields(index) {
+    e.preventDefault();
+
     var values = _toConsumableArray(inputFields);
 
     values.splice(index, 1);
@@ -102854,8 +102939,12 @@ var Add = function Add() {
     className: "selectAddress"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     className: "select-state",
+    id: "pickupstate",
     placeholder: "Pick a state...",
-    id: "selectstate"
+    required: true,
+    value: tutorial.selectstate,
+    onChange: handleInputChanges,
+    name: "pickupstate"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "Andhra Pradesh"
   }, "Pick a state..."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -102931,14 +103020,22 @@ var Add = function Add() {
   }, "Uttarakhand"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "West Bengal"
   }, "West Bengal")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "text",
     className: "form-control force-focus startpoint",
     id: "from_places",
-    placeholder: "Enter Pick Up Location"
+    placeholder: "Enter Pick Up Location",
+    required: true,
+    value: tutorial.from_places || "",
+    onChange: handleInputChanges,
+    name: "from_places"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "hidden",
+    className: "form-control",
     id: "origin",
     name: "origin",
     required: "",
-    type: "hidden"
+    value: tutorial.origin || "",
+    onChange: handleInputChanges
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "add-stop"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -102993,7 +103090,12 @@ var Add = function Add() {
     className: "selectAddress"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     className: "select-state",
-    placeholder: "Pick a state..."
+    id: "destinationstate",
+    placeholder: "Pick a state...",
+    required: true,
+    value: tutorial.selectdestinationstate,
+    onChange: handleInputChanges,
+    name: "destinationstate"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "Andhra Pradesh"
   }, "Pick a state..."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -103069,9 +103171,14 @@ var Add = function Add() {
   }, "Uttarakhand"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "West Bengal"
   }, "West Bengal")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "text",
     className: "form-control force-focus startpoint",
     id: "to_places",
-    placeholder: "Enter Destination"
+    placeholder: "Enter Destination",
+    required: true,
+    value: tutorial.to_places || "",
+    onChange: handleInputChanges,
+    name: "to_places"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     id: "destination",
     name: "destination",
@@ -103134,9 +103241,12 @@ var Add = function Add() {
     className: "form-group book-timing greybg"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "date",
+    id: "depart",
     name: "depart",
     className: "form-control",
-    placeholder: "Depart"
+    placeholder: "Depart",
+    value: tutorial.depart || "",
+    onChange: handleInputChanges
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-sm-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -103145,9 +103255,12 @@ var Add = function Add() {
     className: "form-group book-timing greybg"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "date",
+    id: "arrival",
     name: "arrival",
     className: "form-control",
-    placeholder: "Arrival"
+    placeholder: "Arrival",
+    value: tutorial.arrival || "",
+    onChange: handleInputChanges
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-sm-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -103156,9 +103269,12 @@ var Add = function Add() {
     className: "form-group book-timing greybg"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "time",
-    name: "arrival",
+    id: "pickup_time",
+    name: "pickup_time",
     className: "form-control",
-    placeholder: "Arrival"
+    placeholder: "Pickup Time",
+    value: tutorial.pickup_time || "",
+    onChange: handleInputChanges
   })))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "clearfix"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -103181,9 +103297,12 @@ var Add = function Add() {
     className: "form-group booking-title"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "text",
-    name: "booking-location",
+    id: "name",
+    name: "name",
     className: "form-control",
-    placeholder: "Booking Name"
+    placeholder: "Booking Name",
+    value: tutorial.name || "",
+    onChange: handleInputChanges
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "clearfix"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
