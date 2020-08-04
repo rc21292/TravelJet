@@ -70,6 +70,7 @@ Route::group(['middleware' => 'App\Http\Middleware\Customer'], function()
 {
 Route::get('/customer', 'HomeController@customer')->name('customerhome');
 Route::get('/query/add', 'HomeController@booknow')->name('booknow');
+Route::get('/query/store', 'Api\QueryController@store')->name('storequery');
 });
 
 Auth::routes();
