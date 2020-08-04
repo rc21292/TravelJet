@@ -50,7 +50,7 @@ const Add = () => {
 				const values = [...inputFields];
 				values.splice(index, 1);
 				setInputFields(values);
-				
+
 			};
       return (
 <div>
@@ -147,7 +147,7 @@ const Add = () => {
 										  { 
 				                index > 0 ?
 											<div className="col-sm-6">
-												<div className="radio custom-radio">
+												<div className="radio custom-radio" style={{position: 'relative'}}>
 													<label htmlFor="stopage">Stopage {index}</label>
 														<input
 															onChange={event => handleInputChange(index, event)}
@@ -157,6 +157,7 @@ const Add = () => {
 															name="stopage"
 															value={inputField.stopage}
 															/>
+															<button onClick={() => handleRemoveFields(index)} id="remove1" class="btn btn-danger remove-me" style={{position: 'absolute',top: '21px', right:'1px'}}><i className="fa fa-minus-circle" /></button>
 												</div>
 											</div>
 											:null

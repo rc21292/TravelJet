@@ -102954,7 +102954,10 @@ var Add = function Add() {
     }, index > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-sm-6"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "radio custom-radio"
+      className: "radio custom-radio",
+      style: {
+        position: 'relative'
+      }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
       htmlFor: "stopage"
     }, "Stopage ", index), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -102966,7 +102969,20 @@ var Add = function Add() {
       id: "stopage",
       name: "stopage",
       value: inputField.stopage
-    }))) : null);
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: function onClick() {
+        return handleRemoveFields(index);
+      },
+      id: "remove1",
+      "class": "btn btn-danger remove-me",
+      style: {
+        position: 'absolute',
+        top: '21px',
+        right: '1px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "fa fa-minus-circle"
+    })))) : null);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "clearfix"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
