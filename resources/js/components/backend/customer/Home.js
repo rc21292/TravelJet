@@ -14,8 +14,7 @@ function Home() {
 	 const [bookingData, setBookingData] = useState([]);  
 
 	useEffect(() => {
-
-
+		
 		let stateqq = localStorage["appState"];
 		// console.log(stateqq);
 		if (stateqq) {

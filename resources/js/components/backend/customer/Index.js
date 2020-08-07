@@ -7,6 +7,7 @@ import Bookings from './bookings/Bookings'
 import Quotations from './quotations/Quotations'
 import Address from './address/Address'
 import Profile from './profile/Profile'
+import ChangePassword from './profile/ChangePassword'
 import Wallet from './wallet/Wallet'
 import Inbox from './inbox/Inbox'
 import Footer from './layouts/Footer'
@@ -33,6 +34,7 @@ class Index extends Component {
                 let userData = {
                     id: json.data.id,
                     name: json.data.name,
+                    gender: json.data.gender,
                     email: json.data.email,
                     phone: json.data.phone,
                     role: json.data.role,
@@ -74,6 +76,9 @@ class Index extends Component {
                                                             </Route>
                                                             <Route path="/customer/personal-information">
                                                                   <Profile/>
+                                                            </Route>
+                                                            <Route path="/customer/change-password">
+                                                                  <ChangePassword/>
                                                             </Route>
                                                             <Route path="/customer/wallet">
                                                                   <Wallet/>

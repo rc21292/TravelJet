@@ -23,6 +23,7 @@ Route::get('/customer/bookings', function () { return view('customer'); });
 Route::get('/customer/quotations', function () { return view('customer'); });
 Route::get('/customer/manage-address', function () { return view('customer'); });
 Route::get('/customer/personal-information', function () { return view('customer'); });
+Route::get('/customer/change-password', function () { return view('customer'); });
 Route::get('/customer/wallet', function () { return view('customer'); });
 Route::get('/customer/inbox', function () { return view('customer'); });
 Route::get('/customer/profile', function () { return view('customer'); });

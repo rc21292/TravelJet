@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Query;
+use App\Booking;
+use DB;
 
 class QueryController extends Controller
 {
@@ -38,6 +40,28 @@ class QueryController extends Controller
      */
     public function store(Request $request)
     {
+        $stopages_data = $request->stopeges;
+
+        unset($stopages_data[0]);
+
+        $data = $request->except(['stopeges']);
+
+        $data_re = Booking::create($data);
+
+        if (isset($stopages_data)) {
+
+            DB::table('bookings')
+            ->where('id', $data_re->id)
+            ->update(['stopeges' => json_encode(array_values($stopages_data))]);
+
+        }
+
+        return response()->json([
+            'success' => true,
+            'addresses' => '',
+            'message' => 'Booking Saved successfully!'
+        ], 201);  
+
         return $request->all();
         // $query = new Query;
         // $query->user_id = '4';

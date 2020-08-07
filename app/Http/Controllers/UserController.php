@@ -276,7 +276,7 @@ class UserController extends Controller
         $user->save();
         
 
-        $user_profile = Profile::select('id')->where('user_id', $id)
+        /*$user_profile = Profile::select('id')->where('user_id', $id)
             ->get()->first();
         if (!empty($user_profile->id)) {
             $profile = Profile::find($user_profile->id);
@@ -308,7 +308,7 @@ class UserController extends Controller
 
 
       
-        $profile->save();
+        $profile->save();*/
         return response()->json('success');
     }
 

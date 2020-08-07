@@ -25,13 +25,23 @@
         }
 
         function setDestination() {
-            var from_places = new google.maps.places.Autocomplete(document.getElementById('from_places'));
-            var to_places = new google.maps.places.Autocomplete(document.getElementById('to_places'));
+
+
+
+            var options = {
+              // types: ['(cities)'],
+               types: ['(regions)'],
+              componentRestrictions: {country: "in"}
+              // componentRestrictions: {locality: "Delhi"},
+          };
+          var from_places = new google.maps.places.Autocomplete(document.getElementById('from_places'), options);
+            var to_places = new google.maps.places.Autocomplete(document.getElementById('to_places'), options);
 
             google.maps.event.addListener(from_places, 'place_changed', function () {
                 var from_place = from_places.getPlace();
                 var from_address = from_place.formatted_address;
                 $('#origin').val(from_address);
+                onPlaceSelected(from_place);
             });
 
             google.maps.event.addListener(to_places, 'place_changed', function () {
@@ -41,6 +51,11 @@
                 submitdestination();
             });
 
+        }
+
+        function onPlaceSelected (Place){
+            console.log(Place.formatted_address);
+            document.getElementById('from_places').setAttribute("data-id", Place.formatted_address);
         }
 
         function displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay) {

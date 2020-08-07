@@ -18,6 +18,10 @@
 				$(".newaddress").css("display", "block");
 				$(".test").css("display", "none");
 			});
+			$(document).on('click','#close-address',function () {
+				$(".newaddress").css("display", "none");
+				$(".test").css("display", "block");
+			})
 		});  
 	</script>
 </body>

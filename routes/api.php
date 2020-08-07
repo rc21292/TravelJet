@@ -26,6 +26,8 @@ Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::post('queries/update/{id}','Api\QueryController@update');
 Route::post('users/update/{id}','UserController@update');
+Route::post('save_address/{id}','AddressController@store');
+Route::get('getAddresses/{id}','AddressController@index');
 Route::get('transaction_history/{id}', 'UserTransactionController@index');
 
 Route::get('/users/getbalance/{id}','UserController@balance');
@@ -34,6 +36,10 @@ Route::get('users/show/{id}','UserController@show');
 Route::get('users/getprofile/{id}','UserController@getProfile');
 Route::post('users/insertImages','UserController@insertImages');
 Route::post('users/insertPortfolioImages','UserController@insertPortfolioImages');
+
+Route::post('change-password/{id}','ChangePasswordController@store');
+
+
 Route::post('settings/saveSettings','SiteManagementController@storeCoinSettings');
 Route::post('settings/saveCommissionSettings','SiteManagementController@storeCommissionSettings');
 Route::get('settings/getSettings','SiteManagementController@getCoinSettings');

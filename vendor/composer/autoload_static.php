@@ -510,6 +510,7 @@ class ComposerStaticInit2cb13dcbee870842a54a6d047905ad07
     );
 
     public static $classMap = array (
+        'App\\Address' => __DIR__ . '/../..' . '/app/Address.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Helper' => __DIR__ . '/../..' . '/app/Helper.php',
@@ -520,10 +521,12 @@ class ComposerStaticInit2cb13dcbee870842a54a6d047905ad07
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
         'App\\Http\\Controllers\\Auth\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ResetPasswordController.php',
         'App\\Http\\Controllers\\Auth\\VerificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerificationController.php',
+        'App\\Http\\Controllers\\ChangePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangePasswordController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\NoticeController' => __DIR__ . '/../..' . '/app/Http/Controllers/NoticeController.php',
         'App\\Http\\Controllers\\PublicController' => __DIR__ . '/../..' . '/app/Http/Controllers/PublicController.php',
+        'App\\Http\\Controllers\\SiteManagementController' => __DIR__ . '/../..' . '/app/Http/Controllers/SiteManagementController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
         'App\\Http\\Controllers\\UserTransactionController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserTransactionController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
@@ -546,6 +549,7 @@ class ComposerStaticInit2cb13dcbee870842a54a6d047905ad07
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Query' => __DIR__ . '/../..' . '/app/Query.php',
+        'App\\Rules\\MatchOldPassword' => __DIR__ . '/../..' . '/app/Rules/MatchOldPassword.php',
         'App\\SiteManagement' => __DIR__ . '/../..' . '/app/SiteManagement.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\UserTransaction' => __DIR__ . '/../..' . '/app/UserTransaction.php',

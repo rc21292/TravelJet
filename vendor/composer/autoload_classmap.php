@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Address' => $baseDir . '/app/Address.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Helper' => $baseDir . '/app/Helper.php',
@@ -16,10 +17,12 @@ return array(
     'App\\Http\\Controllers\\Auth\\RegisterController' => $baseDir . '/app/Http/Controllers/Auth/RegisterController.php',
     'App\\Http\\Controllers\\Auth\\ResetPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ResetPasswordController.php',
     'App\\Http\\Controllers\\Auth\\VerificationController' => $baseDir . '/app/Http/Controllers/Auth/VerificationController.php',
+    'App\\Http\\Controllers\\ChangePasswordController' => $baseDir . '/app/Http/Controllers/ChangePasswordController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\NoticeController' => $baseDir . '/app/Http/Controllers/NoticeController.php',
     'App\\Http\\Controllers\\PublicController' => $baseDir . '/app/Http/Controllers/PublicController.php',
+    'App\\Http\\Controllers\\SiteManagementController' => $baseDir . '/app/Http/Controllers/SiteManagementController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',
     'App\\Http\\Controllers\\UserTransactionController' => $baseDir . '/app/Http/Controllers/UserTransactionController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
@@ -42,6 +45,7 @@ return array(
     'App\\Providers\\EventServiceProvider' => $baseDir . '/app/Providers/EventServiceProvider.php',
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'App\\Query' => $baseDir . '/app/Query.php',
+    'App\\Rules\\MatchOldPassword' => $baseDir . '/app/Rules/MatchOldPassword.php',
     'App\\SiteManagement' => $baseDir . '/app/SiteManagement.php',
     'App\\User' => $baseDir . '/app/User.php',
     'App\\UserTransaction' => $baseDir . '/app/UserTransaction.php',
