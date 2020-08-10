@@ -28,6 +28,8 @@
         "moment": "^2.27.0",
         "react-flash-message": "^1.0.2",
         "react-js-pagination": "^3.0.3",
+        "react-load-script": "0.0.6",
+        "react-moment": "^0.9.7",
         "react-router-dom": "^5.2.0"
     }
 }

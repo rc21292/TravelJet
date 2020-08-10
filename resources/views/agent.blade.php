@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    @include('layouts.back-head')
+	<head>
+	@include('layouts.front-head')
+	@section('fronthead')
+
+	@endsection
 </head>
 <body class="ms-body ms-aside-left-open ms-primary-theme ">
 

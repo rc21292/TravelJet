@@ -42,6 +42,10 @@ const Add = () => {
 	const [clickedInfant, setClickedInfant] = useState(0);
 	const [inputFields, setInputFields] = useState([{ stopage: ''}]);
 
+	const [isUpdated, setIsUpdated] = useState(false);
+	const [errors, setErrors] = useState({});
+	const [isErrors, setIsErrors] = useState(0);
+
 	useEffect(()=>{
 		let stateqq = localStorage["appState"];
 		if (stateqq) {
@@ -59,6 +63,8 @@ const Add = () => {
 		loadScript('/frontend/js/main/map.js')
 		loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&callback=initAutocomplete&libraries=places&v=weekly')
 	},[])
+
+
 
 
 
@@ -108,6 +114,20 @@ const Add = () => {
 			setProduct({ ...products, in_city: 1 });
 		}else{
 			setProduct({ ...products, in_city: 0 });
+		}
+	}
+
+	const validateStep1 = event => {
+
+		event.preventDefault();
+		let errors = {};
+		let formIsValid = true;
+
+		if ((products.pickupstate === '') || (!products.pickupstate)) {  
+			formIsValid = false;
+			errors["pickupstate"] = "*Please Select State.";
+			setErrors(errors);
+			setIsErrors(1);
 		}
 	}
 
@@ -173,6 +193,8 @@ const Add = () => {
 
 	};
 
+	console.log(errors);
+
     return (
 		<div>
 			<div className="booking-banner">
@@ -219,11 +241,9 @@ const Add = () => {
 											              className="select-state"
 											              id="pickupstate"
 											              placeholder="Pick a state..."
-											              required
-											              value={products.selectstate}
 											              onChange={handleInputChanges}
 											              name="pickupstate">
-														<option value="Andhra Pradesh">Pick a state...</option>
+														<option value="">Pick a state...</option>
 														<option value="Andhra Pradesh">Andhra Pradesh</option>
 														<option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
 														<option value="Arunachal Pradesh">Arunachal Pradesh</option>
@@ -261,6 +281,7 @@ const Add = () => {
 														<option value="Uttarakhand">Uttarakhand</option>
 														<option value="West Bengal">West Bengal</option>
 													</select>
+													<div style={{ color: "red" }} className="errorMsg"></div>
 													<input
 													  type="text"
 										              className="form-control force-focus startpoint"
@@ -393,7 +414,8 @@ const Add = () => {
 							</div>
 						</div>
 						<div className="clearfix" />
-						<input type="button" name="password" className="next btn btn-success" defaultValue="Next" />
+						<input type="hidden" id="isErrors" value={isErrors} />
+						<input type="button" name="password" onClick={validateStep1} className="next btn btn-success" defaultValue="Next" />
 					</fieldset>
 					<fieldset>
 						<div className="field-title">

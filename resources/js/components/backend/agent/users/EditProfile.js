@@ -131,7 +131,7 @@ class EditProfile extends Component {
 
         // window.location.reload(false);
 
-        // this.props.history.push("/agent/profile/edit");
+        // this.props.history.push("/customer/profile/edit");
 
         // window.location.reload(false);
       }

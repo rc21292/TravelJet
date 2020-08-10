@@ -29,7 +29,7 @@ function Profile() {
 	},[]); 
 
 	 const handleClick = () => {  
-        history.push('/agent/profile/edit')   
+        history.push('/customer/profile/edit')   
   };  
 
 	return (

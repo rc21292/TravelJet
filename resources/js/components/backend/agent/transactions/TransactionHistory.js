@@ -15,6 +15,9 @@ function TransactionHistory(props) {
   const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
+  const [fromCount, setFromCount] = useState(1);  
+  const [toCount, setToCount] = useState(1);  
+  const [totalPages, setTotalPages] = useState(1);  
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
   const [searchTransactionType, setSearchTransactionType] = useState("");
   const [searchDateFrom, setSearchDateFrom] = useState("");
@@ -30,6 +33,9 @@ function TransactionHistory(props) {
       setBookingData(result.data.user_transactions.data);  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
+      setFromCount(result.data.user_transactions.from);  
+      setToCount(result.data.user_transactions.to);  
+      setTotalPages(result.data.user_transactions.last_page);  
       setActivePage(result.data.user_transactions.current_page);
     });
       }   
@@ -38,12 +44,15 @@ function TransactionHistory(props) {
 
 
   const handlePageChange = (pageNumber) => {
-  axios.get('/api/transaction_history/'+user.id+'?page='+pageNumber)
+  axios.get('/api/transaction_history/'+user.id+'?transation_type='+searchTransactionType+'&from_date='+searchDateFrom+'&to_date='+searchDateTo+'&page='+pageNumber)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
+      setFromCount(result.data.user_transactions.from);  
+      setToCount(result.data.user_transactions.to);  
+      setTotalPages(result.data.user_transactions.last_page);  
   });
 }
 
@@ -80,6 +89,9 @@ const onChangeSearchTransactionType = e => {
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
+      setFromCount(result.data.user_transactions.from);  
+      setToCount(result.data.user_transactions.to);  
+      setTotalPages(result.data.user_transactions.last_page);  
      
   }); 
 
@@ -92,6 +104,9 @@ const onChangeSearchTransactionType = e => {
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
+      setFromCount(result.data.user_transactions.from);  
+      setToCount(result.data.user_transactions.to);  
+      setTotalPages(result.data.user_transactions.last_page);  
     })
     .catch(e => {
       console.log(e);
@@ -105,52 +120,67 @@ const onChangeSearchTransactionType = e => {
   };  
   
   return (  
-    <div className="ms-content-wrapper">
-                 <div className="row">
-                    <div className="col-md-2">
-                        <select className="form-control" value={searchTransactionType} onChange={onChangeSearchTransactionType}>
-                            <option value="deposit">Deposit</option>
-                            <option value="withdraw">Withdraw</option>
-                        </select>
-                    </div>
-                    <div className="col-md-3">
-                        <input type="date" name="date_from" className="form-control" placeholder="Search by date from" value={searchDateFrom} onChange={onChangeSearchDateFrom}  />
-                    </div>
-                    <div className="col-md-3">
-                        <input type="date" name="date_to" className="form-control" placeholder="Search by date from" value={searchDateTo} onChange={onChangeSearchDateTo}  />
-                    </div>
-                    <div className="col-md-4" style={{ marginTop:'-19px'}}>
-                    <button type="button" onClick={findByFilter} className="btn btn-pill btn-gradient-success">Filter</button>
-                    <button type="button" onClick={resetFilter} className="btn btn-pill btn-gradient-danger">Reset Filter</button>
-                   </div>
+   <div className="transactionhistory">
+        {/* Page Heading */}
+        <h1>Transaction History</h1>
+        <div className="row">
+          <div className="col-sm-8">
+            <div className="informationform">
+              <div className="row">
+                <div className="col-sm-4">
+                  <div className="form-group">
+                  <select className="form-control" name="transation_type" value={searchTransactionType} onChange={onChangeSearchTransactionType}>
+                    <option value="deposit">Deposit</option>
+                    <option value="withdraw">Withdraw</option>
+                  </select>
+                  </div>
                 </div>
-                <br></br>
-                    <div className="table-responsive">  
-                      <table className="table table-hover table-striped">
-                        <thead>  
-                            <tr>  
-                                <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Transaction Type</th>
-                                <th scope="col">Transaction Description</th>
-                                <th scope="col">Amount</th>
-                            </tr>  
-                        </thead>  
-                        <tbody>  
-                            {  
-                                bookingData.map((query, idx) => {  
-                                return  <tr key={idx}>
-                                    <td scope="row">{query.id}</td>
-                                    <td>{query.created_on}</td>
-                                    <td>{query.type}</td>  
-                                    <td dangerouslySetInnerHTML={{__html: query.description}} ></td>
-                                    <td>Rs. {query.amount}</td>
-                                </tr>  
-                            })}  
-                        </tbody>  
-                    </table> 
-                    <div className="d-flex justify-content-center">
-                        <Pagination
+                <div className="col-sm-4">
+                  <input type="date" name="from_date" className="form-control" defaultValue="date" value={searchDateFrom} onChange={onChangeSearchDateFrom}/> 
+                </div>
+                <div className="col-sm-4">
+                  <input type="date" name="to_date" className="form-control" defaultValue="date" value={searchDateTo} onChange={onChangeSearchDateTo}/>
+                </div>    
+              </div>
+            </div>
+          </div>  
+          <div className="col-sm-4">
+            <div className="transaction-show">
+              <ul className="list-inline">
+                <li><a onClick={findByFilter} className="btn btn-primary">Filter</a></li>
+                <li><a href="#" className="btn btn-light">Export</a></li>
+                <li><a onClick={resetFilter} className="btn btn-primary">Reset</a></li>
+              </ul>
+            </div>
+          </div>  
+        </div>
+        <div className="row">
+          <div className="col-sm-12">
+            <table className="table table-bordered leadstatus">
+              <thead className="thead-secondary">
+                <tr>
+                  <th scope="col" className="bd">Date</th>
+                  <th scope="col">Transaction Type</th>
+                  <th scope="col">Transaction</th>
+                  <th scope="col">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+               {
+                bookingData.map((query, idx) => {  
+                return  <tr key={idx}>
+                  <td>{query.created_on}</td>
+                  <td>{query.type}</td>
+                  <td dangerouslySetInnerHTML={{__html: query.description}} ></td>
+                  <td><i className="fa fa-inr" /> {query.amount}</td>
+                </tr>
+                })}  
+              </tbody>
+            </table>
+          </div>
+          <div className="clearfix" />
+          <div className="col-sm-6" style={{ marginTop:'-20px' }}>
+             <Pagination 
                         activePage={activePage}
                         itemsCountPerPage={itemsCountPerPage}
                         totalItemsCount={totalItemsCount}
@@ -164,11 +194,15 @@ const onChangeSearchTransactionType = e => {
                         firstPageText="First"
 
                         />
-                    </div> 
-                    </div>
-                    
-              
-</div>  
+
+          </div>
+          <div className="col-sm-6">
+            <div className="showingpage">
+              <p>Showing {fromCount} to {toCount} of {totalItemsCount} ({totalPages} Pages)</p>
+            </div>
+          </div>
+        </div>
+      </div>
   )  
 }  
   

@@ -18,6 +18,8 @@ Route::get('/', function () { return view('welcome'); });
 Route::get('/CompanyInfo', function () { return view('welcome'); });
 Route::get('/DriveWithUs', function () { return view('welcome'); });
 Route::get('/HowitWorks', function () { return view('welcome'); });
+Route::get('/browse-bookings', function () { return view('welcome'); });
+Route::get('/booking-details', function () { return view('welcome'); });
 Route::get('/customer/transactions', function () { return view('customer'); });
 Route::get('/customer/bookings', function () { return view('customer'); });
 Route::get('/customer/quotations', function () { return view('customer'); });
@@ -28,6 +30,7 @@ Route::get('/customer/wallet', function () { return view('customer'); });
 Route::get('/customer/inbox', function () { return view('customer'); });
 Route::get('/customer/profile', function () { return view('customer'); });
 Route::get('/customer/notifications', function () { return view('customer'); });
+Route::get('/agent/portfolio', function () { return view('agent'); });
 Route::get('/customer/profile/edit', function () { return view('customer'); });
 
 
@@ -48,9 +51,30 @@ Route::get('/agent/bookings', function () { return view('agent'); });
 Route::get('/agent/users', function () { return view('agent'); });
 Route::get('/agent/user/{id}', function () { return view('agent'); });
 Route::get('/agent/wallet', function () { return view('agent'); });
+Route::get('/agent/payouts', function () { return view('agent'); });
+Route::get('/agent/credits', function () { return view('agent'); });
+Route::get('/agent/invoices', function () { return view('agent'); });
 Route::get('/agent/profile', function () { return view('agent'); });
 Route::get('/agent/notifications', function () { return view('agent'); }	);
 Route::get('/agent/profile/edit', function () { return view('agent'); });
+Route::get('/agent/browse-bookings', function () { return view('agent'); });
+
+
+
+Route::get('/agent/transactions', function () { return view('agent'); });
+Route::get('/agent/bookings', function () { return view('agent'); });
+Route::get('/agent/quotations', function () { return view('agent'); });
+Route::get('/agent/manage-address', function () { return view('agent'); });
+Route::get('/agent/personal-information', function () { return view('agent'); });
+Route::get('/agent/personal-information/edit', function () { return view('agent'); });
+Route::get('/agent/change-password', function () { return view('agent'); });
+Route::get('/agent/wallet', function () { return view('agent'); });
+Route::get('/agent/leads', function () { return view('agent'); });
+Route::get('/agent/inbox', function () { return view('agent'); });
+Route::get('/agent/profile', function () { return view('agent'); });
+Route::get('/agent/notifications', function () { return view('agent'); });
+Route::get('/agent/profile/edit', function () { return view('agent'); });
+
 
 
 
@@ -71,6 +95,7 @@ Route::group(['middleware' => 'App\Http\Middleware\Customer'], function()
 {
 Route::get('/customer', 'HomeController@customer')->name('customerhome');
 Route::get('/query/add', 'HomeController@booknow')->name('booknow');
+Route::get('/query/addgoogle', 'HomeController@booknow')->name('booknow');
 Route::get('/query/store', 'Api\QueryController@store')->name('storequery');
 });
 

@@ -3,95 +3,83 @@ import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 import Home from '../Home';
 
 function Sidebar() {
-return (
-  <div>{/* Sidebar Navigation Left */}
-<aside id="ms-side-nav" className="side-nav fixed ms-aside-scrollable ms-aside-left">
-  {/* Logo */}
-  <div className="logo-sn ms-d-block-lg">
-    <a className="pl-0 ml-0 text-center" href="/"> <img src="https://via.placeholder.com/216x62" alt="logo" /> </a>
-  </div>
-  {/* Navigation */}
-  <ul className="accordion ms-main-aside fs-14" id="side-nav-accordion">
-    {/* Dashboard */}
-    <li className="menu-item">
-      <a href="#" className="has-chevron" data-toggle="collapse" data-target="#dashboard" aria-expanded="false" aria-controls="dashboard">
-        <span><i className="material-icons fs-16">dashboard</i>Dashboard </span>
-      </a>
-      <ul id="dashboard" className="collapse" aria-labelledby="dashboard" data-parent="#side-nav-accordion">
-        <li> <a href="/agent">Dashboard</a> </li>
-      </ul>
-    </li>
-    {/* /Dashboard */}
-   
-    {/* Transaction */}
-    <li className="menu-item">
-    <a href={'/agent/bookings'}>
-        <span><i className="fa fa-ticket" aria-hidden="true"></i>Bookings</span>
-      </a>
-    </li>
-
-     <li className="menu-item">
-    <a href={'/agent/quotation'}>
-        <span><i className="fa fa-ticket" aria-hidden="true"></i>Quotation</span>
-      </a>
-    </li>
-
-    <li className="menu-item">
-    <a href={'/agent/payout'}>
-        <span><i className="fa fa-ticket" aria-hidden="true"></i>Payout</span>
-      </a>
-    </li>
-
-    <li className="menu-item">
-    <a href={'/agent/transactions'}>
-        <span><i className="fas fa-dollar-sign" />Transaction History</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/agent/wallet'}>
-        <span><i className="fas fa-dollar-sign" />Wallet</span>
-      </a>
-    </li>
-
-    <li className="menu-item">
-    <a href={'/agent/invoice'}>
-        <span><i className="fas fa-dollar-sign" />Invoice</span>
-      </a>
-    </li>
-
-    <li className="menu-item">
-    <a href={'/agent/point'}>
-        <span><i className="fas fa-dollar-sign" />Point</span>
-      </a>
-    </li>
-
-    <li className="menu-item">
-    <a href={'/agent/notifications'}>
-        <span><i className="fa fa-bell" aria-hidden="true"></i>Notifications</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/agent/profile'}>
-        <span><i className="fa fa-user" aria-hidden="true"></i>Profile</span>
-      </a>
-    </li>
-     <li className="menu-item">
-    <a href={'/agent/setting'}>
-        <span><i className="fa fa-user" aria-hidden="true"></i>Settings</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href="/logout">
-        <span><i className="flaticon-shut-down mr-2"></i>Logout</span>
-      </a>
-    </li>
-    {/* /Pricing */}
-    </ul>
-</aside>
-{/* Sidebar Right */}
-
+  return (
+  <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+{/* Sidebar - Brand */}
+<a className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+<div className="sidebar-brand-icon">
+<img src="/frontend/image/icons/user.png" alt="user" />
 </div>
-  );
+<div className="sidebar-brand-text mx-3">Hello</div>
+</a>
+{/* Divider */}
+<hr className="sidebar-divider my-0" />
+{/* Nav Item - Pages Collapse Menu */}
+
+<li className="nav-item active">
+	<a className="nav-link" href="/agent">
+  	<span>Dashboard</span></a>
+</li>
+{/* Nav Item - Utilities Collapse Menu */}
+<li className="nav-item">
+<a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+<span>Account Setting</span>
+</a>
+<div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+<div className="bg-white py-2 collapse-inner rounded">
+<a className="collapse-item" href="/agent/personal-information">Profile Information</a>
+<a className="collapse-item" href="/agent/portfolio">portfolio</a>
+</div>
+</div>
+</li>
+<li className="nav-item">
+<a className="nav-link active" href="/agent/leads">
+<span>My Leads</span></a>
+</li>
+<li className="nav-item">
+<a className="nav-link" href="/agent/transactions">
+<span>Transaction History</span></a>
+</li>
+
+{/* Nav Item - Charts */}
+<li className="nav-item">
+<a className="nav-link" href="/agent/wallet">
+<span>My Wallet</span></a>
+</li>
+{/* Nav Item - Tables */}
+
+
+<li className="nav-item">
+        <a className="nav-link" href="/agent/payouts">
+          <span>Payout</span></a>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" href="/agent/credits">
+          <span>Credits</span></a>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" href="/agent/invoices">
+          <span>Invoices</span></a>
+      </li>
+
+<li className="nav-item">
+<a className="nav-link" href="/agent/inbox">
+<span>Inbox</span></a>
+</li>
+<li className="nav-item">
+<a className="nav-link" href="/agent/notifications">
+<span>Notification</span></a>
+</li>
+
+<li className="nav-item">
+<a className="nav-link" href="/logout">
+<span>Logout</span></a>
+</li>
+<hr className="sidebar-divider d-none d-md-block" />
+</ul>
+
+
+);
 }
 
 

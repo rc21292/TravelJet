@@ -30,6 +30,8 @@ Route::post('save_address/{id}','AddressController@store');
 Route::get('getAddresses/{id}','AddressController@index');
 Route::get('transaction_history/{id}', 'UserTransactionController@index');
 
+Route::get('payouts/{id}', 'PayoutController@index');
+
 Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');
 Route::get('users/show/{id}','UserController@show');

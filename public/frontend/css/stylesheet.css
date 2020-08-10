@@ -677,10 +677,6 @@ background: #428bca;
     color: #fff;
     margin-top: 0;
 }
-#regiration_form {
-    padding-top: 20px;
-    padding-bottom: 50px;
-}
 .booking-form {
     border-radius: 6px;
     padding: 18px 20px;
@@ -688,11 +684,6 @@ background: #428bca;
     box-shadow: 0 1px 8px 0 rgba(0,0,0,0.12), 0 1px 4px 0 rgba(0,0,0,0.06);
     max-width: 80%;
     margin: 50px auto 50px;
-}
-.mapspace{
-    padding-top: 400px;
-    margin-top: 40px;
-    margin-bottom: 20px;
 }
 .booking-form .bookbutton {
     margin-top: 20px;
@@ -1363,7 +1354,7 @@ background: #428bca;
 }
 #content-wrapper {
     width: 75%;
-    background-color: #e5e5e5;
+    background-color: #f1f1f1;
     margin: 15px;
     padding: 15px;
 }
@@ -1391,15 +1382,26 @@ background: #428bca;
 .information-page h3{
     color: #111;
     margin-bottom: 25px;
-    font-size: 24px;
+    font-size: 16px;
 }
-.information-page h3 a{
-    font-size: 17px;
+.information-page h3 a {
+    font-size: 16px;
+    color: #007bff;
 }
 .quotation-page .booking .iconview a{
     color: #888;
     font-size: 15px;
-    padding: 0 4px;
+}
+.quotation-page .booking .iconview a.btn-danger {
+    color: #fff !important;
+    background-color: #f30a03;
+    border-color: #f30a03;
+    border-radius: 2px;
+    padding: 2px 7px;
+}
+.quotation-page .booking .iconview a.btn-primary {
+    padding: 4px 7px;
+    font-size: 12px;
 }
 .informationform .padding-left {
     padding-left: 0;
@@ -1532,7 +1534,7 @@ background: #428bca;
     font-size: 26px;
 }
 .main-conversation-box {
-    height: 350px;
+    height: 400px;
     width: 100%;
     overflow-y: scroll;
 }
@@ -1558,6 +1560,7 @@ background: #428bca;
     position: relative;
     margin-bottom: 15px;
     padding-right: 15px;
+    margin-top: 40px;
 }
 .messagesend{
     padding-right: 15px;
@@ -1670,9 +1673,9 @@ background: #428bca;
 }
 .wt-contenthead .wt-title a {
     display: inline-flex;
-    color: #323232;
+    color: #111;
     margin: 0 0 9px;
-    font: 400 20px/16px 'Poppins', Arial, Helvetica, sans-serif;
+    font: 600 20px/16px 'Poppins', Arial, Helvetica, sans-serif;
 }
 .wt-contenthead .wt-title a i {
     color: #157af6;
@@ -1698,6 +1701,13 @@ background: #428bca;
     line-height: 15px;
     display: contents;
 }
+.awardbookig {
+    float: right;
+    line-height: 15px;
+    display: inline;
+    margin-top: 10px;
+    width: auto;
+}
 .chatbtn{
     padding:7px 30px;
 }
@@ -1706,17 +1716,19 @@ background: #428bca;
 }
 .wt-userlisting-breadcrumb li {
     width: auto;
-    padding: 0 12px;
     line-height: inherit;
     list-style-type: none;
     display: inline-block;
     vertical-align: middle;
+    padding-left: 12px;
 }
 .wt-userlisting-breadcrumb li span, .wt-userlisting-breadcrumb li a {
     display: block;
-    color: #767676;
-    font-size: 13px;
+    color: #808080;
+    font-size: 10px;
     line-height: inherit;
+    font-family: 'Montserrat';
+    font-weight: 500;
 }
 .wt-rightarea {
     float: right;
@@ -1745,16 +1757,19 @@ background: #428bca;
     line-height: 24px;
 }
 .roundtrip {
-    font-size: 22px;
+    font-size: 24px;
     color: #111;
     padding-top: 10px;
     padding-bottom: 15px;
+    font-weight: bold;
 }
 .wt-description .table>tbody>tr>td{
     border:none;
 }
 .wt-description .table>tbody>tr>td.bookdetail {
-    font-size: 30px;
+    font-size: 20px;
+    color: #111;
+    font-weight: 600;
 }
 .thead-dark {
     border: 1px solid #ddd;
@@ -1770,7 +1785,9 @@ background: #428bca;
     padding: 10px;
 }
 .bookdetail {
-    font-size: 30px;
+    font-size: 20px;
+    color: #111;
+    font-weight: 600;
 }
 .bookdetail a {
     font-size: 14px;
@@ -1881,12 +1898,1160 @@ background: #428bca;
 }
 .nav-pills>li>a {
     border-radius: 0px;
-    font-size: 22px;
+    font-size: 20px;
     border: 1px solid #ddd;
     margin-right: -3px;
+    color: #000;
+    padding: 5px 30px;
 }
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
     color: #fff;
     background-color: #007bff;
 }
+.nav-pills>li.active>a span {
+    font-size: 10px;
+    color: #ddd;
+    display: flex;
+}
+.nav-pills>li>a span {
+    color: #111;
+    display: flex;
+    font-size: 10px;
+}
+.nav-pills>li>a span b {
+    font-size: 14px;
+    color: #000;
+}
+.wt-rightarea span {
+    display: block;
+    font-size: 18px;
+    color: #808080;
+    margin-top: -10px;
+}
+.wt-rightarea {
+    float: right;
+    font-size: 38px;
+    color: #111;
+    text-align: right;
+}
+.bookid a {
+    font-size: 13px;
+}
+.wt-rightarea a span {
+    text-align: left;
+    margin-bottom: -15px;
+    color: #1ba20b;
+    font-size: 18px;
+    margin-top: -5px;
+}
+.btn-info {
+    color: #fff !important;
+    background-color: #fc8c14;
+    border-color: #fc8c14;
+    padding: 7px 13px;
+    border-radius: 2px;
+}
+.btn-info:hover {
+    color: #fff;
+    background-color: #f59937;
+    border-color: #f59937;
+}
+.editbooking .col-sm-12 {
+    padding-left: 0;
+    padding-right: 0;
+}
+.editbooking .panelHeader h5 {
+    font-size: 18px;
+    color: #000;
+    margin-top: 0;
+}
+.editbooking .seater {
+    margin-left: 15px;
+}
+.editbooking {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: table;
+}
+.savebtn {
+    text-align: left;
+}
+.edittrip {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 20px;
+}
+.edittrip .book-locationPanel {
+    margin-top: 15px;
+}
+.viewprofile .wt-contenthead {
+    max-width: 500px;
+}
+.viewprofile .roundtrip {
+    font-size: 16px;
+    padding-bottom: 5px;
+    padding-top: 0;
+}
+.viewprofile .rating {
+    margin-left: 0;
+    margin-bottom: 10px;
+
+}
+.viewprofile .wt-contenthead a {
+    color: #0fe00f;
+}
+.viewprofile .wt-contenthead a span {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    background: #05ce05;
+    border-radius: 50%;
+    margin-right: 2px;
+}
+.viewprofile .wt-contenthead a .username {
+    font-size: 30px;
+    color: green;
+    font-weight: 600;
+    margin-top: 10px;
+}
+.viewprofile .country {
+    margin-bottom: 10px;
+}
+.viewprofile .wt-rightarea {
+    float: right;
+    padding-top: 20px;
+}
+.viewprofile .wt-starsvtwo {
+    display: block;
+    line-height: 16px;
+    text-align: center;
+}
+.viewprofile .wt-starsvtwo i.fill {
+    color: #e5e5e5;
+    font-size: 16px;
+    text-align: center;
+}
+.viewprofile .wt-starcontent {
+    display: block;
+    color: #323232;
+    margin: 8px 0 0;
+    font-size: 20px;
+    text-align: center;
+}
+.viewprofile .wt-starcontent em {
+    font-style: normal;
+    color: #55acee;
+    display: block;
+    font-size: 13px;
+}
+.viewprofile .wt-starcontent sub {
+    color: #767676;
+}
+.subtitle {
+    font-size: 22px;
+    color: #000;
+}
+hr {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+.about {
+    margin-bottom: 20px;
+}
+.portfolio {
+    margin-bottom: 20px;
+}
+.clienttestimonial {
+    margin-top: 20px;
+}
+/*********testimonials**********/
+.clienttestimonial .carousel-indicators .active {
+  background: #31708f;
+}
+
+.clienttestimonial .content {
+  margin-top: 20px;
+}
+
+.clienttestimonial .adjust1 {
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.clienttestimonial .adjust2 {
+  margin: 0;
+}
+
+.clienttestimonial .carousel-indicators li {
+  border: 1px solid #ccc;
+}
+.clienttestimonial .wt-rightarea {
+    padding-top: 0px;
+    font-size: 24px;
+}
+.clienttestimonial .wt-userlistinghold{
+    padding:15px;
+}
+.clienttestimonial .wt-rightarea i{
+    padding-top: 0px;
+    font-size: 24px;
+}
+.clienttestimonial .wt-contenthead {
+    max-width: 500px;
+    text-align: left;
+}
+.clienttestimonial .col-sm-6 {
+    padding-left: 0;
+}
+.clienttestimonial .destination {
+    font-size: 22px;
+    color: #ddd;
+}
+.clienttestimonial .destination p{
+    font-size: 17px;
+    color: #000;
+}
+.clienttestimonial .date {
+    font-size: 22px;
+    color: #ddd;
+}
+.clienttestimonial .date p{
+    font-size: 17px;
+    color: #000;
+}
+.clienttestimonial .wt-userlistingcontent{
+    margin-bottom: 0px;
+}
+.clienttestimonial .wt-description p {
+    text-align: left;
+    padding-left: 70px;
+}
+.clienttestimonial .carousel-control {
+  color: #31708f;
+  width: 5%;
+}
+
+.clienttestimonial .carousel-control:hover,
+.carousel-control:focus {
+  color: #31708f;
+}
+
+.clienttestimonial .carousel-control.left,
+.carousel-control.right {
+  background-image: none;
+}
+.clienttestimonial .carousel-indicators{
+    display: none;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #fff;
+    opacity: 1;
+}
 /******end***************/
+/********BrowsebookingvenderCSS*****/
+.bookingvenderlist {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.wt-widget {
+    float: left;
+    width: 100%;
+    padding: 15px;
+    margin: 0 0 30px;
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+.wt-widgettitle {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.wt-widgetcontent {
+    float: left;
+    width: 100%;
+}
+.wt-formtheme {
+    width: 100%;
+    float: left;
+}
+.wt-formtheme fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    float: left;
+    position: relative;
+}
+.wt-formsearch > fieldset > .form-group {
+    margin: 0 0 30px;
+}
+.wt-formsearch fieldset .wt-checkboxholder {
+    max-height: 150px;
+}
+.wt-checkboxholder .wt-radio, .wt-checkboxholder .wt-checkbox {
+    margin: 0 0 15px;
+}
+.wt-radio, .wt-radio label, .wt-checkbox, .wt-checkbox label {
+    margin: 0;
+    width: 100%;
+    float: left;
+    position: relative;
+    display: flex;
+    margin-left: 10px;
+}
+.mCSB_inside > .mCSB_container {
+    margin-right: 30px;
+}
+.wt-formsearch fieldset .wt-checkboxholder {
+    margin: 0;
+}
+.wt-searchgbtn {
+    top: 0;
+    right: 0;
+    color: #fff;
+    width: 50px;
+    display: block;
+    line-height: 40px;
+    position: absolute;
+    text-align: center;
+    border-left: 1px solid #ddd;
+    border-radius: 0 5px 5px 0;
+    background-color: #007bff;
+}
+.wt-searchgbtn i {
+    font-weight: 600;
+}
+.wt-formsearch fieldset .form-group .form-control {
+    width: 100%;
+    padding-right: 60px;
+    color: #808080;
+    outline: none;
+    height: 40px!important;
+    background: #fff;
+    font-size: 13px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.wt-widgettitle h2 {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.wt-formsearch > fieldset > .form-group a:hover{
+    color: #fff;
+}
+.rightColumns{
+    width: 100%;
+    background: #f1f1f1;
+    padding: 20px;
+}
+.rightColumns .wt-userlistinghold {
+    float: none;
+    width: 97%;
+    padding: 15px;
+    background: #fff;
+    border-radius: 4px;
+    margin: 0 auto;
+    display: table;
+    margin-bottom: 20px;
+}
+.rightColumns .wt-contenthead .wt-title span{
+    font-size: 14px;
+    color: #555;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.rightColumns .wt-contenthead .wt-title h2 {
+    font-size: 20px;
+    color: #111;
+    margin-top: 5px;
+    font-weight: 600;
+}
+.rightColumns .wt-userlistingcontent {
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.rightColumns .wt-userlisting-breadcrumb li {
+    width: auto;
+    margin: 0 12px;
+    line-height: inherit;
+    list-style-type: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0;
+    padding:0;
+}
+.rightColumns .wt-userlisting-breadcrumb li span i{
+    color: #007bff;
+}
+.rightColumns .wt-userlisting-breadcrumb li span b {
+    font-family: 'Montserrat';
+    font-weight: 500;
+    color: green;
+    margin-right: 5px;
+}
+.rightColumns .wt-userlistinghold .wt-description p {
+    font-size: 13px;
+    line-height: 24px;
+    color: #9e9e9e;
+    font-family: 'Montserrat';
+}
+.viewbooking {
+    text-align: center;
+    margin-top: 35px;
+    float: right;
+}
+.viewbooking .bookingprice {
+    font-size: 16px;
+    color: #111;
+    font-weight: 600;
+}
+.viewbooking .bookingprice i {
+    font-size: 14px;
+}
+.viewbooking span {
+    font-size: 12px;
+    color: #808080;
+    margin-bottom: 5px;
+    display: block;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.rightColumns .wt-userlistinghold .paddingleft{
+    padding-left: 0;
+}
+.rightColumns .wt-userlistinghold .paddingright{
+    padding-right: 0;
+}
+.vendersearchtrip .wt-applyfilters-holder {
+    text-align: center;
+}
+.vendersearchtrip .wt-applyfilters-holder .btn-primary {
+    background: #007bff;
+    border: 1px solid #007bff;
+    color: #fff !important;
+    padding: 10px 30px;
+    font-size: 20px;
+    border-radius: 2px;
+    box-shadow: none;
+}
+/********End************************/
+/***********viewbookingvender*******/
+.viewbookingleft .customerabout ul li {
+    line-height: 30px;
+}
+.viewbookingleft .customerabout ul li span {
+    font-size: 13px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    color: #111;
+}
+.viewbookingleft .customerabout ul li span i{
+    color: #007bff;
+    width: 22px;
+}
+.viewbookingright .bookeddata {
+    background: #fff;
+}
+.viewbookingright .bookingheader {
+    background: #007bff;
+    color: #fff;
+    padding: 7px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.headerbudget span {
+    font-size: 12px;
+    position: relative;
+    right: 43px;
+    bottom: 5px;
+    color: #dcdcdc;
+    font-family: 'Montserrat';
+    font-weight: 100;
+}
+.bookingheader .bookdetail h3 {
+    margin-top: 15px;
+    margin-bottom: 0;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.budgetprice b {
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.headerbudget {
+    text-align: right;
+}
+.viewbookingright .bookeddetail ul li span{
+    padding: 15px;
+    display: table;
+    color: #808080;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 13px;
+}
+.viewbookingright .bookeddetail ul li span .oneway {
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 15px;
+}
+.viewbookingright .bookeddetail ul li span .bktitle {
+    color: #111;
+    font-size: 16px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.viewbookingright .bookeddetail ul li span b {
+    color: #808080;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    font-size: 13px;
+}
+.viewbookingright .bookeddetail ul li {
+    border-bottom: 1px solid #ddd;
+}
+.createquotation .bookingheader .bookdetail h3 {
+    margin-top: 0;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.createquotation {
+    background: #fff;
+}
+.vehicledetail {
+    margin-top: 15px;
+}
+.createquotation .quotationbooked {
+    padding: 15px;
+}
+.paymentpart {
+    margin-bottom: 40px;
+}
+.paypart .table>tbody>tr>td {
+    border: none;
+}
+.paypart .table>tbody>tr>td b {
+    color: green;
+    font-weight: 500;
+}
+.paypart .table>tbody>tr>td span {
+    color: red;
+}
+.paypart .table>tbody>tr>td a {
+    color: #007bff;
+}
+.movebtn .btn-primary {
+    margin-right: 15px;
+    margin-top: 20px;
+}
+.totalpay {
+    margin-top: 22px;
+}
+.totalpay .lablename{
+    text-align: right;
+}
+.quotationbooked .form-group input {
+    color: #111;
+    outline: none;
+    height: 40px;
+    background: #fff;
+    font-size: 16px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.quotationbooked .form-group select {
+    color: #111;
+    outline: none;
+    height: 40px;
+    background: #fff;
+    font-size: 16px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.formtitle h5 {
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 13px;
+}
+.quotationbooked .book-destinationPanel {
+    margin-top: 0px;
+}
+.createquotation .headerbudget span {
+    margin-top: 15px;
+    display: block;
+    position: relative;
+    right: 0;
+}
+.addstoppage {
+    margin-bottom: 15px;
+}
+.stoppageedit {
+    margin-top: 15px;
+}
+#myInput {
+  background: url(../image/filtersearch.png)no-repeat right 10px top 10px !important;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 15px 12px 15px;
+    border: 1px solid #ddd;
+    margin-bottom: -1px;    
+}
+#myUL {
+  border: 1px solid #ddd;
+  display: table;
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.stopbox {
+    border: 1px solid #ddd;
+    padding: 10px;
+    color: #9f9f9f;
+    font-size: 14px;
+}
+.stopbox a i {
+    float: right;
+    color: #9f9f9f;
+    font-size: 10px;
+    position: relative;
+    bottom: 4px;
+}
+.placebid {
+    margin-top: 15px;
+    background: #fff;
+}
+.placebid .placebidbook {
+    padding: 25px;
+}
+.placebid .placebidbook span {
+    font-weight: 100;
+    color: #9f9f9f;
+    font-size: 14px;
+}
+.placebid .placebidbook .gstdescrip {
+    font-size: 14px;
+    color: #9f9f9f;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.placebidbtn {
+    text-align: center;
+}
+.placebid .placebidbook .input-group-btn {
+    border: 1px solid #ddd;
+    padding: 4px 12px;
+    color: #000;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 17px;
+}
+.placebid .bookingheader .bookdetail h3 {
+    margin-top: 0;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+/***********End*********************/
+/***********NotificationPage********/
+.notification-page h1{
+    color: #111;
+    margin-bottom: 25px;
+    font-size: 26px;
+}
+.notification-page .booknotification {
+    background: #fff;
+}
+.notification-page .bookingnotify ul li {
+    border-bottom: 1px solid #ddd;
+    padding: 12px;
+}
+.notification-page .bookingnotify ul li a {
+    margin-right: 5px;
+    font-size: 14px;
+    color: #007bff;
+}
+.notification-page .bookingnotify ul li span {
+    display: inline;
+    color: #111;
+    margin-right: 5px;
+    font-size: 14px;
+}
+/***********End*************/
+/***********My Leads *******/
+.myleads h1{
+    color: #111;
+    margin-bottom: 25px;
+    font-size: 26px;    
+}
+.myleadsstatus #exTab2 .nav-tabs {
+    justify-content: left;
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+}
+.myleadsstatus #exTab2 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    border: none;
+    color: #111;
+    background: #1579f600;
+    border-bottom: 2px solid #1579f6;
+    font-size: 17px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.myleadsstatus #exTab2 .nav-tabs>li>a {
+    border: none;
+    border-radius: 0;
+    padding: 4px 25px;
+    color: #111;
+    font-size: 17px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.myleadsstatus #exTab2 .nav>li>a:focus, .nav>li>a:hover {
+    background: #f4f4f400;
+}
+.myleadsstatus #exTab2 .leadquotation .searchbar {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.myleadsstatus #exTab2 .leadquotation input{
+    width: 100%;
+    padding-right: 60px;
+    color: #808080;
+    outline: none;
+    height: 40px!important;
+    background: #fff;
+    font-size: 13px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.leadstatus .thead-secondary {
+    background: #e9ecef;
+}
+.leadstatus .thead-secondary tr th {
+    border: 1px solid #ddd;
+    font-size: 12px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.bd{
+    min-width: 95px;
+}
+.bt{
+    min-width: 110px;
+}
+.sd{
+    min-width: 100px;
+}
+.mb{
+    min-width: 70px;
+}
+.leadstatus tbody tr td {
+    font-size: 11px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    color: #111;
+    background: #fff;
+}
+.leadstatus tbody tr td .btn-primary {
+    font-size: 13px;
+    padding: 6px 10px;
+}
+.quotaedit .formtitle {
+    display: flex;
+}
+.quedit {
+    margin-left: 15px;
+    margin-top: 7px;
+}
+.quedit a {
+    color: #007bff;
+}
+.quedit .form-group select {
+    font-size: 14px;
+    height: 25px;
+    padding: 0;
+    color: #111;
+}
+#exTab2 .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 6px 12px;
+    margin-top: 0px;
+    border-radius: 0px;
+    margin-left: 0px;
+}
+#exTab2 .pagination>li>a, .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #007bff;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.venderprofile h1{
+    color: #111;
+    margin-bottom: 25px;
+    font-size: 26px;    
+}
+.bashboard {
+    padding-top: 20px;
+}
+.card {
+    margin-bottom: 2.2rem;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.08), 0 2px 4px 0 rgba(0,0,0,.12);
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background: #fff;
+    border-radius: 4px;
+}
+.line-ellipsis {
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.agentname h3 {
+    margin-top: 0;
+    font-size: 18px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 0;
+}
+.agentname {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+.agentname span {
+    font-size: 13px;
+    color: #808080;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    margin-top: 5px;
+    display: block;
+}
+.agentname a {
+    color: #007bff;
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.bashboard .leadstatus .thead-secondary tr th {
+    text-align: center;
+}
+.bashboard .leadstatus tbody tr td {
+    text-align: center;
+}
+.generaldetail h3 {
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.businessselect .col-sm-5 {
+    padding-left: 7px;
+    padding-right: 0;
+}
+.businessselect .col-sm-2 {
+    padding-left: 0px;
+    padding-right: 0;
+}
+.businessselect .col-form-label{
+    font-size: 15px;
+}
+.businessselect .form-check-input {
+    height: auto;
+}
+.businessselect label{
+    margin-right: 10px;
+}
+.businessselect .form-check input {
+    cursor: pointer;
+}
+.generaldetail .btn-primary {
+    padding: 7px 35px;
+    margin-top: 20px;
+}
+.informationform textarea{
+    padding: 10px 20px;
+}
+.informationform select{
+    color: #111;
+    outline: none;
+    height: 40px;
+    background: #fff;
+    font-size: 16px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.transactionhistory h1 {
+    color: #111;
+    margin-bottom: 25px;
+    font-size: 26px;
+}
+.paginationdiv .pagination>li>a, .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #007bff;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.paginationdiv .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 6px 12px;
+    margin-top: 0px;
+    border-radius: 0px;
+    margin-left: 0px;
+}
+.paginationdiv ul {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.showingpage {
+    text-align: right;
+}
+.transactionhistory .leadstatus {
+    margin-top: 20px;
+}
+.btn-light {
+    background: #fff;
+    border: 1px solid #007bff;
+    color: #007bff;
+    padding: 7px 17px;
+    font-size: 16px;
+    border-radius: 2px;
+    box-shadow: none;
+}
+.btn-light:hover {
+    background: #007bff;
+    border: 1px solid #007bff;
+    color: #fff;
+}
+.customerwallet h4 {
+    margin-top: 30px;
+}
+.customerwallet .leadstatus {
+    margin-top: 15px;
+}
+.alltransactions {
+    text-align: center;
+}
+.payout h1 {
+    color: #111;
+    margin-bottom: 25px;
+    font-size: 26px;
+}
+.payouttable {
+    border-bottom: 1px solid #ddd;
+}
+.payouttable .table {
+    max-width: 45%;
+}
+.payouttable .table tbody tr td {
+    border: none;
+    padding-left: 0;
+}
+.payouttable .table tbody tr td i {
+    font-size: 12px;
+}
+.payout .leadstatus .thead-secondary tr th {
+    text-align: center;
+}
+.payout .leadstatus tbody tr td {
+    text-align: center;
+}
+.payout .informationform {
+    margin-top: 20px;
+}
+.payout .leadstatus {
+    margin-top: 20px;
+}
+.travelcredit h1 {
+    font-size: 30px;
+    text-align: center;
+    font-family: 'Montserrat';
+    font-weight: bold;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #111;
+}
+.creditleft {
+    text-align: center;
+    margin-bottom: 70px;
+}
+.btn-dark {
+    background: #000;
+    border-radius: 2px;
+    color: #fff;
+    padding: 15px 25px;
+    font-size: 16px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.btn-dark:hover{
+    background: #000;
+    border-radius: 2px;
+    color: #fff;
+}
+.btn.focus, .btn:focus, .btn:hover {
+    color: #fff;
+    text-decoration: none;
+}
+.card2 {
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.08), 0 2px 4px 0 rgba(0,0,0,.12);
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background: #fff;
+    border-radius: 4px;
+}
+.card2 .price {
+    border-bottom: 1px solid #ddd;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-weight: bold;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    color: #111;
+}
+.card2 .agentname {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+.card2 .agentname h3 {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.card2 .agentname .btn-light {
+    margin-bottom: 15px;
+    display: inline-table;
+    font-size: 16px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.booking-page .table-bordered>tbody>tr>td {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+.booking-page .table-bordered>tbody>tr>td .btn-default {
+    font-size: 13px;
+    padding: 7px 15px;
+}
+.booking-page .table .thead-primary tr th {
+    font-size: 15px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.booking-page .table tbody tr td {
+    font-size: 13px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    color: #333;
+}
+.quotation-page .table-bordered>tbody>tr>td {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+.quotation-page .table .thead-primary tr th {
+    font-size: 15px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.quotation-page .table tbody tr td {
+    font-size: 13px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    color: #333;
+}
+.quotation-page .table-bordered>tbody>tr>td .btn-default {
+    font-size: 13px;
+    padding: 7px 15px;
+}
+/**********End*********/

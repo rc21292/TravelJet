@@ -3,9 +3,23 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Topbar from './layouts/Topbar'
 import Header from './layouts/Header'
+import Bookings from './bookings/Bookings'
+import Quotations from './quotations/Quotations'
+import TransactionHistory from './transactions/TransactionHistory'
+import Notifications from './notifications/Notifications'
+import BrowseBookings from './browsebookings/BrowseBookings'
+import Leads from './leads/Leads'
+import Address from './address/Address'
+import Profile from './profile/Profile'
+import EditProfile from './profile/EditProfile'
+import ChangePassword from './profile/ChangePassword'
+import Wallet from './wallet/Wallet'
+import Payouts from './payouts/Payouts'
+import Credits from './credits/Credits'
+import Invoices from './invoices/Invoices'
+import Inbox from './inbox/Inbox'
 import Footer from './layouts/Footer'
 import Sidebar from './layouts/Sidebar'
-import RightSidebar from './layouts/RightSidebar'
 import Home from './Home'
 import Routes from './Routes'
 
@@ -28,6 +42,7 @@ class Index extends Component {
                 let userData = {
                     id: json.data.id,
                     name: json.data.name,
+                    gender: json.data.gender,
                     email: json.data.email,
                     phone: json.data.phone,
                     role: json.data.role,
@@ -42,44 +57,79 @@ class Index extends Component {
     }
 
 
-  render() {
-    return (
-        <div>
-        <div id="preloader-wrap">
-        <div className="spinner spinner-8">
-        <div className="ms-circle1 ms-child" />
-        <div className="ms-circle2 ms-child" />
-        <div className="ms-circle3 ms-child" />
-        <div className="ms-circle4 ms-child" />
-        <div className="ms-circle5 ms-child" />
-        <div className="ms-circle6 ms-child" />
-        <div className="ms-circle7 ms-child" />
-        <div className="ms-circle8 ms-child" />
-        <div className="ms-circle9 ms-child" />
-        <div className="ms-circle10 ms-child" />
-        <div className="ms-circle11 ms-child" />
-        <div className="ms-circle12 ms-child" />
-        </div>
-        </div>
-    {/* Overlays */}
-    <div className="ms-aside-overlay ms-overlay-left ms-toggler" data-target="#ms-side-nav" data-toggle="slideLeft" />
-    <div className="ms-aside-overlay ms-overlay-right ms-toggler" data-target="#ms-recent-activity" data-toggle="slideRight" />
-    <Router>
-    <Routes/>
-    <Sidebar/>
-  <main className="body-content">
-<Header/>
-<Route exact path="/agent">
-<Home/>
-    </Route>
-  </main>
-    <RightSidebar/>
-  <Footer/>
-  </Router>
-    </div>
-    );
+    render() {
+        return (
+            <div>
+                  <Topbar/>
+                  <Header/> 
+                  <div className="container">
+                        <div id="wrapper">
+                              <Sidebar/>
+                              <div id="content-wrapper">
+                                    <div id="content">
+                                          <div className="container-fluid">
+                                                <Router>
+                                                      <Switch>
+                                                            <Route exact path="/agent">
+                                                                  <Home/>
+                                                            </Route>
+                                                            <Route path="/agent/bookings">
+                                                                  <Bookings/>
+                                                            </Route>
+                                                            <Route path="/agent/quotations">
+                                                                  <Quotations/>
+                                                            </Route>
+                                                            <Route path="/agent/wallet">
+                                                                  <Wallet/>
+                                                            </Route>
+                                                            <Route path="/agent/payouts">
+                                                                  <Payouts/>
+                                                            </Route>
+                                                            <Route path="/agent/credits">
+                                                                  <Credits/>
+                                                            </Route>
+                                                            <Route path="/agent/invoices">
+                                                                  <Invoices/>
+                                                            </Route>
+                                                            <Route path="/agent/leads">
+                                                                  <Leads/>
+                                                            </Route>
+                                                            <Route path="/agent/manage-address">
+                                                                  <Address/>
+                                                            </Route>
+                                                            <Route exact path="/agent/personal-information">
+                                                                  <Profile/>
+                                                            </Route>
+                                                            <Route exact path="/agent/personal-information/edit">
+                                                                  <EditProfile/>
+                                                            </Route>
+                                                            <Route path="/agent/change-password">
+                                                                  <ChangePassword/>
+                                                            </Route>
+                                                            <Route path="/agent/transactions">
+                                                                  <TransactionHistory/>
+                                                            </Route>
+                                                            <Route path="/agent/inbox">
+                                                                  <Inbox/>
+                                                            </Route>
+
+                                                            <Route path="/agent/browse-bookings">
+                                                                  <BrowseBookings/>
+                                                            </Route>
+                                                            
+                                                      </Switch>
+                                                </Router>
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>            
+                  <Footer/>
+            </div>
+            );
+    }
 }
-}
+
 if ( document.getElementById('agent-app') ) {
-    ReactDOM.render(<Index user_id={user_id}/>, document.getElementById('agent-app'));
+    ReactDOM.render(<Index user_id={user_id} />, document.getElementById('agent-app'));
 }

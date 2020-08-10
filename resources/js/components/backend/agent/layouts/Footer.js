@@ -2,46 +2,96 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 export default class Footer extends Component {
-	constructor()
-	{
-		super();
-	}
-
-	componentDidMount(){
-    //An array of assets
-    let scripts = [
-    { src: "/backend/assets/js/jquery-3.3.1.min.js" },
-    { src: "/backend/assets/js/popper.min.js"},
-    { src: "/backend/assets/js/bootstrap.min.js" },
-    { src: "/backend/assets/js/perfect-scrollbar.js" },
-    { src: "/backend/assets/js/jquery-ui.min.js" },
-    { src: "/backend/assets/js/moment.js" },
-    { src: "/backend/assets/js/jquery.webticker.min.js" },
-    { src: "/backend/assets/js/Chart.bundle.min.js" },
-    // { src: "/backend/assets/js/Chart.Financial.js" },
-    // { src: "/backend/assets/js/table-line.js" },
-    // { src: "/backend/assets/js/index-chart.js" },
-    { src: "/backend/assets/js/d3.v3.min.js" },
-    { src: "/backend/assets/js/topojson.v1.min.js" },
-    // { src: "/backend/assets/js/datamaps.all.min.js" },
-    // { src: "/backend/assets/js/index-map.js" },
-    { src: "/backend/assets/js/framework.js" },
-    { src: "/backend/assets/js/settings.js" }
-
-    ]
-    //Append the script element on each iteration
-    scripts.map(item => { 
-    	const script = document.createElement("script")
-    	script.async = true
-    	script.src = item.src
-    	document.body.appendChild(script)
-    })    
-}
-
 
 render() {
 	return (
-		<div></div>
+		      <div>
+        <footer className="footer">
+          <div className="container">
+            <div className="col-sm-3">
+              <div className="payment-option">
+                <div className="footer-title">payment &amp; security</div>
+                <img src="/frontend/image/icons/payments.png" alt="payments" />
+                <div className="footer-title">follow us on</div>
+                <div className="social-icon">
+                  <ul className="list-inline">
+                    <li>
+                      <a href="#">
+                        <i className="fa fa-facebook-f icon" /></a>
+                    </li>
+                    <li>
+                      <a href="#"><i className="fa fa-twitter icon" /></a>
+                    </li>
+                    <li>
+                      <a href="#"><i className="fa fa-instagram icon" /></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="footer-title">payment &amp; security</div>
+              <div className="footer-menu">
+                <ul className="list-unstyled">
+                  <li><a href="/CompanyInfo">Company Info</a></li>
+                  <li><a href="#">Payment Procedure</a></li>
+                  <li><a href="#">Privacy Policy</a></li>
+                  <li><a href="#">Terms and Conditions</a></li>
+                  <li><a href="#">Cancellation Policy</a></li>
+                  <li><a href="#">Contact Us</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="footer-title">Services</div>
+              <div className="footer-menu">
+                <ul className="list-unstyled">
+                  <li><a href="#">Local Car Booking</a></li>
+                  <li><a href="#">Round Trip Booking</a></li>
+                  <li><a href="#">Round Trip with Sight Seeing</a></li>
+                  <li><a href="#">Airport Ride</a></li>
+                  <li><a href="#">Outstation Trip</a></li>
+                  <li><a href="#">Pilgrimage Tour</a></li>
+                  <li><a href="#">Weekend Ride</a></li>
+                  <li><a href="#">Road Trip</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="col-sm-3">
+              <div className="footer-title">Popular Outstation rides</div>
+              <div className="footer-menu">
+                <ul className="list-unstyled">
+                  <li><a href="#">Delhi to Shimla</a></li>
+                  <li><a href="#">Delhi to Manali</a></li>
+                  <li><a href="#">Delhi to jaipur</a></li>
+                  <li><a href="#">Delhi to Mumbai</a></li>
+                  <li><a href="#">Delhi to Mussoorie</a></li>
+                  <li><a href="#">Delhi to Nainital</a></li>
+                  <li><a href="#">Delhi to Haridwar</a></li>
+                  <li><a href="#">Shimla to Manali</a></li>
+                  <li><a href="#">Manali to Ladakh</a></li>
+                  <li><a href="#">Manali to Spiti</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="footer-title">Partner with us</div>
+              <div className="footer-menu">
+                <ul className="list-unstyled">
+                  <li><a href="/DriveWithUs">Drive with us</a></li>
+                  <li><a href="#">Careers</a></li>
+                  <li><a href="/Login">Register</a></li>
+                  <li><a href="/Register">Login</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <div className="footer-bottom">
+          <div className="container">
+            <p>Copyright © 2020 Travel Jet</p>
+          </div>
+        </div>
+      </div>
 		);
 }
 }

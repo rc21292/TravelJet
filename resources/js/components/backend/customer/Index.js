@@ -7,6 +7,7 @@ import Bookings from './bookings/Bookings'
 import Quotations from './quotations/Quotations'
 import Address from './address/Address'
 import Profile from './profile/Profile'
+import Notifications from './notifications/Notifications'
 import ChangePassword from './profile/ChangePassword'
 import Wallet from './wallet/Wallet'
 import Inbox from './inbox/Inbox'
@@ -85,6 +86,9 @@ class Index extends Component {
                                                             </Route>
                                                             <Route path="/customer/inbox">
                                                                   <Inbox/>
+                                                            </Route>
+                                                            <Route path="/customer/notifications">
+                                                                  <Notifications/>
                                                             </Route>
                                                             
                                                       </Switch>

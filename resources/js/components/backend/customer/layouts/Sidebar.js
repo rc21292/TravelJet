@@ -15,6 +15,12 @@ function Sidebar() {
 {/* Divider */}
 <hr className="sidebar-divider my-0" />
 {/* Nav Item - Pages Collapse Menu */}
+
+<li className="nav-item active">
+	<a className="nav-link" href="/customer">
+  	<span>Dashboard</span></a>
+</li>
+
 <li className="nav-item">
 <a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
 <span>My Booking</span>
@@ -49,7 +55,7 @@ function Sidebar() {
 <span>Inbox</span></a>
 </li>
 <li className="nav-item">
-<a className="nav-link" href="#">
+<a className="nav-link" href="/customer/notifications">
 <span>Notification</span></a>
 </li>
 <li className="nav-item">

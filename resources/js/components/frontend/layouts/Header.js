@@ -4,8 +4,11 @@ import Home from '../Home';
 import DriveWithUs from '../DriveWithUs';
 import HowitWorks from '../HowitWorks';
 import CompanyInfo from '../CompanyInfo';
+import BrowseBookings from '../BrowseBookings';
+import BookingDetails from '../BookingDetails';
 import Queries from '../queries/Index';
 import Add from '../queries/Add';
+import GoogleeAdd from '../queries/GoogleeAdd';
 
 
 function Header() {
@@ -46,8 +49,11 @@ function Header() {
   <Route exact path='/HowitWorks' component={HowitWorks} />
   <Route exact path='/DriveWithUs' component={DriveWithUs} />
   <Route exact path='/CompanyInfo' component={CompanyInfo} />
+  <Route exact path='/browse-bookings' component={BrowseBookings} />
+  <Route exact path='/booking-details' component={BookingDetails} />
   <Route exact path='/queries' component={Queries} />
   <Route exact path='/query/add' component={Add} />
+  <Route exact path='/query/addgoogle' component={GoogleeAdd} />
   </Router>
   );
 }

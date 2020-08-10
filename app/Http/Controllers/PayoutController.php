@@ -1,0 +1,257 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Payout;
+use App\Helper;
+use DB;
+use Illuminate\Support\Facades\Input;
+
+class PayoutController extends Controller
+{
+
+     protected $payouts;
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+
+    public function __construct(Payout $payouts)
+    {
+        $this->payouts = $payouts;
+
+    }
+
+    public function index(Request $request,$id)
+    {
+          if (!empty($_GET['year']) && !empty($_GET['month'])) {
+            $year = $_GET['year'];
+            $month = $_GET['month'];
+            $payouts =  DB::table('payouts')
+                ->select('*')
+                ->whereYear('created_at', '=', $year)
+                ->whereMonth('created_at', '=', $month)
+                ->latest()->paginate(7)->setPath('');
+            $pagination = $payouts->appends(
+                array(
+                    'year' => request('year'),
+                    'month' => request('month')
+                )
+            );
+        } else {
+            $payouts =  Payout::latest()->paginate(7);
+        }
+        $selected_year = !empty($_GET['year']) ? $_GET['year'] : date('Y');
+        $selected_month = !empty($_GET['month']) ? $_GET['month'] : '';
+        $months = Helper::getMonthList();
+        $years = range(date("Y"), 1970);
+        return response()->json([
+            'success' => true,
+            'payouts' => $payouts,
+            'selected_year' => $selected_year,
+            'years' => $years,
+            'selected_month' => $selected_month,
+            'months' => array_values($months),
+        ], 200);
+    }
+
+
+    public function generatePDF($year, $month, $id = array())
+    {
+        $slected_ids = array();
+        if (!empty($id)) {
+            $slected_ids = explode(',', $id);
+        }
+        $payouts =  DB::table('payouts')
+            ->select('*')
+            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->whereIn('id', $slected_ids)
+            ->get();
+        $pdf = PDF::loadView('back-end.admin.payouts-pdf', compact('payouts', 'year', 'month'));
+        return $pdf->download('payout-' . $month . '-' . $year . '.pdf');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+
+     public function submitUserRefund(Request $request)
+    {
+        $server_verification = Helper::worketicIsDemoSite();
+        if (!empty($server_verification)) {
+            Session::flash('error', $server_verification);
+            return Redirect::back();
+        }
+        $json = array();
+        if (!empty($request)) {
+            $this->validate(
+                $request,
+                [
+                    'refundable_user_id' => 'required',
+                ]
+            );
+            $role = $this->user::getUserRoleType($request['refundable_user_id']);
+            if ($role->role_type == 'freelancer') {
+                $update_status = '';
+                if ($request['type'] == 'job') {
+                    $update_status = $this->user->updateCancelProject($request);
+                } elseif ($request['type'] == 'service') {
+                    $update_status = $this->user->updateCancelService($request);
+                }
+                if ($update_status = 'success') {
+                    $json['type'] = 'success';
+                    $json['message'] = trans('lang.status_updated');
+                    return $json;
+                } else {
+                    $json['type'] = 'error';
+                    $json['message'] = trans('lang.something_wrong');
+                    return $json;
+                }
+            } elseif ($role->role_type == 'employer') {
+                $refound = $this->user->transferRefund($request);
+                if ($refound == 'payout_not_available') {
+                    $json['type'] = 'error';
+                    $json['message'] = trans('lang.user_payout_not_set');
+                    return $json;
+                } else if ($refound == 'success') {
+                    $json['type'] = 'success';
+                    $json['message'] = trans('lang.refund_transfer');
+                    return $json;
+                } else {
+                    $json['type'] = 'error';
+                    $json['message'] = trans('lang.all_required');
+                    return $json;
+                }
+            }
+        } else {
+            $json['type'] = 'error';
+            $json['message'] = trans('lang.something_wrong');
+            return $json;
+        }
+    }
+
+    /**
+     * Verify Code
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePayoutDetail(Request $request)
+    {
+        $user_id = $request['id'];
+        if (!empty($user_id)) {
+
+            $payout_setting = $this->profile->savePayoutDetail($request, $user_id);
+            $json['type'] = 'success';
+            $json['message'] = 'payout update successfully';
+            return $json;
+        } else {
+            $json['type'] = 'error';
+            $json['message'] = trans('lang.verify_code');
+            return $json;
+        }
+    }
+
+    /**
+     * Get payout detail
+     *
+     */
+    public function getPayoutDetail()
+    {
+        $json = array();
+        if (Auth::user()) {
+            $user = User::find(Auth::user()->id);
+            $payout_detail = !empty($user->profile) ? Helper::getUnserializeData($user->profile->payout_settings) : array();
+            $json['type'] = 'success';
+            $json['payouts'] = $payout_detail;
+            return $json;
+        } else {
+            $json['type'] = 'error';
+            $json['message'] = trans('lang.verify_code');
+            return $json;
+        }
+    }
+
+     public function getRequestedPayoutDetails(Request $request)
+    {
+        $json = array();
+        if ($request->id) {
+            $user = User::find($request->id);
+            $payout_detail = !empty($user->profile) ? Helper::getUnserializeData($user->profile->payout_settings) : array();
+            $json['type'] = 'success';
+            $json['payouts'] = $payout_detail;
+            return $json;
+        } else {
+            $json['type'] = 'error';
+            $json['message'] = trans('lang.verify_code');
+            return $json;
+        }
+    }
+}
