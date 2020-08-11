@@ -4,6 +4,8 @@ import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Topbar from './layouts/Topbar'
 import Header from './layouts/Header'
 import Bookings from './bookings/Bookings'
+import Drivers from './vehicles/Drivers'
+import Vehicles from './vehicles/Vehicles'
 import Quotations from './quotations/Quotations'
 import TransactionHistory from './transactions/TransactionHistory'
 import Notifications from './notifications/Notifications'
@@ -71,10 +73,16 @@ class Index extends Component {
                                                 <Router>
                                                       <Switch>
                                                             <Route exact path="/agent">
-                                                                  <Home/>
+                                                                  <Home user_id={user_id}/>
                                                             </Route>
                                                             <Route path="/agent/bookings">
                                                                   <Bookings/>
+                                                            </Route>
+                                                            <Route path="/agent/vehicles">
+                                                                  <Vehicles/>
+                                                            </Route>
+                                                            <Route path="/agent/drivers">
+                                                                  <Drivers/>
                                                             </Route>
                                                             <Route path="/agent/quotations">
                                                                   <Quotations/>
@@ -111,6 +119,10 @@ class Index extends Component {
                                                             </Route>
                                                             <Route path="/agent/inbox">
                                                                   <Inbox/>
+                                                            </Route>
+
+                                                            <Route path="/agent/notifications">
+                                                                  <Notifications/>
                                                             </Route>
 
                                                             <Route path="/agent/browse-bookings">

@@ -2,14 +2,14 @@ import React, { Component, useState, useEffect, Fragment } from 'react';
 import {BrowserRouter as Router, Link, Route, useHistory} from 'react-router-dom';
 
 
-const Add = () => {
+const Add = (props) => {
 
 
 	const history = useHistory();
 
 	const initialProductState = {
 		id: null,
-		user_id: null,
+		user_id: props.user_id,
 		pickupstate: "",
 		from_places: "",
 		destinationstate: "",
@@ -47,11 +47,6 @@ const Add = () => {
 	const [isErrors, setIsErrors] = useState(0);
 
 	useEffect(()=>{
-		let stateqq = localStorage["appState"];
-		if (stateqq) {
-			let AppState = JSON.parse(stateqq);
-			setProduct({ ...products, user_id: AppState.user.id });
-		}
 		var loadScript = function(src) {
 			var tag = document.createElement('script');
 			tag.async = false;
@@ -63,10 +58,6 @@ const Add = () => {
 		loadScript('/frontend/js/main/map.js')
 		loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&callback=initAutocomplete&libraries=places&v=weekly')
 	},[])
-
-
-
-
 
 	const saveProduct = () => {
 		var data = {

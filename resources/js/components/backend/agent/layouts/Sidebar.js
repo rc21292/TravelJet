@@ -36,6 +36,20 @@ function Sidebar() {
 <a className="nav-link active" href="/agent/leads">
 <span>My Leads</span></a>
 </li>
+
+<li className="nav-item">
+<a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseUtilities1" aria-expanded="true" aria-controls="collapseUtilities1">
+<span>Vehicles</span>
+</a>
+<div id="collapseUtilities1" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+<div className="bg-white py-2 collapse-inner rounded">
+<a className="collapse-item" href="/agent/vehicles">Vehicles</a>
+<a className="collapse-item" href="/agent/drivers">Drivers</a>
+</div>
+</div>
+</li>
+
+
 <li className="nav-item">
 <a className="nav-link" href="/agent/transactions">
 <span>Transaction History</span></a>

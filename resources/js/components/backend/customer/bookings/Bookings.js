@@ -82,7 +82,7 @@ render() {
                               <td>{query.pick_up}</td>
                               <td>{query.destination}</td>
                               <td>{query.persons}</td>
-                              <td><a href="#" class="btn btn-default">View More</a></td>
+                              <td><a href="/customer-booking" class="btn btn-default">View More</a></td>
                            </tr>
                            )
                         })

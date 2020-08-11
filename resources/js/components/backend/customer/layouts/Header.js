@@ -9,6 +9,24 @@ import Add from '../../../frontend/queries/Add';
 
 
 function Header() {
+
+      const [user, setUser] = useState(false);
+  const [userId, setUserId] = useState(false);
+
+  useEffect(() => {
+    let stateqq = localStorage["appState"];
+      let AppState = JSON.parse(stateqq);
+    if (AppState.isLoggedIn == true) {
+      setUser(AppState.user);
+      setUserId(AppState.user.id);
+    }else{
+      console.log('kkk');
+       setUser(null);
+      setUserId(false);
+    }   
+
+  },[]);
+  
   return (
   <Router>
     <header>
@@ -31,8 +49,15 @@ function Header() {
                       </li>
                       <li className="calltoAction"><a className="btn btn-primary" href="/query/add">Book Now</a>
                       </li>
-                      <li><a href="/login">Login</a></li>
-                      <li ><a href="/register">Register</a></li>
+                      {(userId === false) && 
+                        <li><a href="/login">Login</a></li>
+                      }
+                      {(userId === false) && 
+                        <li ><a href="/register">Register</a></li>
+                      }
+                      {(userId) &&
+                        <li ><a href="/login">My Account</a></li>
+                      }    
                   </ul>
               </div>
           </div>

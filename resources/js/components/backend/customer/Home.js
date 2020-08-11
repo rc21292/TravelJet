@@ -4,35 +4,50 @@ import Bookings from './bookings/Bookings';
 import { useState, useEffect } from 'react'
 import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 
-function Home() {
+function Home(props) {
+  // console.log(props.user_id);
 
 	const [user, setUser] = useState(false);
+  const [userId, setUserId] = useState(props.user_id);
 	const [balance, setBalance] = useState(0);
 	 const [noticeData, setNoticeData] = useState([]);  
 	 const [bookingData, setBookingData] = useState([]);  
 
 	useEffect(() => {
+
+    axios.get("/api/users/show/"+userId).then(response => {
+            return response;
+        }).then(json => {
+            if (json.data) {
+                let userData = {
+                    id: json.data.id,
+                    name: json.data.name,
+                    gender: json.data.gender,
+                    email: json.data.email,
+                    phone: json.data.phone,
+                    role: json.data.role,
+                };
+                let appState = {
+                    isLoggedIn: true,
+                    user: userData
+                };
+                setUser(appState.user);
+                localStorage["appState"] = JSON.stringify(appState);
+            }
+        });
 		
-		let stateqq = localStorage["appState"];
-		if (stateqq) {
-			let AppState = JSON.parse(stateqq);
-			setUser(AppState.user);
-			if (AppState.isLoggedIn == false) {
-				history.push('/login');
-			}
-			axios.get('/api/users/getbalance/'+AppState.user.id)
+			axios.get('/api/users/getbalance/'+userId)
 				.then(response=>{
 					setBalance(response.data.balance);
 			});
-			axios.get('/api/notifications/'+AppState.user.id)
+			axios.get('/api/notifications/'+userId)
 		  		.then(result=>{
 		  			setNoticeData(result.data);
 	  		});
 		  	axios.get('/api/queries')
 		  		.then(result=>{
 		  			setBookingData(result.data.data);
-	  		});
-		}   
+	  		});   
 
 	},[]); 
 
@@ -46,8 +61,8 @@ function Home() {
                 <div className="card-body py-3">
                   <div className="line-ellipsis">Welcome Back</div>
                   <div className="agentname">
-                    <h3>{user.name}</h3>
-                    <span>{user.email}</span>
+                    <h3>{(user) ? user.name : ''}</h3>
+                    <span>{(user) ? user.email : ''}</span>
                   </div>
                 </div>
               </div>
@@ -130,9 +145,9 @@ function Home() {
                   <td><i className="fa fa-inr" /> 6000</td>
                 </tr>
                  <tr>
-                    <td colspan="5">
-                   <div class="placebidbtn">
-                      <a href="#" class="btn btn-primary">View More</a>
+                    <td colSpan="5">
+                   <div className="placebidbtn">
+                      <a href="#" className="btn btn-primary">View More</a>
                     </div>
                   </td>
                   </tr>

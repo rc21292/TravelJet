@@ -164,7 +164,7 @@ const handleClick = () => {
         <div id="exTab2"> 
           <ul className="nav nav-tabs">
             <li className="active">
-              <a href="#1" data-toggle="tab">Quotation</a>
+              <a href="#1" data-toggle="tab">quotations</a>
             </li>
             <li><a href="#2" data-toggle="tab">Upcoming Booking</a>
             </li>
@@ -209,7 +209,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -220,7 +220,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -231,7 +231,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -242,7 +242,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -253,7 +253,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                       </tbody>
                     </table>
@@ -315,7 +315,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="upcomingbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -325,7 +325,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="upcomingbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -335,7 +335,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="upcomingbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -345,7 +345,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="upcomingbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -355,7 +355,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="upcomingbookingvenderedit.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                       </tbody>
                     </table>
@@ -417,7 +417,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbooked.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -427,7 +427,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbooked.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -437,7 +437,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbooked.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -447,7 +447,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbooked.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -457,7 +457,7 @@ const handleClick = () => {
                           <td>14-Jul-20</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="viewbooked.php" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                       </tbody>
                     </table>

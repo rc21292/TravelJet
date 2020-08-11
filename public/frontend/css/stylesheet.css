@@ -2385,6 +2385,15 @@ hr {
     font-family: 'Montserrat';
     font-weight: 100;
 }
+.totalcost span {
+    font-size: 12px;
+    position: relative;
+    right: 64px;
+    bottom: 5px;
+    color: #dcdcdc;
+    font-family: 'Montserrat';
+    font-weight: 100;
+}
 .bookingheader .bookdetail h3 {
     margin-top: 15px;
     margin-bottom: 0;
@@ -2407,6 +2416,15 @@ hr {
     font-family: 'Montserrat';
     font-weight: 500;
     font-size: 13px;
+    width: 100%;
+    display:flex;
+}
+.viewbookingright .bookeddetail ul li span .paiddiv {
+    text-align: right;
+    width: 88%;
+    color: green;
+    font-family: 'Montserrat';
+    font-weight: 600;
 }
 .viewbookingright .bookeddetail ul li span .oneway {
     color: #111;
@@ -2463,11 +2481,33 @@ hr {
     margin-right: 15px;
     margin-top: 20px;
 }
+.movebtn .btn-primary {
+    margin-right: 15px;
+    margin-top: 20px;
+}
 .totalpay {
     margin-top: 22px;
 }
 .totalpay .lablename{
     text-align: right;
+}
+.totalpay .payprice{
+    text-align: right;
+}
+.bookedinclusion {
+    color: #808080;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 13px;
+    padding: 15px;
+}
+.bookinclusion {
+    border: 1px solid #808080;
+    padding: 15px;
+    margin: 15px;
+    margin-top: 0;
+    color: #555;
+    font-size: 14px;
 }
 .quotationbooked .form-group input {
     color: #111;
@@ -2783,6 +2823,7 @@ hr {
 .agentname {
     padding-top: 25px;
     padding-bottom: 25px;
+    height: 90px;
 }
 .agentname span {
     font-size: 13px;
@@ -3054,4 +3095,119 @@ hr {
     font-size: 13px;
     padding: 7px 15px;
 }
+.placebid .placebidbook .form-group label {
+    font-weight: 100;
+    color: #9f9f9f;
+    font-size: 14px;
+}
+.placebid .placebidbook .form-group a {
+    color: #007bff;
+    font-size: 14px;
+    margin-top: 32px;
+    display: block;
+}
+.upload-field {
+    position: relative;
+}
+.upload-field ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 170px;
+    height: 35px;
+}
+.upload-icon i {
+    position: absolute;
+    left: auto;
+    right: 15px;
+}
+.upload-field .file-upload1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 170px;
+    height: 40px;
+}
+.upload-field .file-upload1 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.vehicletable tr td a {
+    color: green;
+    font-size: 12px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    vertical-align: -webkit-baseline-middle;
+}
+.vehicletable input {
+    color: #111;
+    outline: none;
+    height: 40px;
+    background: #fff;
+    font-size: 13px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.vehicletable tr td a.btn-link {
+    background: red;
+    color: #fff;
+    border-radius: 2px;
+    border-color: red;
+}
+.vehicletable tr td a.btn-link:hover {
+    background: red;
+    color: #fff;
+    border-radius: 2px;
+    border-color: red;
+}
+.vehicletable table thead tr th {
+    border-bottom: none;
+}
+.vehicletable .table>tbody>tr>td{
+    border-top:none;
+}
+.vehicletable tr td a.approval {
+    color: red;
+    font-size: 12px;
+    line-height: 12px;
+    vertical-align: super;
+}
+.vehicletable tr td a.btn-primary {
+    float: right;
+    padding: 7px 8px;
+}
 /**********End*********/
+/********signup*********/
+.signuppage {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.signupform {
+    max-width: 65%;
+    background: #f1f1f1;
+    padding: 20px;
+    margin: 0 auto;
+}
+/********end************/

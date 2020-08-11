@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
 
-function Invoices(props) { 
+function Payouts(props) { 
 
   const history = useHistory()
   const location = useLocation()
@@ -229,4 +229,4 @@ const onChangeYear = e => {
   )  
 }  
   
-export default Invoices
+export default Payouts

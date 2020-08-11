@@ -5,6 +5,9 @@
 </head>
 <body>
 	{{ Session::get('url.intended') }}
+	<script>
+		var user_id = "<?php echo (Auth::user()) ? json_encode(Auth::user()->id) : '' ?>";
+	</script>
     <div id="root">
 
     </div>

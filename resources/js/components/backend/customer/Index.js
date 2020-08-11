@@ -64,7 +64,7 @@ class Index extends Component {
                                                 <Router>
                                                       <Switch>
                                                             <Route exact path="/customer">
-                                                                  <Home/>
+                                                                  <Home user_id={user_id}/>
                                                             </Route>
                                                             <Route path="/customer/bookings">
                                                                   <Bookings/>
