@@ -30,7 +30,6 @@ function Header(props) {
       console.log(AppState.user.id);
       console.log('jhj');
     }else{
-      console.log('kkk');
        setUser(null);
       setUserId(false);
     }   
@@ -84,7 +83,7 @@ function Header(props) {
       <Route exact path='/CompanyInfo' component={CompanyInfo} />
       <Route exact path='/browse-bookings' component={BrowseBookings} />
       <Route exact path='/booking-details' component={BookingDetails} />
-      <Route exact path='/customer-booking' component={CustomerBookings} />
+      <Route exact path='/customer-booking/:id' component={CustomerBookings} />
       <Route exact path='/quotations' component={Qutations} />
       <Route exact path='/booked' component={Booked} />
       <Route exact path='/Bookings' component={Bookings} />

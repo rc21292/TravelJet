@@ -18,12 +18,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('queries','Api\QueryController@index');
+Route::get('queries/{id}','Api\QueryController@index');
 Route::post('queries/store','Api\QueryController@store');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
+Route::delete('queries/cancel/{id}','Api\QueryController@cancel');
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
+Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
 Route::post('queries/update/{id}','Api\QueryController@update');
 Route::post('users/update/{id}','UserController@update');
 Route::post('save_address/{id}','AddressController@store');

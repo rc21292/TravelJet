@@ -44,7 +44,7 @@ function Home(props) {
 		  		.then(result=>{
 		  			setNoticeData(result.data);
 	  		});
-		  	axios.get('/api/queries')
+		  	axios.get('/api/queries/'+userId)
 		  		.then(result=>{
 		  			setBookingData(result.data.data);
 	  		});   
@@ -109,47 +109,24 @@ function Home(props) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>0000000</td>
-                  <td>Rahul Kumar</td>
-                  <td>Manali</td>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 6000</td>
-                </tr>
-                <tr>
-                  <td>0000000</td>
-                  <td>Rahul Kumar</td>
-                  <td>Manali</td>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 6000</td>
-                </tr>
-                <tr>
-                  <td>0000000</td>
-                  <td>Rahul Kumar</td>
-                  <td>Manali</td>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 6000</td>
-                </tr>
-                <tr>
-                  <td>0000000</td>
-                  <td>Rahul Kumar</td>
-                  <td>Manali</td>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 6000</td>
-                </tr>
-                <tr>
-                  <td>0000000</td>
-                  <td>Rahul Kumar</td>
-                  <td>Manali</td>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 6000</td>
-                </tr>
-                 <tr>
-                    <td colSpan="5">
-                   <div className="placebidbtn">
-                      <a href="#" className="btn btn-primary">View More</a>
-                    </div>
-                  </td>
+                {bookingData.map((query,i)=>{
+                   return(
+                   <tr key={i}>
+                    <td>000000{query.id}</td>
+                    <td>{query.name}</td>
+                    <td>{query.to_places}</td>
+                    <td>{query.arrival}</td>
+                    <td><i className="fa fa-inr" /> 6000</td>
+                  </tr>
+                  )
+                  })
+                  }
+                  <tr>
+                   <td colSpan="5">
+                     <div className="placebidbtn">
+                       <a href="customer/bookings" className="btn btn-primary">View More</a>
+                     </div>
+                   </td>
                   </tr>
               </tbody>
             </table>

@@ -8,6 +8,7 @@ export default class Bookings extends Component {
   constructor(props){
     super(props);
     this.state={
+      user:{},
       queries:[],
      activePage:1,
      itemsCountPerPage:1,
@@ -18,7 +19,11 @@ export default class Bookings extends Component {
  }
  componentDidMount(){
 
-   axios.get('/api/queries')
+  let stateqq = localStorage["appState"];
+      let AppState = JSON.parse(stateqq);
+    if (AppState.isLoggedIn == true) {
+      this.setState({user : AppState.user});
+       axios.get('/api/queries/'+AppState.user.id)
    .then(response=>{
     this.setState({
       queries:response.data.data,
@@ -27,11 +32,12 @@ export default class Bookings extends Component {
       activePage:response.data.current_page
     })
   });
+    }
 
  }
 
  handlePageChange(pageNumber) {
-  axios.get('/api/queries?page='+pageNumber)
+  axios.get('/api/queries/'+this.state.user.id+'?page='+pageNumber)
   .then(response=>{
     this.setState({
       queries:response.data.data,
@@ -61,7 +67,7 @@ render() {
        <div className="booking-page">
             <h1>Upcoming Booking</h1>
                   <table className="table table-bordered booking">
-                     <thead class="thead-primary">
+                     <thead className="thead-primary">
                         <tr>
                            <th scope="col">Booking Type</th>
                            <th scope="col">Start Date</th>
@@ -77,12 +83,12 @@ render() {
                            return(
                            <tr key={i}>
                               <td>{query.booking_type}</td>
-                              <td>{query.start_at}</td>
-                              <td>{query.end_on}</td>
-                              <td>{query.pick_up}</td>
-                              <td>{query.destination}</td>
-                              <td>{query.persons}</td>
-                              <td><a href="/customer-booking" class="btn btn-default">View More</a></td>
+                              <td>{query.depart}</td>
+                              <td>{query.arrival}</td>
+                              <td>{query.from_places}</td>
+                              <td>{query.to_places}</td>
+                              <td>{query.no_of_adults+query.no_of_childrens+query.no_of_infants}</td>
+                              <td><a href={'/customer-booking/'+query.id} className="btn btn-default">View More</a></td>
                            </tr>
                            )
                         })

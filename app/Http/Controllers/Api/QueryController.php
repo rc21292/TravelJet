@@ -15,9 +15,9 @@ class QueryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $result = Query::paginate(5);
+        $result = booking::where('user_id',$id)->paginate(5);
         return $result;
     }
 
@@ -99,9 +99,36 @@ class QueryController extends Controller
     public function show($id)
     {
 
-        $project = Query::find($id);
+        $project = Booking::find($id);
 
-        return $project->toJson();
+        return $project;
+    }
+
+     public function getStopages($id)
+     {
+
+        $project = Booking::select('stopeges')->find($id);
+
+        $stopages = "";
+
+        $kay_first = array_key_first(json_decode($project->stopeges));
+        $kay_last = array_key_last(json_decode($project->stopeges));
+
+        foreach (json_decode($project->stopeges) as $key => $value) {
+
+            if ($key ==0){
+                $stopages .= ucfirst($value->stopage);
+            }else{
+                $stopages .= " -> " . ucfirst($value->stopage);
+            }
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'stopages' => $stopages,
+        ], 200);  
+
     }
 
     /**
@@ -163,4 +190,15 @@ class QueryController extends Controller
         $query = Query::find($id);
         $query->delete();
     }
+
+
+    public function cancel($id)
+    {
+        $query = Booking::find($id);
+        $query->status = 'cancelled';
+        $query->save();
+        $project = Booking::find($id);
+        return $project;
+    }
+
 }
