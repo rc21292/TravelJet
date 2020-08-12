@@ -84,7 +84,7 @@ function Header(props) {
       <Route exact path='/browse-bookings' component={BrowseBookings} />
       <Route exact path='/booking-details' component={BookingDetails} />
       <Route exact path='/customer-booking/:id' component={CustomerBookings} />
-      <Route exact path='/quotations' component={Qutations} />
+      <Route exact path='/quotations/:id' component={Qutations} />
       <Route exact path='/booked' component={Booked} />
       <Route exact path='/Bookings' component={Bookings} />
       <Route exact path='/queries' component={Queries} />

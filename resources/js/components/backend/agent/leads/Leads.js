@@ -209,7 +209,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -220,7 +220,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -231,7 +231,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -242,7 +242,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         <tr>
                           <td>0000000</td>
@@ -253,7 +253,7 @@ const handleClick = () => {
                           <td><i className="fa fa-inr" /> 5500</td>
                           <td>Delhi</td>
                           <td>Manali</td>
-                          <td><a href="/quotations" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                       </tbody>
                     </table>

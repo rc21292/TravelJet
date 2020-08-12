@@ -3,104 +3,152 @@ import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
-import { useState, useEffect } from 'react'  
+import { useState, useEffect, Fragment } from 'react'  
 
-function Qutations(props) { 
+function Qutations({match}) { 
 
   const history = useHistory()
   const location = useLocation()
 
+
+  const initialQuotationState = {
+    booking_id: match.params.id,
+    user_id: null,
+    payment: 0,
+    total_payment: 0,
+    payment_first: 0,
+    payment_second: 0,
+    payments: null
+  };
+
+  const [quotations, setQuotations] = useState(initialQuotationState);
+  const [bookingData, setBookingData] = useState({});  
+  const [stopeges, setStopages] = useState(false);  
+  const [submitted, setSubmitted] = useState(false);
+
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isErrors, setIsErrors] = useState(0);
    const [user, setUser] = useState(false);
-
-  const [payoutsData, setPayoutsData] = useState([]);  
-  const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
-  const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
-
+    const [inputFields, setInputFields] = useState([{payment:''}]);
+ 
   useEffect(() => {  
-
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
-      });
-    }   
+      setQuotations({ ...quotations, user_id: AppState.user.id });
 
+      axios.get('/api/quotations/getQuotation/'+AppState.user.id)
+      .then(response=>{
+        console.log(response.data.total_payment);
+        if (response.data) {
+          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_second:response.data.payment_second })
+        }else{
+        }
+      }); 
+
+      axios.get('/api/quotations/getQuotationPayment/'+AppState.user.id)
+      .then(response=>{
+        if (response.data) {
+          setInputFields(response.data);
+        }else{
+        setInputFields([{ payment: ''}]);
+        }
+      }); 
+
+
+      const GetData = async () => {  
+      const result = await axios('/api/queries/show/'+match.params.id);  
+      setBookingData(result.data);  
+
+       const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
+      setStopages(result1.data.stopages);  
+    };  
+  
+    GetData();  
+
+    }   
   }, []);  
 
 
-  const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
+const myFunction = () =>  {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("myInput");
+ /*   filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }*/
 }
 
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
-  };
+const handleInputChanges = event => {
+    const { name, value } = event.target;
+     if (name === "payment") {
+      const total_paymentt = parseInt(value) + ((value * 15)/100);
+      console.log(total_paymentt);
+    // setQuotations({ ...quotations, payments: total_paymentt });
+    setQuotations({ ...quotations, payment:value,total_payment: total_paymentt });
+  }else{
 
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
-
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
-
+    setQuotations({ ...quotations, [name]: value });
   }
-  const findByFilter = () => {
+  };
 
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
+
+const saveBid = () => {
+    var data = quotations;
+    axios({
+      method: 'post',
+      url: '/api/quotations/storeBid',
+      data: data,
+    })
+    .then(response => {
+      setSubmitted(true);
+      //window.location = '/customer/bookings';     
     })
     .catch(e => {
       console.log(e);
     });
   };
 
+const handleInputChange = (index, event) => {
+  const values = [...inputFields];
+  if (event.target.name === "payment") {
+    values[index][event.target.name] = event.target.value;
+  }
+  setInputFields(values);
+  setQuotations({ ...quotations, payments: values });
+};
+
+const handleAddFields = () => {
+  const values = [...inputFields];
+  if(values.length < 5){
+    setInputFields([...inputFields, { payment:''}]);
+  }
+};
+
+const handleRemoveFields = (index, event) => {
+  alert(index);
+  event.preventDefault();
+  const values = [...inputFields];
+  console.log(values);
+  values.splice(index, 1);
+  setInputFields(values);
+  setQuotations({ ...quotations, payments: values });
+
+};
+
+
   return (  
-     <div className="bookingvenderlist">
+          <div className="bookingvenderlist">
         <main id="wt-main" className="wt-main wt-haslayout wt-innerbgcolor">
           <div className="wt-main-section wt-haslayout">
             {/* User Listing Start*/}
@@ -143,25 +191,26 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="headerbudget">
                                       <div className="budgetprice">
-                                        <b>Budget:</b> <i className="fa fa-inr" /> 3500 - 5500
+                                        <b>Budget:</b> <i className="fa fa-inr" /> {bookingData.vehicle_budget}
                                       </div>
-                                      <span>Booking ID:0000000</span>
+                                      <span>Booking ID:000000{bookingData.id}</span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               <div className="bookeddetail">
                                 <ul className="list-unstyled">
-                                  <li><span><div className="oneway">One Way Trip</div></span></li>
-                                  <li><span><div className="bktitle">Booking Title: Delhi to Manali Cab Booking</div></span></li>
-                                  <li><span>Pickup Location: <b>Delhi</b></span></li>
-                                  <li><span>Stoppage During the trip : <b>Kurukshetra - Ambala - Chandigarh</b></span></li>
-                                  <li><span>Depart : <b>22nd March 2020</b></span></li>
-                                  <li><span>Pickup Time : <b>3:00 AM</b></span></li>
-                                  <li><span>Number of Person : <b>4 Adults + 2 Children + 2 infants</b></span></li>
-                                  <li><span>Type of Vehicle : <b>Hatchback</b></span></li>
+                                  <li><span><div className="oneway"> {bookingData.booking_type}</div></span></li>
+                                  <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
+                                  <li><span>Pickup Location: <b>{bookingData.from_places}</b></span></li>
+                                  <li><span>Stoppage During the trip :  <b>  {stopeges}</b></span></li>
+                                  <li><span>Depart : <b>{bookingData.to_places}</b></span></li>
+                                  <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
+
+                                  <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
+                                  <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
                                   <li><span>Total Kilometers : <b>570</b></span></li>
-                                  <li><span>Description: <b>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</b></span></li>
+                                  <li><span>Description: <b>{bookingData.description}</b></span></li>
                                 </ul>
                               </div>
                             </div>{/*End*/}
@@ -185,13 +234,13 @@ const onChangeYear = e => {
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Type of Booking</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho5">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho5">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" id="inputGroupSelect01" disabled>
-                                        <option selected>One Way Trip</option>
-                                        <option value={1}>One</option>
+                                        <option>One Way Trip</option>
+                                        <option value={1}>One</option>        
                                         <option value={2}>Two</option>
                                         <option value={3}>Three</option>
                                       </select>
@@ -199,7 +248,7 @@ const onChangeYear = e => {
                                     <div className="quotbkedit" style={{display: 'none'}}>
                                       <div className="form-group">
                                         <select className="custom-select form-control" id="inputGroupSelect01">
-                                          <option selected>One Way Trip</option>
+                                          <option>One Way Trip</option>
                                           <option value={1}>One</option>
                                           <option value={2}>Two</option>
                                           <option value={3}>Three</option>
@@ -210,7 +259,7 @@ const onChangeYear = e => {
                                   <div className="col-sm-8">
                                     <div className="formtitle">
                                       <h5>Subject/Title of Booking</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho6">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho6">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -227,7 +276,7 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Pickup Location</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho7">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho7">Edit</a>
                                       </div>
                                     </div>
                                     <div className="book-locationPanel">
@@ -324,7 +373,7 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Drop Location</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho8">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho8">Edit</a>
                                       </div>
                                     </div>
                                     <div className="book-destinationPanel">
@@ -423,11 +472,11 @@ const onChangeYear = e => {
                                   <div className="col-sm-12">
                                     <div className="formtitle">
                                       <h5>Add Stoppage</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho9">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho9">Edit</a>
                                       </div>
                                     </div>
                                     <div className="addstoppage">
-                                      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search Stoppage..." title="Type in a name" />
+                                      <input type="text" id="myInput" onKeyUp={myFunction()} placeholder="Search Stoppage..." title="Type in a name" />
                                       <div id="myUL">
                                         <div className="col-sm-3">
                                           <div className="stopbox">
@@ -442,7 +491,7 @@ const onChangeYear = e => {
                                     </div>
                                     <div className="stoppageedit" style={{display: 'none'}}>
                                       <div className="addstoppage">
-                                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search Stoppage..." />
+                                        <input type="text" id="myInput2" onKeyUp={myFunction()} placeholder="Search Stoppage..." />
                                         <div id="myUL">
                                           <div className="col-sm-3">
                                             <div className="stopbox">
@@ -462,7 +511,7 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Inclusions</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho10">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho10">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -488,7 +537,7 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Exclusions</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho11">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho11">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -518,12 +567,12 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Cab Details</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho12">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho12">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" id="inputGroupSelect01" disabled>
-                                        <option selected>Hatchback</option>
+                                        <option>Hatchback</option>
                                         <option value={1}>One</option>
                                         <option value={2}>Two</option>
                                         <option value={3}>Three</option>
@@ -532,7 +581,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                     <div className="cabdetailedit" style={{display: 'none'}}>
                                       <div className="form-group">
                                         <select className="custom-select form-control" id="inputGroupSelect01">
-                                          <option selected>Select Cab Type..</option>
+                                          <option>Select Cab Type..</option>
                                           <option value={1}>One</option>
                                           <option value={2}>Two</option>
                                           <option value={3}>Three</option>
@@ -543,7 +592,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Cab Modal</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho13">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho13">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -558,7 +607,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Total Kilometers</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho14">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho14">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -575,7 +624,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Sitting Capacity</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho15">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho15">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -590,12 +639,12 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Luggage Space</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho16">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho16">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" id="inputGroupSelect01" disabled>
-                                        <option selected>2</option>
+                                        <option>2</option>
                                         <option value={1}>1</option>
                                         <option value={2}>2</option>
                                         <option value={3}>3</option>
@@ -607,7 +656,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                     <div className="luggageedit" style={{display: 'none'}}>
                                       <div className="form-group">
                                         <select className="custom-select form-control" id="inputGroupSelect01">
-                                          <option selected>Select Number of Bag..</option>
+                                          <option>Select Number of Bag..</option>
                                           <option value={1}>1</option>
                                           <option value={2}>2</option>
                                           <option value={3}>3</option>
@@ -623,7 +672,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-12">
                                     <div className="formtitle">
                                       <h5>Note:(Optional)</h5>
-                                      <div className="quedit"><a href="JavaScript:void(0)" className="btnsho17">Edit</a>
+                                      <div className="quedit"><a href="" className="btnsho17">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
@@ -664,29 +713,86 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                       <span className="input-group-btn">
                                         <i className="fa fa-inr" />
                                       </span>
-                                      <input type="name" className="form-control" placeholder={6000} />
-                                    </div>
-                                  </div>
-                                  <div className="col-sm-4">
-                                    <div className="input-group">
-                                      <span className="input-group-btn">
-                                        <i className="fa fa-inr" />
-                                      </span>
-                                      <input type="name" className="form-control" placeholder={6000} />
-                                    </div>
-                                  </div>
-                                  <div className="col-sm-4">
-                                    <div className="input-group">
-                                      <span className="input-group-btn">
-                                        <i className="fa fa-inr" />
-                                      </span>
-                                      <input type="name" className="form-control" placeholder={6000} />
+                                      <input type="number" name="payment" value={quotations.payment} onChange={handleInputChanges} className="form-control" placeholder={6000} />
                                     </div>
                                   </div>
                                 </div>
-                                <div className="gstdescrip">The Total amount of booking after adding GST and our service charges:6000 + 5% GST + 10% SC = <i className="fa fa-inr" /> 6900 </div>
+                                <div className="gstdescrip">The Total amount of booking after adding GST and our service charges:{quotations.payment} + 5% GST + 10% SC = <i className="fa fa-inr" /> {quotations.total_payment} </div>
+                                <hr />
+                                <div className="row">
+                                  <div className="col-sm-4">
+                                    <div className="formtitle">
+                                      <h5>Suggest a advance payment</h5>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="form-group col-sm-4">
+                                    <label htmlFor="payment">1st Payment</label>
+                                    <div className="input-group">
+                                      <span className="input-group-btn">
+                                        <i className="fa fa-inr" />
+                                      </span>
+                                      <input type="number" value={quotations.payment_first} name="payment_first" onChange={handleInputChanges} className="form-control" placeholder={6000} />
+                                    </div>
+                                  </div>
+                                  <div className="form-group col-sm-3">
+                                    <a href="#">Check Payment Details</a>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="form-group col-sm-4">
+                                    <label htmlFor="payment">2st Payment</label>
+                                    <div className="input-group">
+                                      <span className="input-group-btn">
+                                        <i className="fa fa-inr" />
+                                      </span>
+                                      <input type="number" value={quotations.payment_second} name="payment_second" onChange={handleInputChanges} className="form-control" placeholder={6000} />
+                                    </div>
+                                  </div>
+                                  <div className="form-group col-sm-3">
+                                    <a href="#">Check Payment Details</a>
+                                  </div>
+                                </div>
+                                
+                                <div className="row col-sm-12">
+                                  <div className="form-group ">
+                                    <div className="">
+                                      <button onClick={() => handleAddFields()} className="btn btn-primary" >Add Another Installments</button>
+                                      {inputFields.map((inputField, index) => (
+                                        <Fragment key={`${inputField}~${index}`}>
+                                          { 
+                                            index > 0 ?
+                                            <div className="row col-sm-12">
+
+                                              <div className="form-group col-sm-4">
+                                                  <label htmlFor="payment">Enter Amount {index}</label>
+                                                  <div className="input-group">
+                                                      <span className="input-group-btn">
+                                                          <i className="fa fa-inr" />
+                                                      </span>
+                                                      <input type="number" value={inputField.payment} name="payment" onChange={event => handleInputChange(index, event)} className="form-control" placeholder={6000} />
+                                                  </div>
+                                              </div>
+                                              <div className="form-group col-sm-3">
+                                                  <a href="#">Check Payment Details</a>
+                                              </div>
+
+                                              <div className="form-group col-sm-3">
+                                                  <a onClick={event => handleRemoveFields(index, event)} id="remove1" className=" remove-me">remove</a>
+                                              </div>
+                                            </div>
+                                            :null
+                                          }
+                                        </Fragment>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  
                                 <div className="placebidbtn">
-                                  <a href="http://n2rtech.com/traveljetadmin/myleads.php" className="btn btn-primary">Place Bid</a>
+                                  <a onClick={saveBid} className="btn btn-primary">Place Bid</a>
                                 </div>
                               </div>
                             </div>

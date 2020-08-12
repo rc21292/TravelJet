@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('queries/{id}','Api\QueryController@index');
 Route::post('queries/store','Api\QueryController@store');
+Route::post('quotations/storeBid','QuotationController@storeBid');
+Route::get('quotations/getQuotation/{id}','QuotationController@getQuotation');
+Route::get('quotations/getQuotationPayment/{id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
 Route::delete('queries/cancel/{id}','Api\QueryController@cancel');
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
