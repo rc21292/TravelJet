@@ -124,10 +124,7 @@ function Bookings({match}) {
                                   </div>
                                   <div className="col-sm-5">
                                     <div className="headerbudget">
-                                      <span>Booking ID:000000 <b>Total Cost:</b> <i className="fa fa-inr" /> {bookingData.vehicle_budget}
-                                      </div>
                                       <span>Booking ID:000000{bookingData.id}</span>
-                                    </span>
                                     </div>
                                   </div>
                                 </div>
