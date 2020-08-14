@@ -2,102 +2,49 @@ import React from 'react'
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
 
-import Pagination from "react-js-pagination";
-import { useState, useEffect } from 'react'  
+import Moment from 'react-moment';
 
-function Booked(props) { 
+
+import { useState, useEffect } from 'react'  
+function Booked({match}) { 
 
   const history = useHistory()
-  const location = useLocation()
 
-   const [user, setUser] = useState(false);
+  const [bookingData, setBookingData] = useState({});  
+  const [customer, setCustomer] = useState({});  
+  const [stopeges, setStopages] = useState(false);  
+  
+   useEffect(() => {  
+    const GetData = async () => { 
+      axios.get('/api/queries/show/'+match.params.id+'?type=booked').then((result) => { 
+        console.log('hhhh',result);
+      setBookingData(result.data); 
 
-  const [payoutsData, setPayoutsData] = useState([]);  
-  const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
-  const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
-
-  useEffect(() => {  
-
-    let stateqq = localStorage["appState"];
-    if (stateqq) {
-      let AppState = JSON.parse(stateqq);
-      setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
-      });
-    }   
-
-  }, []);  
+       axios.get('/api/users/show/'+result.data.user_id)
+        .then(response=>{
+          if (response.data) {
+            setCustomer(response.data);
+          }else{
+          }
+        });
+      }); 
 
 
-  const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
 
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
-  };
+       const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
+      setStopages(result1.data.stopages);  
+    };  
+  
+    GetData();  
+  }, []); 
 
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
 
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
-
-  }
-  const findByFilter = () => {
-
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-  };
+  const cancelBooking = (id) => {  
+    axios.delete('/api/queries/cancel/'+ id)  
+      .then((result) => {  
+       setBookingData(result.data);  
+      });  
+  };  
 
   return (  
      <div className="bookingvenderlist">
@@ -117,11 +64,11 @@ const onChangeYear = e => {
                             </div>
                             <div className="customerabout">
                               <ul className="list-unstyled">
-                                <li><span><i className="fa fa-user" />Name : Ranjeet Singh</span></li>
-                                <li><span><i className="fa fa-phone" />Contact Number : +91 9971717045</span></li>
-                                <li><span><i className="fa fa-envelope" />Email : avisheksubi@gmail.com</span></li>
+                                 <li><span><i className="fa fa-user" />Name : {customer.name}</span></li>
+                                <li><span><i className="fa fa-phone" />Contact Number : +91 {customer.phone}</span></li>
+                                <li><span><i className="fa fa-envelope" />Email : {customer.email}</span></li>
                                 <li><span><i className="fa fa-flag" />State : Delhi, INDIA</span></li>
-                                <li><span><i className="fa fa-address-card" />Member Since : 24-Jul-2020</span></li>
+                                <li><span><i className="fa fa-address-card" />Member Since : <Moment format="MMMM - YYYY">{customer.created_at}</Moment></span></li>
                               </ul>
                             </div>
                           </div>
@@ -143,31 +90,31 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="headerbudget">
                                       <div className="budgetprice">
-                                        <b>Budget:</b> <i className="fa fa-inr" /> 3500 - 5500
+                                        <b>Budget:</b> <i className="fa fa-inr" /> {bookingData.vehicle_budget}
                                       </div>
-                                      <span>Booking ID:0000000</span>
+                                      <span>Booking ID:000000{bookingData.id}</span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               <div className="bookeddetail conformbooked">
                                 <ul className="list-unstyled">
-                                  <li><span><div className="oneway">One Way Trip</div><div className="paiddiv">Paid</div></span></li>
-                                  <li><span><div className="bktitle">Booking Title: Delhi to Manali Cab Booking</div></span></li>
-                                  <li><span>Pickup Location: <b>Delhi</b></span></li>
-                                  <li><span>Stoppage During the trip : <b>Kurukshetra - Ambala - Chandigarh</b></span></li>
-                                  <li><span>Depart : <b>22nd March 2020</b></span></li>
-                                  <li><span>Pickup Time : <b>3:00 AM</b></span></li>
-                                  <li><span>Number of Person : <b>4 Adults + 2 Children + 2 infants</b></span></li>
-                                  <li><span>Type of Vehicle : <b>Hatchback</b></span></li>
+                                    <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">Paid</div></span></li>
+                                  <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
+                                  <li><span>Pickup Location: <b>{bookingData.from_places}</b></span></li>
+                                  <li><span>Stoppage During the trip :  <b>  {stopeges}</b></span></li>
+                                  <li><span>Depart : <b>{bookingData.to_places}</b></span></li>
+                                  <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
+                                  <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
+                                  <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
                                   <li><span>Total Kilometers : <b>570</b></span></li>
-                                  <li>
+                                  <li>                                
                                     <div className="row">
                                       <div className="col-sm-6">
                                         <div className="bookedinclusion">Inclusions</div>
                                         <div className="form-group">
                                           <div className="bookinclusion">
-                                            State Tax,<br /> Toll Tax <br />Driver allowance<br /> Taxes
+                                            State Tax,<br /> {bookingData.inclusions}
                                           </div>
                                         </div>
                                       </div>
@@ -175,20 +122,22 @@ const onChangeYear = e => {
                                         <div className="bookedinclusion">Exclusions</div>
                                         <div className="form-group">
                                           <div className="bookinclusion">
-                                            Parking<br />
-                                            Night time allowance<br />
-                                            Additional place/destination visit<br /> Any type of Permits and Entrance fees.
+                                           {bookingData.exclusions}
                                           </div>
                                         </div>
                                       </div>
                                     </div>
                                   </li>
-                                  <li><span>Description: <b>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</b></span></li>
+                                  <li><span>Description: <b>{bookingData.description}</b></span></li>
                                 </ul>
                               </div>
                             </div>{/*End*/}
                             <div className="placebidbtn movebtn">
-                              <a href="#" className="btn btn-primary">Send Voucher</a><a href="#" className="btn btn-primary">Send Invoice</a><a href="#" className="btn btn-primary">Cancel This Booking</a>
+                              <a href="#" className="btn btn-primary">Send Voucher</a><a href="#" className="btn btn-primary">Send Invoice</a>
+                               { (bookingData.status == 'cancelled') ?
+                              <a className="btn btn-primary">This Booking Canceled</a> :
+                              <a onClick={event => cancelBooking(bookingData.id)} className="btn btn-primary">Cancel This Booking</a> 
+                            }
                             </div>
                           </div>{/*End*/}
                         </div>

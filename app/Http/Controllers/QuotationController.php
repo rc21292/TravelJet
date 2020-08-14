@@ -40,6 +40,27 @@ class QuotationController extends Controller
     }
 
 
+    public function awardBooking($id)
+    {
+        DB::table('quotations')
+        ->where('id', $id)
+        ->update(['status'=> 'awarded']);
+
+        $quotation =  Quotation::where('id',$id)->first();
+
+        DB::table('bookings')
+        ->where('id', $quotation->booking_id)
+        ->update(['status'=> 'awarded']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking awarded!'
+        ], 200);
+
+    }
+
+
+
     public function storeQuotation(Request $request)
     {
         $data = $request->all();

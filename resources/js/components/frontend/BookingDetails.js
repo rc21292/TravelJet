@@ -168,7 +168,7 @@ function BookingDetails({match}) {
                                   </div>
                                   <div className="col-sm-5">
                                     <div className="headerbudget">
-                                      <span>Booking ID:0000000</span>
+                                      <span>Booking ID:000000{bookingData.id}</span>
                                     </div>
                                   </div>
                                 </div>

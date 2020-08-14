@@ -23,6 +23,7 @@ Route::get('queries','Api\QueryController@getQueries');
 Route::post('queries/store','Api\QueryController@store');
 Route::post('quotations/storeBid','QuotationController@storeBid');
 Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
+Route::post('quotations/awardBooking/{id}','QuotationController@awardBooking');
 Route::get('quotations/getQuotation/{id}','QuotationController@getQuotation');
 Route::get('quotations/getQuotationByBookingId/{id}','QuotationController@getQuotationByBookingId');
 Route::get('quotations/getQuotationPayment/{id}','QuotationController@getQuotationPayment');

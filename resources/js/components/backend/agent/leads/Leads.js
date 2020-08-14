@@ -163,7 +163,7 @@ function Leads(props) {
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
-                    <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                    <div className="d-flex justify-content-center" style={{marginLeft: '20%'}}>
                      <Pagination
                      activePage={activePage}
                      itemsCountPerPage={itemsCountPerPage}
@@ -209,62 +209,28 @@ function Leads(props) {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/bookings" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
+                       {
+                          bookingsData.map((booking,i)=>{
+                            return(   
+                            <tr key={i}>
+                              <td>000000{booking.id}</td>
+                              <td>{booking.booking_name}</td>
+                              <td>{booking.name}</td>
+                              <td>{booking.booking_type}</td>
+                              <td><Moment format="DD-MMM-YYYY">{booking.created_at}</Moment></td>
+                              <td>{booking.from_places}</td>
+                              <td>{booking.to_places}</td>
+                              <td><a href={'/bookings/'+booking.id} className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                            </tr>
+                            )
+                          })
+                        }
                       </tbody>
                     </table>
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
-                    <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                    <div className="d-flex justify-content-center" style={{marginLeft: '20%'}}>
                      <Pagination
                      activePage={activePage1}
                      itemsCountPerPage={itemsCountPerPage1}
@@ -310,62 +276,28 @@ function Leads(props) {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/booked" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
+                       {
+                          bookedsData.map((booked,i)=>{
+                            return(   
+                            <tr key={i}>
+                              <td>000000{booked.id}</td>
+                              <td>{booked.booking_name}</td>
+                              <td>{booked.name}</td>
+                              <td>{booked.booking_type}</td>
+                              <td><Moment format="DD-MMM-YYYY">{booked.created_at}</Moment></td>
+                              <td>{booked.from_places}</td>
+                              <td>{booked.to_places}</td>
+                              <td><a href={'/booked/'+booked.id} className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                            </tr>
+                            )
+                          })
+                        }
                       </tbody>
                     </table>
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
-                    <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                    <div className="d-flex justify-content-center" style={{marginLeft: '20%'}}>
                      <Pagination
                      activePage={activePage2}
                      itemsCountPerPage={itemsCountPerPage2}

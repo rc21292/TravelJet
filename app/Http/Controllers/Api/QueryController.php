@@ -23,21 +23,21 @@ class QueryController extends Controller
                      ->select('bookings.*','quotations.payment')
                      ->where('quotations.status','pending')
                      ->where('quotations.user_id',$id)
-                     ->paginate(6);
+                     ->paginate(5);
         }else if($request->type == 'booking'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
-                     ->where('quotations.status','awarded')->where('bookings.status','!=','posted')
+                     ->where('quotations.status','awarded')->where('bookings.status','awarded')
                      ->where('quotations.user_id',$id)
-                     ->paginate(6);
+                     ->paginate(5);
         }else if($request->type == 'booked'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
-                     ->where('bookings.status','booked')->where('bookings.status','booked')
+                     ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('quotations.user_id',$id)
-                     ->paginate(6);
+                     ->paginate(5);
         }else{
             $result = Booking::where('user_id',$id)->paginate(5);
         }
@@ -152,12 +152,35 @@ class QueryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+       if ($request->type=='booked') {
+        DB::connection()->enableQueryLog();
+            $result = Booking::
+            join('quotations', 'bookings.id' ,'quotations.booking_id')
+            ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
+            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions')
+            ->where('bookings.id',$id)->where('quotations.status','booked')
+            ->first();
+            $queries = DB::getQueryLog();
+            $last_query = end($queries);
+            // echo "<pre>";print_r($last_query);"</pre>";exit;
+        }else if ($request->type=='booking') {
+        DB::connection()->enableQueryLog();
+            $result = Booking::
+            join('quotations', 'bookings.id' ,'quotations.booking_id')
+            ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
+            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions')
+            ->where('bookings.id',$id)->where('quotations.status','awarded')
+            ->first();
+            $queries = DB::getQueryLog();
+            $last_query = end($queries);
+            // echo "<pre>";print_r($last_query);"</pre>";exit;
+        }else{            
+        $result = Booking::find($id);
+        }
 
-        $project = Booking::find($id);
-
-        return $project;
+        return $result;
     }
 
 

@@ -57,6 +57,17 @@ function QuotationDetaills({id}) {
   };  
 
 
+
+  const awardBooking = (id) => {
+    axios.post('/api/quotations/awardBooking/'+ id)  
+    .then((result) => { 
+    if (result.data.success) {
+      alert('Awarded');
+    } 
+      //window.location.reload(false);
+    });  
+  };  
+
   const deleteQuotation = (id) => {
   axios.delete('/api/queries/delete/'+ id)  
       .then((result) => {  
@@ -133,7 +144,7 @@ function QuotationDetaills({id}) {
                 </div>
               </div>
               <ul className="wt-userlisting-breadcrumb awardbookig">
-                <li><span><a href="#" className="btn btn-primary">Award Booking</a></span>
+                <li><span><a onClick={event => awardBooking(quotation2.id)} className="btn btn-primary">Award Booking</a></span>
                 </li>
                 <li><span> <a href="#" className="btn btn-default chatbtn">Chat Now</a></span>
                 </li>
@@ -330,8 +341,7 @@ function QuotationDetaills({id}) {
             </div>
           </div>
         </div>
-      </div>
-                   
+      </div>                  
              
 		);
 	
