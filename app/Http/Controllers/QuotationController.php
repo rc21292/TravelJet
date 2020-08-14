@@ -120,7 +120,7 @@ class QuotationController extends Controller
 
     public function getQuotationByBookingId($id)
     {
-       return $quotation = Quotation::where('booking_id',$id)->get();
+       return $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->get();
     }
 
 

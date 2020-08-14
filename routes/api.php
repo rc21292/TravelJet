@@ -32,6 +32,7 @@ Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioI
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
+Route::get('queries/getStopagesData/{id}','Api\QueryController@getStopagesData');
 Route::get('queries/getQueriesByUserId/{id}','Api\QueryController@getQueriesByUserId');
 Route::post('queries/update/{id}','Api\QueryController@update');
 Route::post('users/update/{id}','UserController@update');

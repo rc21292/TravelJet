@@ -160,6 +160,33 @@ class QueryController extends Controller
         return $project;
     }
 
+
+     public function getStopagesData($id)
+     {
+
+        $project = Booking::select('stopeges')->find($id);
+
+        $stopages = "";
+
+        $kay_first = array_key_first(json_decode($project->stopeges));
+        $kay_last = array_key_last(json_decode($project->stopeges));
+
+        $data_arr = array();
+
+        foreach (json_decode($project->stopeges) as $key => $value) {
+                array_push($data_arr, $value->stopage);
+           
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'stopages' => $data_arr,
+        ], 200);  
+
+    }
+
+
      public function getStopages($id)
      {
 
