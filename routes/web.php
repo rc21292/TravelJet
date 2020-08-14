@@ -19,7 +19,7 @@ Route::get('/CompanyInfo', function () { return view('welcome'); });
 Route::get('/DriveWithUs', function () { return view('welcome'); });
 Route::get('/HowitWorks', function () { return view('welcome'); });
 Route::get('/browse-bookings', function () { return view('welcome'); });
-Route::get('/booking-details', function () { return view('welcome'); });
+Route::get('/booking-details/{id}', function () { return view('welcome'); });
 Route::get('/customer-booking/{id}', function () { return view('welcome'); });
 Route::get('/quotations/{id}', function () { return view('welcome'); });
 Route::get('/bookings', function () { return view('welcome'); });

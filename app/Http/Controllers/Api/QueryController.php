@@ -15,9 +15,65 @@ class QueryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index(Request $request, $id)
     {
-        $result = booking::where('user_id',$id)->paginate(5);
+        if ($request->type == 'quotation') {
+             $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*','quotations.payment')
+                     ->where('quotations.status','pending')
+                     ->where('quotations.user_id',$id)
+                     ->paginate(6);
+        }else if($request->type == 'booking'){
+            $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+                     ->where('quotations.status','awarded')->where('bookings.status','!=','posted')
+                     ->where('quotations.user_id',$id)
+                     ->paginate(6);
+        }else if($request->type == 'booked'){
+            $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+                     ->where('bookings.status','booked')->where('bookings.status','booked')
+                     ->where('quotations.user_id',$id)
+                     ->paginate(6);
+        }else{
+            $result = Booking::where('user_id',$id)->paginate(5);
+        }
+        return $result;
+    }
+
+    public function getQueries(Request $request)
+    {
+        // DB::connection()->enableQueryLog();
+
+         $result = Booking::
+         leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+         ->where('bookings.status',$request->status)->where('bookings.status','!=','booked')
+         ->groupBy('bookings.id')
+         ->paginate(6);
+
+         // $queries = DB::getQueryLog();
+         // $last_query = end($queries);
+        return $result;
+    }
+
+    public function getQueriesByUserId(Request $request,$id)
+    {
+        DB::connection()->enableQueryLog();
+
+         $result = Booking::
+         join('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.booking_name','bookings.id','quotations.created_at as date')
+         ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')
+         ->groupBy('bookings.id')
+         ->paginate(6);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+         // echo "<pre>";print_r($last_query);"</pre>";exit;
         return $result;
     }
 
@@ -187,7 +243,7 @@ class QueryController extends Controller
      */
     public function destroy($id)
     {
-        $query = Query::find($id);
+        $query = Booking::find($id);
         $query->delete();
     }
 

@@ -39,6 +39,20 @@ class QuotationController extends Controller
     {
     }
 
+
+    public function storeQuotation(Request $request)
+    {
+        $data = $request->all();
+
+        $data_re = Quotation::create($data);
+       
+            return response()->json([
+                'success' => true,
+                'addresses' => '',
+                'message' => 'Bid Placed successfully!'
+            ], 201);
+    }
+
     public function storeBid(Request $request)
     {
         $payments_data = $request->payments;
@@ -59,31 +73,32 @@ class QuotationController extends Controller
                 ->update(['payments' => serialize(array_values($payments_data)),'agent_id' => $request->user_id]);
 
             }
+            return response()->json([
+                'success' => true,
+                'addresses' => '',
+                'message' => 'Bid Placed successfully!'
+            ], 201);
         }else{
-           DB::table('quotations')
-           ->where('user_id', $request->user_id)
-           ->update($data);
-
-           if (isset($payments_data)) {
-
             DB::table('quotations')
             ->where('user_id', $request->user_id)
-            ->update(['payments' => serialize(array_values($payments_data)),'agent_id' => $request->user_id]);
+            ->update($data);
 
-        }
+            if (isset($payments_data)) {
+
+                DB::table('quotations')
+                ->where('user_id', $request->user_id)
+                ->update(['payments' => serialize(array_values($payments_data)),'agent_id' => $request->user_id]);
+
+            }
+
+            return response()->json([
+                'success' => true,
+                'addresses' => '',
+                'message' => 'Bid Edited successfully!'
+            ], 201);
+        }   
+
     }
-
-
-
-
-
-    return response()->json([
-        'success' => true,
-        'addresses' => '',
-        'message' => 'Quotation Saved successfully!'
-    ], 201);
-
-}
 
     /**
      * Display the specified resource.
@@ -102,39 +117,25 @@ class QuotationController extends Controller
        return $quotation = Quotation::where('user_id',$id)->first();
     }
 
+
+    public function getQuotationByBookingId($id)
+    {
+       return $quotation = Quotation::where('booking_id',$id)->get();
+    }
+
+
     public function getQuotationPayment($id)
     {
-       $quotation = Quotation::select('payments')->where('user_id',$id)->first();
+        $quotation = Quotation::select('payments')->where('user_id',$id)->first();
 
+        $cars = array("payment"=>'');
 
-//        $array['key1']['key2']=array();
-// array_push($array,$array['key1']=>'one',$array['key2']=>'two')
-// print_r($array['key1']['key2']);
+        $ttt = array();
+        $ttt = unserialize($quotation->payments);
+        array_unshift($ttt, $cars);
 
+        return $ttt;
 
-// echo "<pre>";print_r(array_values(unserialize($quotation->payments)));"</pre>";exit;
-
-
-$cars = array("payment"=>'');
-
-$ttt = array();
-$ttt = unserialize($quotation->payments);
-array_unshift($ttt, $cars);
-
-return $ttt;
-
-echo "<pre>";print_r($ttt);"</pre>";exit;
-
-foreach (unserialize($quotation->payments) as $key => $value) {
-   echo "<pre>";print_r($value);"</pre>";exit;
-}
-
-       // $a=array([]["payment"=>""]);
-array_push($cars,array_values(unserialize($quotation->payments)));
-
-
-       echo "<pre>";print_r($cars);"</pre>";exit;
-       return unserialize($quotation->payments);
     }
 
     /**

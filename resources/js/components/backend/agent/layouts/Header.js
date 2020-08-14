@@ -50,8 +50,6 @@ function Header() {
                       </li>
                       <li><a href="/CompanyInfo">Company Info</a>
                       </li>
-                      <li className="calltoAction"><a className="btn btn-primary" href="/query/add">Book Now</a>
-                      </li>
                       {(userId === false) && 
                         <li><a href="/login">Login</a></li>
                       }

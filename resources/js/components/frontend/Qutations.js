@@ -3,7 +3,10 @@ import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
+import Moment from 'react-moment';
 import { useState, useEffect, Fragment } from 'react'  
+
+import FlashMessage from 'react-flash-message'
 
 function Qutations({match}) { 
 
@@ -21,6 +24,11 @@ function Qutations({match}) {
     payments: null
   };
 
+
+const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+
   const [quotations, setQuotations] = useState(initialQuotationState);
   const [bookingData, setBookingData] = useState({});  
   const [stopeges, setStopages] = useState(false);  
@@ -30,6 +38,7 @@ function Qutations({match}) {
   const [errors, setErrors] = useState({});
   const [isErrors, setIsErrors] = useState(0);
    const [user, setUser] = useState(false);
+   const [customer, setCustomer] = useState(false);
     const [inputFields, setInputFields] = useState([{payment:''}]);
  
   useEffect(() => {  
@@ -43,8 +52,7 @@ function Qutations({match}) {
       .then(response=>{
         console.log(response.data.total_payment);
         if (response.data) {
-          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_second:response.data.payment_second })
-        }else{
+          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_second:response.data.payment_second })       }else{
         }
       }); 
 
@@ -60,7 +68,16 @@ function Qutations({match}) {
 
       const GetData = async () => {  
       const result = await axios('/api/queries/show/'+match.params.id);  
-      setBookingData(result.data);  
+      setBookingData(result.data); 
+
+         axios.get('/api/users/show/'+result.data.user_id)
+          .then(response=>{
+            console.log(response.data.total_payment);
+            if (response.data) {
+              setCustomer(response.data);
+            }else{
+            }
+          });  
 
        const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
       setStopages(result1.data.stopages);  
@@ -95,7 +112,7 @@ const handleInputChanges = event => {
       const total_paymentt = parseInt(value) + ((value * 15)/100);
       console.log(total_paymentt);
     // setQuotations({ ...quotations, payments: total_paymentt });
-    setQuotations({ ...quotations, payment:value,total_payment: total_paymentt });
+    setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
   }else{
 
     setQuotations({ ...quotations, [name]: value });
@@ -112,6 +129,7 @@ const saveBid = () => {
     })
     .then(response => {
       setSubmitted(true);
+      setSuccess(response.data.message);
       //window.location = '/customer/bookings';     
     })
     .catch(e => {
@@ -143,7 +161,6 @@ const handleRemoveFields = (index, event) => {
   values.splice(index, 1);
   setInputFields(values);
   setQuotations({ ...quotations, payments: values });
-
 };
 
 
@@ -165,11 +182,11 @@ const handleRemoveFields = (index, event) => {
                             </div>
                             <div className="customerabout">
                               <ul className="list-unstyled">
-                                <li><span><i className="fa fa-user" />Name : Ranjeet Singh</span></li>
-                                <li><span><i className="fa fa-phone" />Contact Number : +91 9971717045</span></li>
-                                <li><span><i className="fa fa-envelope" />Email : avisheksubi@gmail.com</span></li>
+                                <li><span><i className="fa fa-user" />Name : {customer.name}</span></li>
+                                <li><span><i className="fa fa-phone" />Contact Number : +91 {customer.phone}</span></li>
+                                <li><span><i className="fa fa-envelope" />Email : {customer.email}</span></li>
                                 <li><span><i className="fa fa-flag" />State : Delhi, INDIA</span></li>
-                                <li><span><i className="fa fa-address-card" />Member Since : 24-Jul-2020</span></li>
+                                <li><span><i className="fa fa-address-card" />Member Since : <Moment format="MMMM - YYYY">{customer.created_at}</Moment></span></li>
                               </ul>
                             </div>
                           </div>
@@ -696,7 +713,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+                              </div>                               
                               <div className="placebidbook">
                                 <p>You will be able to edit your bid until the booking is awarded to someone.</p>
                                 <div className="row">
@@ -790,10 +807,12 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                     </div>
                                   </div>
                                   
-                                  
-                                <div className="placebidbtn">
-                                  <a onClick={saveBid} className="btn btn-primary">Place Bid</a>
+                                <div className="placebidbtn">                                 
+                                  <a onClick={saveBid} className="btn btn-primary">{quotations.payment_first == 0 ? 'Place Bid' : 'Edit Bid' }</a>
                                 </div>
+                                 {success ? <FlashMessage duration={10000} persistOnHover={true}>
+                                 <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
+                                 
                               </div>
                             </div>
                           </div>{/*End*/}

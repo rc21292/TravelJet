@@ -5,25 +5,20 @@ import { useHistory, useLocation } from 'react-router-dom'
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
 
+import Moment from 'react-moment'
+
 function BrowseBookings(props) { 
 
   const history = useHistory()
   const location = useLocation()
 
-   const [user, setUser] = useState(false);
+  const [user, setUser] = useState(false);
 
-  const [payoutsData, setPayoutsData] = useState([]);  
+  const [bookingsData, setBookingsData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);  
 
   useEffect(() => {  
 
@@ -31,15 +26,11 @@ function BrowseBookings(props) {
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
+      axios.get('/api/queries?status=posted').then(result=>{
+        setBookingsData(result.data.data); 
+        setItemsCountPerPage(result.data.per_page);  
+        setTotalItemsCount(result.data.total);  
+        setActivePage(result.data.current_page);
       });
     }   
 
@@ -48,56 +39,15 @@ function BrowseBookings(props) {
 
   const handlePageChange = (pageNumber) => {
     console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
+    axios.get('/api/queries?status=posted'+'&page='+pageNumber)
 
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
-  };
-
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
-
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
-
-  }
-  const findByFilter = () => {
-
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-    })
-    .catch(e => {
-      console.log(e);
+    .then(result=>{
+      setBookingsData(result.data.data);
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
     });
-  };
+  }
 
   return (  
      <div className="bookingvenderlist">
@@ -242,7 +192,7 @@ const onChangeYear = e => {
                           <div className="wt-widget wt-applyfilters-holder">
                             <div className="wt-widgetcontent">
                               <div className="wt-applyfilters">
-                                <a href="javascript:void(0);" className="wt-btn btn btn-primary">Apply Filters</a>
+                                <a href="" className="wt-btn btn btn-primary">Apply Filters</a>
                               </div>
                             </div>
                           </div>
@@ -250,143 +200,70 @@ const onChangeYear = e => {
                       </div>
                     </div>
                     <div className="vendersearchlist">
-                      <div className="col-sm-9 float-left">
-                        <div className="rightColumns">
-                          <div className="wt-userlistingholder wt-userlisting wt-haslayout">
-                            <div className="row">
-                              <div className="wt-userlistinghold wt-featured">
-                                <div className="col-sm-9 paddingleft">
-                                  <div className="wt-userlistingcontent">
-                                    <div className="wt-contenthead">
-                                      <div className="wt-title">
-                                        <span>One Way Trip</span>
-                                        <h2>Delhi to Shimla Cab</h2>
+                      {bookingsData.map((booking,i)=>{
+                           return(
+                                <div key={i} className="col-sm-9 float-left">
+                                  <div className="rightColumns">
+                                    <div className="wt-userlistingholder wt-userlisting wt-haslayout">
+                                      <div className="row">
+                                        <div className="clearfix" />
+                                        <div className="wt-userlistinghold wt-featured">
+                                          <div className="col-sm-9 paddingleft">
+                                            <div className="wt-userlistingcontent">
+                                              <div className="wt-contenthead">
+                                                <div className="wt-title">
+                                                  <span>{booking.booking_type}</span>
+                                                  <h2>{booking.booking_name}</h2>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="wt-description">
+                                              <p>{booking.description}</p>
+                                            </div>
+                                            <ul className="wt-userlisting-breadcrumb">
+                                              <li><span><i className="fa fa-map-marker" /> Pickup from: {booking.from_places}</span></li>
+                                              <li><span> <i className="fa fa-taxi" /> Cab: {booking.vehicle_type}</span></li>
+                                              <br />
+                                              <li><span><b>Posted</b>  <Moment interval={1000} parse="YYYY-MM-DD HH:mm" fromNow>{booking.created_at}</Moment> - {booking.count} qoute</span></li>
+                                              <li><span><i className="fa fa-calendar" /> Starting Date: <Moment format="Do MMMM YYYY">{booking.created_at}</Moment></span></li>
+                                            </ul>
+                                          </div>
+                                          <div className="col-sm-3 paddingright">
+                                            <div className="viewbooking">
+                                              <div className="bookingprice">
+                                                <i className="fa fa-inr" />{booking.vehicle_budget}
+                                              </div>
+                                              <span>Booking id : 000000{booking.id}</span>
+                                              <a href={'/booking-details/'+booking.id} className="btn btn-primary">View Booking</a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="clearfix" />
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="wt-description">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                                  </div>
-                                  <ul className="wt-userlisting-breadcrumb">
-                                    <li><span><i className="fa fa-map-marker" /> Pickup from: Delhi</span></li>
-                                    <li><span> <i className="fa fa-taxi" /> Cab: Hachback</span></li>
-                                    <br />
-                                    <li><span><b>Posted</b> 2 minute ago - 0 qoute</span></li>
-                                    <li><span><i className="fa fa-calendar" /> Starting Date: 24th March 2020</span></li>
-                                  </ul>
                                 </div>
-                                <div className="col-sm-3 paddingright">
-                                  <div className="viewbooking">
-                                    <div className="bookingprice">
-                                      <i className="fa fa-inr" /> 45000
-                                    </div>
-                                    <span>Booking id : 0000000</span>
-                                    <a href="/booking-details" className="btn btn-primary">View Booking</a>
-                                  </div>
-                                </div>
-                              </div>{/*END*/}
-                              <div className="clearfix" />
-                              <div className="wt-userlistinghold wt-featured">
-                                <div className="col-sm-9 paddingleft">
-                                  <div className="wt-userlistingcontent">
-                                    <div className="wt-contenthead">
-                                      <div className="wt-title">
-                                        <span>One Way Trip</span>
-                                        <h2>Delhi to Shimla Cab</h2>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="wt-description">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                                  </div>
-                                  <ul className="wt-userlisting-breadcrumb">
-                                    <li><span><i className="fa fa-map-marker" /> Pickup from: Delhi</span></li>
-                                    <li><span> <i className="fa fa-taxi" /> Cab: Hachback</span></li>
-                                    <br />
-                                    <li><span><b>Posted</b> 2 minute ago - 0 qoute</span></li>
-                                    <li><span><i className="fa fa-calendar" /> Starting Date: 24th March 2020</span></li>
-                                  </ul>
-                                </div>
-                                <div className="col-sm-3 paddingright">
-                                  <div className="viewbooking">
-                                    <div className="bookingprice">
-                                      <i className="fa fa-inr" /> 45000
-                                    </div>
-                                    <span>Booking id : 0000000</span>
-                                    <a href="/booking-details" className="btn btn-primary">View Booking</a>
-                                  </div>
-                                </div>
-                              </div>{/*END*/}
-                              <div className="clearfix" />
-                              <div className="wt-userlistinghold wt-featured">
-                                <div className="col-sm-9 paddingleft">
-                                  <div className="wt-userlistingcontent">
-                                    <div className="wt-contenthead">
-                                      <div className="wt-title">
-                                        <span>One Way Trip</span>
-                                        <h2>Delhi to Shimla Cab</h2>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="wt-description">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                                  </div>
-                                  <ul className="wt-userlisting-breadcrumb">
-                                    <li><span><i className="fa fa-map-marker" /> Pickup from: Delhi</span></li>
-                                    <li><span> <i className="fa fa-taxi" /> Cab: Hachback</span></li>
-                                    <br />
-                                    <li><span><b>Posted</b> 2 minute ago - 0 qoute</span></li>
-                                    <li><span><i className="fa fa-calendar" /> Starting Date: 24th March 2020</span></li>
-                                  </ul>
-                                </div>
-                                <div className="col-sm-3 paddingright">
-                                  <div className="viewbooking">
-                                    <div className="bookingprice">
-                                      <i className="fa fa-inr" /> 45000
-                                    </div>
-                                    <span>Booking id : 0000000</span>
-                                    <a href="/booking-details" className="btn btn-primary">View Booking</a>
-                                  </div>
-                                </div>
-                              </div>{/*END*/}
-                              <div className="clearfix" />
-                              <div className="wt-userlistinghold wt-featured">
-                                <div className="col-sm-9 paddingleft">
-                                  <div className="wt-userlistingcontent">
-                                    <div className="wt-contenthead">
-                                      <div className="wt-title">
-                                        <span>One Way Trip</span>
-                                        <h2>Delhi to Shimla Cab</h2>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="wt-description">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                                  </div>
-                                  <ul className="wt-userlisting-breadcrumb">
-                                    <li><span><i className="fa fa-map-marker" /> Pickup from: Delhi</span></li>
-                                    <li><span> <i className="fa fa-taxi" /> Cab: Hachback</span></li>
-                                    <br />
-                                    <li><span><b>Posted</b> 2 minute ago - 0 qoute</span></li>
-                                    <li><span><i className="fa fa-calendar" /> Starting Date: 24th March 2020</span></li>
-                                  </ul>
-                                </div>
-                                <div className="col-sm-3 paddingright">
-                                  <div className="viewbooking">
-                                    <div className="bookingprice">
-                                      <i className="fa fa-inr" /> 45000
-                                    </div>
-                                    <span>Booking id : 0000000</span>
-                                    <a href="/booking-details" className="btn btn-primary">View Booking</a>
-                                  </div>
-                                </div>
-                              </div>{/*END*/}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                                )
+                              })
+                            }
+
                   </div>
+                    </div>
+                      <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                     <Pagination
+                     activePage={activePage}
+                     itemsCountPerPage={itemsCountPerPage}
+                     totalItemsCount={totalItemsCount}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>                 
                 </div>
               </div>
               {/* User Listing End*/}

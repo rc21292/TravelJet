@@ -19,9 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('queries/{id}','Api\QueryController@index');
+Route::get('queries','Api\QueryController@getQueries');
 Route::post('queries/store','Api\QueryController@store');
 Route::post('quotations/storeBid','QuotationController@storeBid');
+Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
 Route::get('quotations/getQuotation/{id}','QuotationController@getQuotation');
+Route::get('quotations/getQuotationByBookingId/{id}','QuotationController@getQuotationByBookingId');
 Route::get('quotations/getQuotationPayment/{id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
 Route::delete('queries/cancel/{id}','Api\QueryController@cancel');
@@ -29,6 +32,7 @@ Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioI
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
+Route::get('queries/getQueriesByUserId/{id}','Api\QueryController@getQueriesByUserId');
 Route::post('queries/update/{id}','Api\QueryController@update');
 Route::post('users/update/{id}','UserController@update');
 Route::post('save_address/{id}','AddressController@store');

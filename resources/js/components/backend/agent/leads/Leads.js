@@ -1,159 +1,102 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'  
+import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
 
-import { useState, useEffect } from 'react'
-import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
+import Pagination from "react-js-pagination";
+import { useState, useEffect } from 'react'  
 
+import Moment from 'react-moment'
 
-
-const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
-
-function Leads() {
-
-  const [user, setUser] = useState(false);
-  const [name, setName] = useState(false);
-  const [email, setEmail] = useState(false);
-  const [phone, setPhone] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
-  const [errors, setErrors] = useState({});
-
-  const [readonlyName, setReadonlyName] = useState(true);
-  const [readonlyEmail, setReadonlyEmail] = useState(true);
-  const [readonlyPhone, setReadonlyPhone] = useState(true);
-
-  const [gender, setGender] = useState('');
+function Leads(props) { 
 
   const history = useHistory()
+  const location = useLocation()
 
-  useEffect(() => {
+  const [user, setUser] = useState(false);
+
+  const [quotationsData, setQuotationsData] = useState([]);  
+  const [bookingsData, setBookingsData] = useState([]);  
+  const [bookedsData, setBookedsData] = useState([]);  
+  const [activePage, setActivePage] = useState(1);  
+  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
+  const [totalItemsCount, setTotalItemsCount] = useState(1);  
+
+
+  const [activePage1, setActivePage1] = useState(1);  
+  const [itemsCountPerPage1, setItemsCountPerPage1] = useState(1);  
+  const [totalItemsCount1, setTotalItemsCount1] = useState(1);  
+
+
+  const [activePage2, setActivePage2] = useState(1);  
+  const [itemsCountPerPage2, setItemsCountPerPage2] = useState(1);  
+  const [totalItemsCount2, setTotalItemsCount2] = useState(1); 
+
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);  
+
+  useEffect(() => {  
+
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      setName(AppState.user.name);
-      setEmail(AppState.user.email);
-      setGender(AppState.user.gender);
-      setPhone(AppState.user.phone);
-      if (AppState.isLoggedIn == false) {
-        history.push('/login');
-      }
+      axios.get('/api/queries/'+AppState.user.id+'?type=quotation').then(result=>{
+        setQuotationsData(result.data.data); 
+        setItemsCountPerPage(result.data.per_page);  
+        setTotalItemsCount(result.data.total);  
+        setActivePage(result.data.current_page);
+      });
+      axios.get('/api/queries/'+AppState.user.id+'?type=booking').then(result=>{
+        setBookingsData(result.data.data); 
+        setItemsCountPerPage1(result.data.per_page);  
+        setTotalItemsCount1(result.data.total);  
+        setActivePage1(result.data.current_page);
+      });
+      axios.get('/api/queries/'+AppState.user.id+'?type=booked').then(result=>{
+        setBookedsData(result.data.data); 
+        setItemsCountPerPage1(result.data.per_page);  
+        setTotalItemsCount1(result.data.total);  
+        setActivePage1(result.data.current_page);
+      });
     }   
 
-  },[]); 
+  }, []);  
 
-  const handleChange = (event) => {
-    event.preventDefault();
-    const { name, value } = event.target;
-    let errors = {};
 
-    switch (name) {
-      case 'name': 
-      errors.name = 
-      value.length < 5
-      ? 'Name must be 5 characters long!'
-      : '';
-      setName(value);
-      break;
-      case 'email': 
-      errors.email = 
-      validEmailRegex.test(value)
-      ? ''
-      : 'Email is not valid!';
-      setEmail(value);
-      break;
-      case 'phone': 
-      errors.phone = 
-      value.length < 10
-      ? 'phone must be 10 characters long!'
-      : '';
-      setPhone(value);
-      break;
-      default:
-      break;
-    }
+  const handlePageChange = (pageNumber) => {
+    console.log(location.pathname)
+    axios.get('/api/queries/'+AppState.user.id+'?type=quotation'+'&page='+pageNumber)
 
-    setErrors(errors);
+    .then(result=>{
+      setQuotationsData(result.data.data);
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    });
   }
 
+   const handlePageChange1 = (pageNumber) => {
+    console.log(location.pathname)
+    axios.get('/api/queries/'+AppState.user.id+'?type=booking'+'&page='+pageNumber)
 
-  const validateForm = () => {
-
-    let errors = {};
-    let formIsValid = true;
-
-    if (!name) {
-      formIsValid = false;
-      errors["name"] = "*Please enter Name.";
-    }
-
-    if (!email) {
-      formIsValid = false;
-      errors["email"] = "*Please enter Email.";
-    }
-
-    if(!validEmailRegex.test(email)){
-      formIsValid = false;  
-      errors["email"] = "*Not a valid email Address.";
-    }
-
-    if (!phone) { 
-      formIsValid = false;
-      errors["phone"] = "*Please enter Phone.";
-    }
-
-    setErrors(errors);
-    return formIsValid;
+    .then(result=>{
+      setBookingsData(result.data.data);
+      setItemsCountPerPage1(result.data.per_page);  
+      setTotalItemsCount1(result.data.total);  
+      setActivePage1(result.data.current_page);
+    });
   }
 
+   const handlePageChange2 = (pageNumber) => {
+    console.log(location.pathname)
+    axios.get('/api/queries/'+AppState.user.id+'?type=booked'+'&page='+pageNumber)
 
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if(validateForm(errors)) {
-      event.preventDefault();
-      const query = {
-        name:name,
-        email:email,
-        phone:phone,
-      }
-      let user_id = user.id;
-      axios.post('/api/users/update/'+user.id,query).then(res=>
-      {
-        axios.get("/api/users/show/"+user_id).then(json => {
-          if (json.data) {
-            let userData = {
-              id: json.data.id,
-              name: json.data.name,
-              email: json.data.email,
-              gender: json.data.gender,
-              phone: json.data.phone,
-              role: json.data.role,
-            };
-            let appState = {
-              isLoggedIn: true,
-              user: userData
-            };
-localStorage.setItem('appState', JSON.stringify(appState));
-}
-});
-
-        setIsUpdated(true);
-        setReadonlyName(true);
-        setReadonlyEmail(true);
-        setReadonlyPhone(true);
-
-        window.scrollTo(0, 0);
-      }
-      );
-    }else{
-      console.error('Invalid Form')
-    }
+    .then(result=>{
+      setBookedsData(result.data.data);
+      setItemsCountPerPage2(result.data.per_page);  
+      setTotalItemsCount2(result.data.total);  
+      setActivePage2(result.data.current_page);
+    });
   }
-
-const handleClick = () => {  
-        history.push('/agent/personal-information/edit')   
-  };  
 
   return (
 
@@ -200,82 +143,41 @@ const handleClick = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td><i className="fa fa-inr" /> 5500</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                      {quotationsData.map((quotation,i)=>{
+                           return(   <tr key={i}>
+                          <td>000000{quotation.id}</td>
+                          <td>{quotation.booking_name}</td>
+                          <td>{quotation.name}</td>
+                          <td>{quotation.booking_type}</td>
+                          <td><Moment format="DD-MMM-YYYY">{quotation.created_at}</Moment></td>
+                          <td><i className="fa fa-inr" /> {quotation.payment}</td>
+                          <td>{quotation.from_places}</td>
+                          <td>{quotation.to_places}</td>
+                          <td><a href={'/quotations/'+quotation.id} className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td><i className="fa fa-inr" /> 5500</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td><i className="fa fa-inr" /> 5500</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td><i className="fa fa-inr" /> 5500</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
-                        <tr>
-                          <td>0000000</td>
-                          <td>Delhi Manali Cab Booking for 3 night 4 days with 4 person</td>
-                          <td>Rahul Kumar</td>
-                          <td>One Way</td>
-                          <td>14-Jul-20</td>
-                          <td><i className="fa fa-inr" /> 5500</td>
-                          <td>Delhi</td>
-                          <td>Manali</td>
-                          <td><a href="/quotations/10" className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
-                        </tr>
+                        )
+                              })
+                            }
                       </tbody>
                     </table>
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
-                    <nav aria-label="Page navigation">
-                      <ul className="pagination">
-                        <li className="page-item">
-                          <a href="#" aria-label="Previous">
-                            <i className="fa fa-angle-left" />
-                          </a>
-                        </li>
-                        <li className="active"><a className="page-link" href="#">1</a></li>
-                        <li><a className="page-link" href="#">2</a></li>
-                        <li>
-                          <a href="#" aria-label="Next">
-                            <i className="fa fa-angle-right" />
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
+                    <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                     <Pagination
+                     activePage={activePage}
+                     itemsCountPerPage={itemsCountPerPage}
+                     totalItemsCount={totalItemsCount}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>
                   </div>
                 </div>
               </div>
@@ -362,22 +264,21 @@ const handleClick = () => {
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
-                    <nav aria-label="Page navigation">
-                      <ul className="pagination">
-                        <li className="page-item">
-                          <a href="#" aria-label="Previous">
-                            <i className="fa fa-angle-left" />
-                          </a>
-                        </li>
-                        <li className="active"><a className="page-link" href="#">1</a></li>
-                        <li><a className="page-link" href="#">2</a></li>
-                        <li>
-                          <a href="#" aria-label="Next">
-                            <i className="fa fa-angle-right" />
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
+                    <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                     <Pagination
+                     activePage={activePage1}
+                     itemsCountPerPage={itemsCountPerPage1}
+                     totalItemsCount={totalItemsCount1}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange1}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>
                   </div>
                 </div>
               </div>
@@ -464,22 +365,21 @@ const handleClick = () => {
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
-                    <nav aria-label="Page navigation">
-                      <ul className="pagination">
-                        <li className="page-item">
-                          <a href="#" aria-label="Previous">
-                            <i className="fa fa-angle-left" />
-                          </a>
-                        </li>
-                        <li className="active"><a className="page-link" href="#">1</a></li>
-                        <li><a className="page-link" href="#">2</a></li>
-                        <li>
-                          <a href="#" aria-label="Next">
-                            <i className="fa fa-angle-right" />
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
+                    <div className="d-flex justify-content-center" style={{marginLeft: '50%'}}>
+                     <Pagination
+                     activePage={activePage2}
+                     itemsCountPerPage={itemsCountPerPage2}
+                     totalItemsCount={totalItemsCount2}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange2}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>
                   </div>
                 </div>
               </div>

@@ -123,7 +123,11 @@ const Add = (props) => {
 	}
 
 	const handleInputChanges = event => {
-		const { name, value } = event.target;
+		console.log('krishan', event.target)
+
+		const { name, value, dataId } = event.target;
+		console.log('krishan', dataId)
+
 		setProduct({ ...products, [name]: value });
 	};
 
@@ -277,6 +281,7 @@ const Add = (props) => {
 													  type="text"
 										              className="form-control force-focus startpoint"
 										              id="from_places"
+										              data-id=""
 										              placeholder="Enter Pick Up Location"
 										              onChange={handleInputChanges}
 										              name="from_places"/>

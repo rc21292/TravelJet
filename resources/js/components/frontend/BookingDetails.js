@@ -3,96 +3,89 @@ import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
-import { useState, useEffect } from 'react'  
+import Moment from 'react-moment';
+import { useState, useEffect, Fragment } from 'react'  
 
-function BrowseBookings(props) { 
+import FlashMessage from 'react-flash-message'
+
+function BookingDetails({match}) { 
 
   const history = useHistory()
   const location = useLocation()
 
-   const [user, setUser] = useState(false);
 
-  const [payoutsData, setPayoutsData] = useState([]);  
-  const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
-  const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
+  const initialQuotationState = {
+    booking_id: match.params.id,
+    user_id: null,
+    payment: 0,
+    total_payment: 0,
+  };
+
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+
+  const [quotations, setQuotations] = useState(initialQuotationState);
+  const [bookingData, setBookingData] = useState({});  
+  const [stopeges, setStopages] = useState(false);  
+
+  const [errors, setErrors] = useState({});
+  const [isErrors, setIsErrors] = useState(0);
+  const [user, setUser] = useState(false);
+  const [customer, setCustomer] = useState(false);
 
   useEffect(() => {  
-
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
-      });
-    }   
+      setQuotations({ ...quotations, user_id: AppState.user.id });
 
+      const GetData = async () => {  
+        const result = await axios('/api/queries/show/'+match.params.id);  
+        setBookingData(result.data); 
+
+        axios.get('/api/users/show/'+result.data.user_id)
+        .then(response=>{
+          console.log(response.data.total_payment);
+          if (response.data) {
+            setCustomer(response.data);
+          }else{
+          }
+        });  
+
+        const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
+        setStopages(result1.data.stopages);  
+      };  
+
+      GetData();  
+
+    }   
   }, []);  
 
+  const handleInputChanges = event => {
+    const { name, value } = event.target;
+    if (name === "payment") {
+      const total_paymentt = parseInt(value) + ((value * 15)/100);
+      console.log(total_paymentt);
+      setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
+    }else{
 
-  const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
-
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
+      setQuotations({ ...quotations, [name]: value });
+    }
   };
 
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
 
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
-
-  }
-  const findByFilter = () => {
-
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
+  const saveBid = () => {
+    var data = quotations;
+    axios({
+      method: 'post',
+      url: '/api/quotations/storeQuotation',
+      data: data,
+    })
+    .then(response => {
+     window.location.href = "/agent/leads";
     })
     .catch(e => {
       console.log(e);
@@ -117,11 +110,11 @@ const onChangeYear = e => {
                             </div>
                             <div className="customerabout">
                               <ul className="list-unstyled">
-                                <li><span><i className="fa fa-user" />Name : Ranjeet Singh</span></li>
-                                <li><span><i className="fa fa-phone" />Contact Number : +91 9971717045</span></li>
-                                <li><span><i className="fa fa-envelope" />Email : avisheksubi@gmail.com</span></li>
+                                <li><span><i className="fa fa-user" />Name : {customer.name}</span></li>
+                                <li><span><i className="fa fa-phone" />Contact Number : +91 {customer.phone}</span></li>
+                                <li><span><i className="fa fa-envelope" />Email : {customer.email}</span></li>
                                 <li><span><i className="fa fa-flag" />State : Delhi, INDIA</span></li>
-                                <li><span><i className="fa fa-address-card" />Member Since : 24-Jul-2020</span></li>
+                                <li><span><i className="fa fa-address-card" />Member Since : <Moment format="MMMM - YYYY">{customer.created_at}</Moment></span></li>
                               </ul>
                             </div>
                           </div>
@@ -143,25 +136,25 @@ const onChangeYear = e => {
                                   <div className="col-sm-6">
                                     <div className="headerbudget">
                                       <div className="budgetprice">
-                                        <b>Budget:</b> <i className="fa fa-inr" /> 3500 - 5500
+                                          <b>Budget:</b> <i className="fa fa-inr" /> {bookingData.vehicle_budget}
                                       </div>
-                                      <span>Booking ID:0000000</span>
+                                      <span>Booking ID:000000{bookingData.id}</span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               <div className="bookeddetail">
                                 <ul className="list-unstyled">
-                                  <li><span><div className="oneway">One Way Trip</div></span></li>
-                                  <li><span><div className="bktitle">Booking Title: Delhi to Manali Cab Booking</div></span></li>
-                                  <li><span>Pickup Location: <b>Delhi</b></span></li>
-                                  <li><span>Stoppage During the trip : <b>Kurukshetra - Ambala - Chandigarh</b></span></li>
-                                  <li><span>Depart : <b>22nd March 2020</b></span></li>
-                                  <li><span>Pickup Time : <b>3:00 AM</b></span></li>
-                                  <li><span>Number of Person : <b>4 Adults + 2 Children + 2 infants</b></span></li>
-                                  <li><span>Type of Vehicle : <b>Hatchback</b></span></li>
+                                   <li><span><div className="oneway"> {bookingData.booking_type}</div></span></li>
+                                  <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
+                                  <li><span>Pickup Location: <b>{bookingData.from_places}</b></span></li>
+                                  <li><span>Stoppage During the trip :  <b>  {stopeges}</b></span></li>
+                                  <li><span>Depart : <b>{bookingData.to_places}</b></span></li>
+                                  <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
+                                  <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
+                                  <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
                                   <li><span>Total Kilometers : <b>570</b></span></li>
-                                  <li><span>Description: <b>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</b></span></li>
+                                  <li><span>Description: <b>{bookingData.description}</b></span></li>
                                 </ul>
                               </div>
                             </div>{/*End*/}
@@ -188,7 +181,7 @@ const onChangeYear = e => {
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" id="inputGroupSelect01">
-                                        <option selected>One Way Trip</option>
+                                        <option>One Way Trip</option>
                                         <option value={1}>One</option>
                                         <option value={2}>Two</option>
                                         <option value={3}>Three</option>
@@ -310,7 +303,7 @@ const onChangeYear = e => {
                                       <h5>Add Stoppage</h5>
                                     </div>
                                     <div className="addstoppage">
-                                      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search Stoppage..." title="Type in a name" />
+                                      <input type="text" id="myInput"  placeholder="Search Stoppage..." title="Type in a name" />
                                       <div id="myUL">
                                         <div className="col-sm-3">
                                           <div className="stopbox">
@@ -350,7 +343,7 @@ const onChangeYear = e => {
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" id="inputGroupSelect01">
-                                        <option selected>Select Cab Type..</option>
+                                        <option>Select Cab Type..</option>
                                         <option value={1}>One</option>
                                         <option value={2}>Two</option>
                                         <option value={3}>Three</option>
@@ -389,7 +382,7 @@ const onChangeYear = e => {
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" id="inputGroupSelect01">
-                                        <option selected>Select Number of Bag..</option>
+                                        <option>Select Number of Bag..</option>
                                         <option value={1}>1</option>
                                         <option value={2}>2</option>
                                         <option value={3}>3</option>
@@ -434,17 +427,17 @@ const onChangeYear = e => {
                                       <span className="input-group-btn">
                                         <i className="fa fa-inr" />
                                       </span>
-                                      <input type="name" className="form-control" placeholder={6000} />
+                                      <input type="number" name="payment" onChange={handleInputChanges} className="form-control" placeholder={6000} />
                                     </div>
                                   </div>
                                 </div>
-                                <div className="gstdescrip">The Total amount of booking after adding GST and our service charges:6000 + 5% GST + 10% SC = <i className="fa fa-inr" /> 6900 </div>
+                                <div className="gstdescrip">The Total amount of booking after adding GST and our service charges:{quotations.payment} + 5% GST + 10% SC = <i className="fa fa-inr" /> {quotations.total_payment} </div>
                                 <div className="placebidbtn">
-                                  <a href="http://n2rtech.com/traveljetadmin/myleads.php" className="btn btn-primary">Place Bid</a>
+                                  <a onClick={saveBid} className="btn btn-primary">Place Bid</a>
                                 </div>
                               </div>
                             </div>
-                          </div>{/*End*/}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -459,4 +452,4 @@ const onChangeYear = e => {
   )  
 }  
   
-export default BrowseBookings
+export default BookingDetails

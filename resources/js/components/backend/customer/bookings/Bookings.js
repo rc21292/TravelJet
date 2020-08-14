@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 import axios from 'axios';
 import Pagination from "react-js-pagination";
 
+
 export default class Bookings extends Component {
   constructor(props){
     super(props);
