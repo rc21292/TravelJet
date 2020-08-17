@@ -1,5 +1,65 @@
-import React, { Component, useState, useEffect, Fragment } from 'react';
+import React, { Component, useState,useRef, useEffect, Fragment } from 'react';
 import {BrowserRouter as Router, Link, Route, useHistory} from 'react-router-dom';
+
+
+let autoComplete;
+let autoComplete1;
+
+const loadScript = (url, callback) => {
+  let script = document.createElement("script");
+  script.type = "text/javascript";
+
+  if (script.readyState) {
+    script.onreadystatechange = function () {
+      if (script.readyState === "loaded" || script.readyState === "complete") {
+        script.onreadystatechange = null;
+        callback();
+      }
+    };
+  } else {
+    script.onload = () => callback();
+  }
+
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+};
+
+function handleScriptLoad(
+  updateQuery1,
+  updateQuery,
+  autoCompleteRef1,
+  autoCompleteRef
+) {
+  autoComplete1 = new window.google.maps.places.Autocomplete(
+    autoCompleteRef1.current,
+    { types: ["(cities)"], componentRestrictions: { country: "in" } }
+  );
+  autoComplete1.setFields(["address_components", "formatted_address"]);
+  autoComplete1.addListener("place_changed", () =>
+    handlePlaceSelect1(updateQuery1)
+  );
+
+  autoComplete = new window.google.maps.places.Autocomplete(
+    autoCompleteRef.current,
+    { types: ["(cities)"], componentRestrictions: { country: "in" } }
+  );
+  autoComplete.setFields(["address_components", "formatted_address"]);
+  autoComplete.addListener("place_changed", () =>
+    handlePlaceSelect(updateQuery)
+  );
+}
+
+async function handlePlaceSelect1(updateQuery1) {
+  const addressObject = autoComplete1.getPlace();
+  const query = addressObject.formatted_address;
+  updateQuery1(query);
+}
+
+async function handlePlaceSelect(updateQuery) {
+  const addressObject = autoComplete.getPlace();
+  const query = addressObject.formatted_address;
+  updateQuery(query);
+}
 
 
 const Add = (props) => {
@@ -46,17 +106,28 @@ const Add = (props) => {
 	const [errors, setErrors] = useState({});
 	const [isErrors, setIsErrors] = useState(0);
 
-	useEffect(()=>{
-		var loadScript = function(src) {
-			var tag = document.createElement('script');
-			tag.async = false;
-			tag.src = src;
-			document.body.appendChild(tag);
-		}
 
-		loadScript('/frontend/js/main/book.js')
-		loadScript('/frontend/js/main/map.js')
-		loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&callback=initAutocomplete&libraries=places&v=weekly')
+	const [query1, setQuery1] = useState("");
+  const [query, setQuery] = useState("");
+
+
+  const autoCompleteRef1 = useRef(null);
+  const autoCompleteRef = useRef(null);
+
+	useEffect(()=>{	
+ const script = document.createElement("script");
+
+    script.src = "/frontend/js/main/book.js";
+    script.async = true;
+
+    document.body.appendChild(script);
+		
+
+ loadScript(
+      `https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places`,
+      () => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
+    );
+
 	},[])
 
 	const saveProduct = () => {
@@ -67,9 +138,9 @@ const Add = (props) => {
 			pickup: products.from_places,
 			origin: products.origin,
 			depart: products.depart,
-			from_places: products.from_places,
+			from_places: query,
 			stopeges: products.stopeges,
-			to_places: products.to_places,
+			to_places: query1,
 			arrival: products.arrival,
 			pickup: products.pickup_time,
 			name: products.name,
@@ -123,10 +194,8 @@ const Add = (props) => {
 	}
 
 	const handleInputChanges = event => {
-		console.log('krishan', event.target)
 
-		const { name, value, dataId } = event.target;
-		console.log('krishan', dataId)
+		const { name, value } = event.target;
 
 		setProduct({ ...products, [name]: value });
 	};
@@ -188,7 +257,7 @@ const Add = (props) => {
 
 	};
 
-	console.log(errors);
+	console.log(products);
 
     return (
 		<div>
@@ -278,20 +347,13 @@ const Add = (props) => {
 													</select>
 													<div style={{ color: "red" }} className="errorMsg"></div>
 													<input
-													  type="text"
-										              className="form-control force-focus startpoint"
-										              id="from_places"
-										              data-id=""
-										              placeholder="Enter Pick Up Location"
-										              onChange={handleInputChanges}
-										              name="from_places"/>
-													<input 
-													  type="hidden"
-													  className="form-control"
-													  onChange={handleInputChanges}
-													  id="origin" 
-													  name="origin"
-										              />
+                          id="from_places"
+                          ref={autoCompleteRef}
+                          className="form-control force-focus startpoint"
+                          onChange={event => setQuery(event.target.value)}
+                          placeholder="Enter a City"
+                          name="from_places"
+                          />
 												</div>
 											<div className="add-stop">
 												<div className="addstop-title" onClick={() => handleAddFields()}>
@@ -374,13 +436,15 @@ const Add = (props) => {
 														<option value="West Bengal">West Bengal</option>
 													</select>
 													<input
-													  type="text"
-										              className="form-control force-focus startpoint"
-										              id="to_places"
-										              placeholder="Enter Destination"
-										              onChange={handleInputChanges}
-										              name="to_places"/>
-													<input id="destination" name="destination" required="" type="hidden"/></div>
+                            ref={autoCompleteRef1}
+                            id="to_places"
+                            onChange={event => setQuery1(event.target.value)}
+                            className="form-control force-focus startpoint"
+                            onTouchEnd={(event) => handleChange(event.target.value)}
+                            placeholder="Enter a City"
+                            name="to_places"
+                          />
+													</div>
 												</div>
 											</div>
 											<div className="clearfix" />

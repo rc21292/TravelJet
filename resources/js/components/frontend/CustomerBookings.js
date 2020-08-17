@@ -1,6 +1,7 @@
 import React from 'react'  
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
+import Moment from 'react-moment';
 
 import { useState, useEffect } from 'react'  
 function CustomerBookings({match}) { 
@@ -8,12 +9,31 @@ function CustomerBookings({match}) {
   const history = useHistory()
 
   const [bookingData, setBookingData] = useState({});  
+  const [quotationData, setQuotationData] = useState({});  
   const [stopeges, setStopages] = useState(false);  
+  const [payment_sc, setPayment_sc] = useState(0);  
+  const [payment_gst, setPayment_gst] = useState(0);  
+  const [customer, setCustomer] = useState({});  
   
    useEffect(() => {  
     const GetData = async () => {  
       const result = await axios('/api/queries/show/'+match.params.id);  
-      setBookingData(result.data);  
+      setBookingData(result.data); 
+
+      const result2 = await axios('/api/quotations/getQuotationByBookingId/'+match.params.id+'?status=awarded');  
+      setQuotationData(result2.data);  
+      let pay = result2.data.payment;
+      setPayment_sc(((parseInt(pay)*5)/100));  
+      setPayment_gst(((parseInt(pay)*10)/100));  
+
+        axios.get('/api/users/show/'+result2.data.user_id)
+        .then(response=>{
+          if (response.data) {
+            setCustomer(response.data);
+          }else{
+          }
+        });
+
 
        const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
       setStopages(result1.data.stopages);  
@@ -48,12 +68,12 @@ function CustomerBookings({match}) {
                             </div>
                             <div className="customerabout">
                               <ul className="list-unstyled">
-                                <li><span><i className="fa fa-user" />Name : Ranjeet Singh</span></li>
-                                <li><span><i className="fa fa-phone" />Contact Number : +91 9971717045</span></li>
-                                <li><span><i className="fa fa-envelope" />Email : avisheksubi@gmail.com</span></li>
+                                 <li><span><i className="fa fa-user" />Name : {customer.name}</span></li>
+                                <li><span><i className="fa fa-phone" />Contact Number : +91 {customer.phone}</span></li>
+                                <li><span><i className="fa fa-envelope" />Email : {customer.email}</span></li>
                                 <li><span><i className="fa fa-flag" />State : Delhi, INDIA</span></li>
-                                <li><span><i className="fa fa-address-card" />Member Since : 24-Jul-2020</span></li>
-                              </ul>
+                                <li><span><i className="fa fa-address-card" />Member Since : <Moment format="MMMM - YYYY">{customer.created_at}</Moment></span></li>
+                             </ul>
                             </div>
                           </div>
                         </aside>
@@ -118,12 +138,12 @@ function CustomerBookings({match}) {
                                         <tbody>
                                           <tr>
                                             <td>1) First Part</td>
-                                            <td> <i className="fa fa-inr" /> 3000</td>
+                                            <td> <i className="fa fa-inr" /> {quotationData.payment_first}</td>
                                             <td> <b>Paid</b> <a href="#"><i className="fa fa-eye" /></a></td>
                                           </tr>
                                           <tr>
                                             <td>2) Second Part</td>
-                                            <td><i className="fa fa-inr" /> 3000</td>
+                                            <td><i className="fa fa-inr" /> {quotationData.payment_second}</td>
                                             <td><span>Unpaid</span> <a href="#" className="btn btn-primary">Pay Now</a> </td>
                                           </tr>
                                         </tbody>
@@ -136,19 +156,19 @@ function CustomerBookings({match}) {
                                         <tbody>
                                           <tr>
                                             <td className="lablename">Total Amount of whole Trip :</td>
-                                            <td className="payprice"> <i className="fa fa-inr" /> 6000</td>
+                                            <td className="payprice"> <i className="fa fa-inr" /> {quotationData.payment}</td>
                                           </tr>
                                           <tr>
                                             <td className="lablename">Service Charge 10% :</td>
-                                            <td className="payprice"> <i className="fa fa-inr" /> 600</td>
+                                            <td className="payprice"> <i className="fa fa-inr" /> {payment_sc}</td>
                                           </tr>
                                           <tr>
                                             <td className="lablename">GST 5% :</td>
-                                            <td className="payprice"> <i className="fa fa-inr" /> 300</td>
+                                            <td className="payprice"> <i className="fa fa-inr" /> {payment_gst}</td>
                                           </tr>
                                           <tr>
                                             <td className="lablename">Net Amount :</td>
-                                            <td className="payprice"> <i className="fa fa-inr" /> <b>6900</b></td>
+                                            <td className="payprice"> <i className="fa fa-inr" /> <b>{quotationData.total_payment}</b></td>
                                           </tr>
                                         </tbody>
                                       </table>

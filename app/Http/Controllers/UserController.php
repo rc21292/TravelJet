@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Profile;
 use App\Query;
+use App\AgentProfile;
 use Auth;
 use DB;
 use File;
@@ -63,6 +64,50 @@ class UserController extends Controller
             return $this->uploadTempattachments($attachments, $path);
         }
     }
+
+
+
+    public function saveAgentProfile(Request $request, $id)
+    {
+
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->save();
+
+        $data = $request->all();
+        $agent = AgentProfile::where('user_id',$id)->first();
+
+        if(!$agent){
+            AgentProfile::create($data);
+        }
+        if($agent){
+            AgentProfile::where('user_id',$id)->update($data);
+        }
+
+        $agent_profile = AgentProfile::where('user_id',$id);
+
+        return response()->json([
+            'success' => true,
+            'data' => $agent_profile,
+            'message' => 'Agent Profile Saved successfully!'
+        ], 201);
+    }
+
+
+
+    public function getAgentProfile($id)
+    {
+        return $agent_profile = AgentProfile::where('user_id',$id)->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => $agent_profile,
+            'message' => 'Bid Edited successfully!'
+        ], 201);
+    }
+
 
     public function insertPortfolioImages(Request $request)
     {

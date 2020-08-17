@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('queries/{id}','Api\QueryController@index');
+Route::get('queries/getUpcommingBookings/{id}','Api\QueryController@getUpcommingBookings');
+Route::get('queries/getBookedBookings/{id}','Api\QueryController@getBookedBookings');
 Route::get('queries','Api\QueryController@getQueries');
 Route::post('queries/store','Api\QueryController@store');
 Route::post('quotations/storeBid','QuotationController@storeBid');
@@ -26,10 +28,13 @@ Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
 Route::post('quotations/awardBooking/{id}','QuotationController@awardBooking');
 Route::get('quotations/getQuotation/{id}','QuotationController@getQuotation');
 Route::get('quotations/getQuotationByBookingId/{id}','QuotationController@getQuotationByBookingId');
-Route::get('quotations/getQuotationPayment/{id}','QuotationController@getQuotationPayment');
+Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
+Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
 Route::delete('queries/cancel/{id}','Api\QueryController@cancel');
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
+Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
+Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');

@@ -11,18 +11,17 @@ import Add from '../../../frontend/queries/Add';
 function Header() {
 
 
-      const [user, setUser] = useState(false);
+  const [user, setUser] = useState(false);
   const [userId, setUserId] = useState(false);
 
   useEffect(() => {
     let stateqq = localStorage["appState"];
-      let AppState = JSON.parse(stateqq);
+    let AppState = JSON.parse(stateqq);
     if (AppState.isLoggedIn == true) {
       setUser(AppState.user);
       setUserId(AppState.user.id);
     }else{
-      console.log('kkk');
-       setUser(null);
+      setUser(null);
       setUserId(false);
     }   
 
@@ -58,6 +57,9 @@ function Header() {
                       }
                       {(userId) &&
                         <li ><a href="/login">My Account</a></li>
+                      }   
+                       {(userId) &&
+                        <li ><a href="/logout">Logout</a></li>
                       }    
                   </ul>
               </div>

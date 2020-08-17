@@ -29,19 +29,11 @@ function Notifications(props) {
         <div className="booknotification">
           <div className="bookingnotify">
             <ul className="list-unstyled">
-              <li><a href="#">Booking ID 0000000</a><span>payment is pending.</span></li>
-              <li><span>Admin paid <i className="fa fa-inr" /> 5500 check payout </span><a href="#">details</a></li>
-              <li><a href="#">Booking ID 0000000</a> <span>Provided feedback for completing tour</span><a href="#">check review</a></li>
-              <li><a href="#">Rajeev singh</a> <span>posted a new booking</span><a href="#">check details</a></li>
-              <li><a href="#">Rahul Kumar</a> <span>create a dispute check dispute</span><a href="#">details</a></li>
-              <li><span>Admin paid <i className="fa fa-inr" /> 5500 check payout </span><a href="#">details</a></li>
-              <li><a href="#">Booking ID 0000000</a> <span>Provided feedback for completing tour</span><a href="#">check review</a></li>
-              <li><a href="#">Rahul Kumar</a> <span>create a dispute check dispute</span><a href="#">details</a></li>
-              <li><a href="#">Rajeev singh</a> <span>posted a new booking</span><a href="#">check details</a></li>
-              <li><a href="#">Rahul Kumar</a> <span>create a dispute check dispute</span><a href="#">details</a></li>
-              <li><span>Admin paid <i className="fa fa-inr" /> 5500 check payout </span><a href="#">details</a></li>
-              <li><a href="#">Rajeev singh</a> <span>posted a new booking</span><a href="#">check details</a></li>
-              <li><a href="#">Rahul Kumar</a> <span>create a dispute check dispute</span><a href="#">details</a></li>
+             {
+                noticeData.map((query, idx) => {  
+                return  <li key={idx} dangerouslySetInnerHTML={{__html: query.data}} ></li>
+                })
+              }  
             </ul>
           </div>
         </div>

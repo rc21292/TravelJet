@@ -48,7 +48,7 @@ const [error, setError] = useState('');
       setUser(AppState.user);
       setQuotations({ ...quotations, user_id: AppState.user.id });
 
-      axios.get('/api/quotations/getQuotation/'+AppState.user.id)
+      axios.get('/api/quotations/getQuotationByBookingUserId/'+match.params.id+'/'+AppState.user.id)
       .then(response=>{
         console.log(response.data.total_payment);
         if (response.data) {
@@ -56,7 +56,7 @@ const [error, setError] = useState('');
         }
       }); 
 
-      axios.get('/api/quotations/getQuotationPayment/'+AppState.user.id)
+      axios.get('/api/quotations/getQuotationPayment/'+match.params.id+'/'+AppState.user.id)
       .then(response=>{
         if (response.data) {
           setInputFields(response.data);
@@ -808,7 +808,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   </div>
                                   
                                 <div className="placebidbtn">                                 
-                                  <a onClick={saveBid} className="btn btn-primary">{quotations.payment_first == 0 ? 'Place Bid' : 'Edit Bid' }</a>
+                                  <a onClick={saveBid} className="btn btn-primary">{quotations.payment == 0 ? 'Place Bid' : 'Edit Bid' }</a>
                                 </div>
                                  {success ? <FlashMessage duration={10000} persistOnHover={true}>
                                  <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}

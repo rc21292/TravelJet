@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Query;
 use App\Booking;
+use App\Quotation;
+use App\User;
+use App\Notice;
 use DB;
 
 class QueryController extends Controller
@@ -18,8 +21,8 @@ class QueryController extends Controller
     public function index(Request $request, $id)
     {
         if ($request->type == 'quotation') {
-             $result = Booking::
-                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+             $result = Quotation::
+                     join('bookings', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*','quotations.payment')
                      ->where('quotations.status','pending')
                      ->where('quotations.user_id',$id)
@@ -44,6 +47,30 @@ class QueryController extends Controller
         return $result;
     }
 
+
+
+    public function getUpcommingBookings($id)
+    {
+         return $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*')
+                     ->where('quotations.status','awarded')->where('bookings.status','awarded')
+                     ->where('bookings.user_id',$id)
+                     ->paginate(5);
+    }
+
+
+    public function getBookedBookings($id)
+    {
+         return $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+                     ->where('quotations.status','booked')->where('bookings.status','booked')
+                     ->where('bookings.user_id',$id)
+                     ->paginate(5);
+    }
+
+
     public function getQueries(Request $request)
     {
         // DB::connection()->enableQueryLog();
@@ -53,6 +80,7 @@ class QueryController extends Controller
          ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
          ->where('bookings.status',$request->status)->where('bookings.status','!=','booked')
          ->groupBy('bookings.id')
+         ->orderBy('bookings.id','DESC')
          ->paginate(6);
 
          // $queries = DB::getQueryLog();
@@ -67,7 +95,7 @@ class QueryController extends Controller
          $result = Booking::
          join('quotations', 'bookings.id' ,'quotations.booking_id')
          ->select('bookings.booking_name','bookings.id','quotations.created_at as date')
-         ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')
+         ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')
          ->groupBy('bookings.id')
          ->paginate(6);
 
@@ -111,6 +139,12 @@ class QueryController extends Controller
             ->update(['stopeges' => json_encode(array_values($stopages_data))]);
 
         }
+
+        $user = User::where('id',$request->user_id)->first();
+
+        $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <a href='/customer-booking/". $data_re->id."'>".$request->booking_name."</a>";
+
+        Notice::create(['user_id' => $request->user_id, 'receiver_id' => 0, 'data' => $message , 'type' => 'job_post', 'created_at' => \Carbon\Carbon::now()]);
 
         return response()->json([
             'success' => true,
@@ -189,16 +223,22 @@ class QueryController extends Controller
 
         $project = Booking::select('stopeges')->find($id);
 
-        $stopages = "";
+        if ($project->stopeges) {
 
-        $kay_first = array_key_first(json_decode($project->stopeges));
-        $kay_last = array_key_last(json_decode($project->stopeges));
 
-        $data_arr = array();
+            $stopages = "";
 
-        foreach (json_decode($project->stopeges) as $key => $value) {
+            $kay_first = array_key_first(json_decode($project->stopeges));
+            $kay_last = array_key_last(json_decode($project->stopeges));
+
+            $data_arr = array();
+
+            foreach (json_decode($project->stopeges) as $key => $value) {
                 array_push($data_arr, $value->stopage);
-           
+
+            }
+        }else{
+            $data_arr = array();
         }
 
 
@@ -215,18 +255,23 @@ class QueryController extends Controller
 
         $project = Booking::select('stopeges')->find($id);
 
-        $stopages = "";
+        if ($project->stopeges) {
 
-        $kay_first = array_key_first(json_decode($project->stopeges));
-        $kay_last = array_key_last(json_decode($project->stopeges));
+            $stopages = "";
 
-        foreach (json_decode($project->stopeges) as $key => $value) {
+            $kay_first = array_key_first(json_decode($project->stopeges));
+            $kay_last = array_key_last(json_decode($project->stopeges));
 
-            if ($key ==0){
-                $stopages .= ucfirst($value->stopage);
-            }else{
-                $stopages .= " -> " . ucfirst($value->stopage);
+            foreach (json_decode($project->stopeges) as $key => $value) {
+
+                if ($key ==0){
+                    $stopages .= ucfirst($value->stopage);
+                }else{
+                    $stopages .= " -> " . ucfirst($value->stopage);
+                }
             }
+        }else{
+            $stopages = "";
         }
 
 

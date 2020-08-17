@@ -6,8 +6,6 @@ import Pagination from "react-js-pagination";
 import Moment from 'react-moment';
 import { useState, useEffect, Fragment } from 'react'  
 
-import FlashMessage from 'react-flash-message'
-
 function BookingDetails({match}) { 
 
   const history = useHistory()
@@ -48,7 +46,6 @@ function BookingDetails({match}) {
 
         axios.get('/api/users/show/'+result.data.user_id)
         .then(response=>{
-          console.log(response.data.total_payment);
           if (response.data) {
             setCustomer(response.data);
           }else{
@@ -68,7 +65,6 @@ function BookingDetails({match}) {
     const { name, value } = event.target;
     if (name === "payment") {
       const total_paymentt = parseInt(value) + ((value * 15)/100);
-      console.log(total_paymentt);
       setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
     }else{
 
@@ -78,6 +74,14 @@ function BookingDetails({match}) {
 
 
   const saveBid = () => {
+
+    if (quotations.payment == '' || quotations.payment < 1) {
+      setError('please enter amount!');
+      return false;
+    }else{
+      setError('');
+    }
+
     var data = quotations;
     axios({
       method: 'post',
@@ -427,8 +431,9 @@ function BookingDetails({match}) {
                                       <span className="input-group-btn">
                                         <i className="fa fa-inr" />
                                       </span>
-                                      <input type="number" name="payment" onChange={handleInputChanges} className="form-control" placeholder={6000} />
+                                      <input type="number" name="payment" onChange={handleInputChanges} className="form-control" placeholder="Enter Bidding Amount" />
                                     </div>
+                                    <div style={{color:'red'}}>{error && error}</div>
                                   </div>
                                 </div>
                                 <div className="gstdescrip">The Total amount of booking after adding GST and our service charges:{quotations.payment} + 5% GST + 10% SC = <i className="fa fa-inr" /> {quotations.total_payment} </div>

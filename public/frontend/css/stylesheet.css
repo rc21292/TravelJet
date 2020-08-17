@@ -3200,14 +3200,302 @@ hr {
 }
 /**********End*********/
 /********signup*********/
-.signuppage {
-    margin-top: 50px;
-    margin-bottom: 50px;
+.upload-field2 {
+    position: relative;
 }
-.signupform {
-    max-width: 65%;
-    background: #f1f1f1;
-    padding: 20px;
-    margin: 0 auto;
+.upload-field2 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 230px;
+    height: 160px;
+}
+.upload-field2 input {
+    height: 160px;
+}
+.upload-icon2 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field2 .file-upload1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 230px;
+    height: 160px;
+}
+.upload-field2 .file-upload1 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.personalkyc h3{
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.pancard{
+    margin-top: 30px;
+}
+.upload-field4 {
+    position: relative;
+    margin-bottom: 15px;
+}
+.upload-field4 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 190px;
+    height: 35px;
+}
+.upload-icon4 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field4 .file-upload3 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 190px;
+    height: 40px;
+}
+.upload-field4 .file-upload3 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.upload-field5 {
+    position: relative;
+}
+.upload-field5 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 230px;
+    height: 35px;
+}
+.upload-icon5 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field5 .file-upload6 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 230px;
+    height: 40px;
+}
+.upload-field5 .file-upload6 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
 }
 /********end************/
+/*********myvehicle*****/
+.panel-default>.panel-heading {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 0;
+    padding: 12px 15px;
+}
+.modal-title {
+    margin: 0;
+    line-height: 1.42857143;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 16px;
+}
+.vehicletable button.close {
+    position: relative;
+    bottom: 34px;
+    width: 46px;
+    height: 47px;
+    left: 15px;
+    background-color: red;
+    z-index: 99999999;
+    color: #fff;
+    opacity: 5;
+    font-size: 17px;
+}
+.vehicletable .close:focus, .close:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    filter: alpha(opacity=50);
+    opacity: 5;
+}
+.verifiinput{
+    position: relative;
+    bottom: 18px;
+}
+.vehicletable a.close2 {
+    position: relative;
+    bottom: 0px;
+    width: 45px;
+    height: 45px;
+    left: 0px;
+    background-color: red;
+    z-index: 99999999;
+    color: #fff;
+    opacity: 5;
+    font-size: 17px;
+    padding: 10px 15px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+}
+.upload-field7 {
+    position: relative;
+}
+.upload-field7 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 220px;
+    height: 35px;
+}
+.upload-icon7 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field7 .file-upload8 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 220px;
+    height: 40px;
+}
+.upload-field7 .file-upload8 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.searchbar {
+    margin-bottom: 20px;
+}
+.ifcab {
+    text-align: right;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    color: #808080;
+    font-size: 14px;
+}
+.addmorebtn {
+    text-align: right;
+}
+.modal-header h5 {
+    font-size: 20px;
+    color: #007bff;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.modal-body h6 {
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-top: 0;
+}
+.modal-body p {
+    font-size: 14px;
+    color: #333;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    text-align: justify;
+    line-height: 22px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.modal-footer {
+    text-align: left;
+    border-top: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+}
+.modal-footer h6 {
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.modal-header .close {
+    position: relative;
+    bottom: 40px;
+    opacity: 5;
+}
+.modal-header .close span {
+    font-size: 40px;
+    color: #111;
+}
+.uploadimage input {
+    max-width: 45%;
+    padding-left: 10px;
+    height: 45px;
+}
+.submitbtn {
+    text-align: left;
+    margin-top: 15px;
+}
+/*********end********/

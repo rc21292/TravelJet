@@ -16,12 +16,11 @@ $(document).ready(function(){
 		setProgressBar(--current);
 	});
 	setProgressBar(current);
-			  // Change progress bar action
-			  function setProgressBar(curStep){
-			  	var percent = parseFloat(100 / steps) * curStep;
-			  	percent = percent.toFixed();
-			  	$(".progress-bar")
-			  	.css("width",percent+"%")
-			  	.html(percent+"%");   
-			  }
-			});
+	function setProgressBar(curStep){
+		var percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		$(".progress-bar")
+		.css("width",percent+"%")
+		.html(percent+"%");   
+	}
+});

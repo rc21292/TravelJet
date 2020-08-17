@@ -21,21 +21,21 @@ export default class Bookings extends Component {
  componentDidMount(){
 
   let stateqq = localStorage["appState"];
-      let AppState = JSON.parse(stateqq);
-    if (AppState.isLoggedIn == true) {
-      this.setState({user : AppState.user});
-       axios.get('/api/queries/'+AppState.user.id)
-   .then(response=>{
-    this.setState({
-      queries:response.data.data,
-      itemsCountPerPage:response.data.per_page,
-      totalItemsCount:response.data.total,
-      activePage:response.data.current_page
-    })
-  });
-    }
+  let AppState = JSON.parse(stateqq);
+  if (AppState.isLoggedIn == true) {
+    this.setState({user : AppState.user});
+    axios.get('/api/queries/getUpcommingBookings/'+AppState.user.id)
+    .then(response=>{
+      this.setState({
+        queries:response.data.data,
+        itemsCountPerPage:response.data.per_page,
+        totalItemsCount:response.data.total,
+        activePage:response.data.current_page
+      })
+    });
+  }
 
- }
+}
 
  handlePageChange(pageNumber) {
   axios.get('/api/queries/'+this.state.user.id+'?page='+pageNumber)

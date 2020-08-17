@@ -39,6 +39,14 @@ function Bookings({match}) {
   }, []); 
 
 
+  const bookBooking = (id) => {  
+    axios.delete('/api/queries/cancel/'+ id)  
+    .then((result) => {  
+      setBookingData(result.data);  
+    });  
+  };  
+
+
   const cancelBooking = (id) => {  
     axios.delete('/api/queries/cancel/'+ id)  
     .then((result) => {  
@@ -720,7 +728,9 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                               </div>
                             </div>
                             <div className="placebidbtn movebtn">
-                              <a href="#" className="btn btn-primary">Save</a><a href="#" className="btn btn-primary">Move to Booked</a><a href="#" className="btn btn-primary">Cancel This Booking</a>
+                              <a href="#" className="btn btn-primary">Save</a>
+                              <a onClick={event => bookBooking(bookingData.id)} className="btn btn-primary">Move to Booked</a>
+                              <a onClick={event => cancelBooking(bookingData.id)} className="btn btn-primary">Cancel This Booking</a>
                             </div>
                           </div>{/*End*/}
                         </div>

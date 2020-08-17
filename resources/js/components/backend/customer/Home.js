@@ -44,7 +44,7 @@ function Home(props) {
 		  		.then(result=>{
 		  			setNoticeData(result.data);
 	  		});
-		  	axios.get('/api/queries/'+userId)
+		  	axios.get('/api/queries/getBookedBookings/'+userId)
 		  		.then(result=>{
 		  			setBookingData(result.data.data);
 	  		});   
@@ -121,6 +121,7 @@ function Home(props) {
                   )
                   })
                   }
+                  {bookingData.length > 0 ? '' :<center><tr style={{ color:'red'}}>Data not found..........</tr></center>}
                   <tr>
                    <td colSpan="5">
                      <div className="placebidbtn">

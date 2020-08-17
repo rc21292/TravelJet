@@ -11,10 +11,51 @@ const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"
 
 function Profile() {
 
+
+    const initialProfileState = {
+    user_id: null,
+    name:"",
+    father_name:"",
+    email:"",
+    mobile:"",
+    address:"",
+    pincode:"",
+    city:"",
+    state:"",
+    country:"",
+    alt_number:"",
+    dob:"",
+    birth_place:"",
+    marital_state:"",
+    category:"",
+    password:"",
+    passport_size_photo:"",
+    signature_photo:"",
+    aadhar_front_photo:"",
+    aadhar_back_photo:"",
+    driving_license_front_photo:"",
+    driving_license_back_photo:"",
+    pancard_photo:"",
+    passport_front_photo:"",
+    passport_back_photo:"",
+    business_type:"",
+    company:"",
+    website:"",
+    cinno_photo:"",
+    company_pancard_photo:"",
+    office_address_proof_photo:"",
+    gstno_photo:"",
+    business_description:"",
+    beneficiary_name:"",
+    branch_ifsc_code:"",
+    account_number:"",
+    confirm_account_number:"",
+    paytm_number:"",
+  };
+
+
+  const [profileData, setProfileData] = useState(initialProfileState);
   const [user, setUser] = useState(false);
-  const [name, setName] = useState(false);
-  const [email, setEmail] = useState(false);
-  const [phone, setPhone] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -31,10 +72,10 @@ function Profile() {
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      setName(AppState.user.name);
-      setEmail(AppState.user.email);
-      setGender(AppState.user.gender);
-      setPhone(AppState.user.phone);
+      setProfileData({...profileData, user_id: AppState.user.id,name: AppState.user.name,email: AppState.user.email,phone: AppState.user.phone});
+      axios('/api/users/getAgentProfile/'+AppState.user.id).then(result=>{
+        setProfileData(result.data);
+      });
       if (AppState.isLoggedIn == false) {
         history.push('/login');
       }
@@ -43,250 +84,433 @@ function Profile() {
   },[]); 
 
   const handleChange = (event) => {
-    event.preventDefault();
     const { name, value } = event.target;
-    let errors = {};
-
-    switch (name) {
-      case 'name': 
-      errors.name = 
-      value.length < 5
-      ? 'Name must be 5 characters long!'
-      : '';
-      setName(value);
-      break;
-      case 'email': 
-      errors.email = 
-      validEmailRegex.test(value)
-      ? ''
-      : 'Email is not valid!';
-      setEmail(value);
-      break;
-      case 'phone': 
-      errors.phone = 
-      value.length < 10
-      ? 'phone must be 10 characters long!'
-      : '';
-      setPhone(value);
-      break;
-      default:
-      break;
-    }
-
-    setErrors(errors);
+   setProfileData({...profileData, [name]:value})
   }
 
-
-  const validateForm = () => {
-
-    let errors = {};
-    let formIsValid = true;
-
-    if (!name) {
-      formIsValid = false;
-      errors["name"] = "*Please enter Name.";
-    }
-
-    if (!email) {
-      formIsValid = false;
-      errors["email"] = "*Please enter Email.";
-    }
-
-    if(!validEmailRegex.test(email)){
-      formIsValid = false;  
-      errors["email"] = "*Not a valid email Address.";
-    }
-
-    if (!phone) { 
-      formIsValid = false;
-      errors["phone"] = "*Please enter Phone.";
-    }
-
-    setErrors(errors);
-    return formIsValid;
-  }
-
-
-
-  const handleSubmit = (event) => {
+  const saveProfile = (event) => {
     event.preventDefault();
-    if(validateForm(errors)) {
-      event.preventDefault();
-      const query = {
-        name:name,
-        email:email,
-        phone:phone,
-      }
-      let user_id = user.id;
-      axios.post('/api/users/update/'+user.id,query).then(res=>
-      {
-        axios.get("/api/users/show/"+user_id).then(json => {
-          if (json.data) {
-            let userData = {
-              id: json.data.id,
-              name: json.data.name,
-              email: json.data.email,
-              gender: json.data.gender,
-              phone: json.data.phone,
-              role: json.data.role,
-            };
-            let appState = {
-              isLoggedIn: true,
-              user: userData
-            };
-localStorage.setItem('appState', JSON.stringify(appState));
-}
-});
-
-        setIsUpdated(true);
-        setReadonlyName(true);
-        setReadonlyEmail(true);
-        setReadonlyPhone(true);
-
-        window.scrollTo(0, 0);
-      }
-      );
-    }else{
-      console.error('Invalid Form')
-    }
+    var query = profileData;
+    axios.post('/api/users/saveAgentProfile/'+user.id,query).then(res=>
+    {
+      window.location.reload(false);
+    });
   }
-
-const handleClick = () => {  
-        history.push('/agent/personal-information/edit')   
-  };  
 
   return (
 
-        <div className="venderprofile">
-          {/* Page Heading */}
-          <div className="row">
-            <div className="col-sm-6">
-              <h1>Profile Information</h1>
-            </div>
-            <div className="col-sm-6">
-              <div className="quedit text-right">
-                <a onClick={handleClick} id="test2">Edit</a>
-              </div>
-            </div>
+         <div className="venderprofile">
+        {/* Page Heading */}
+        <div className="row">
+          <div className="col-sm-6">
+            <h1>Profile Information</h1>
           </div>
-          <div className="venderprofilepage">
-            <div className="generaldetail test" style={{display: 'block'}}>
-              <form>
-                <div className="generaldetail informationform">
-                  <h3>General Details</h3>
-                  <div className="form-group row">
-                    <label htmlFor="inputnmae3" className="col-sm-3 col-form-label">Your Name</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="Lorem Ipsum Doler" disabled />
-                    </div>
+        </div>
+        <div className="venderprofilepage">
+          <div className="generaldetail">
+            <form>
+              <div className="generaldetail informationform">
+                <h3>General Details</h3>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputnmae3" className="col-form-label">Your Name</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="name" value={profileData.name} placeholder="Your Name" />
                   </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputname3" className="col-sm-3 col-form-label">Email</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="lorem@gmail.com" disabled />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputname3" className="col-sm-3 col-form-label">Mobile</label>
-                    <div className="col-sm-4">
-                      <input type="number" className="form-control" placeholder="+91 9200123456" disabled />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputPassword3" className="col-sm-3 col-form-label">Password</label>
-                    <div className="col-sm-4">
-                      <input type="password" className="form-control" placeholder="********" disabled />
-                    </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Father Name</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="father_name" value={profileData.father_name} placeholder="Father Name" />
                   </div>
                 </div>
-                <div className="generaldetail informationform">
-                  <h3>Business Details</h3>
-                  <div className="form-group row">
-                    <label htmlFor="inputnmae3" className="col-sm-3 col-form-label">Business Name</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="Lorem Ipsum Doler" disabled />
-                    </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Email</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="email" value={profileData.email} placeholder="Email" />
                   </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputname3" className="col-sm-3 col-form-label">Business Address</label>
-                    <div className="col-sm-4">
-                      <textarea name="w3review" rows={4} cols={50} placeholder="Lorem Ipsum" className="form-control" disabled defaultValue={""} />
-                    </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Mobile Number</label>
+                    <input type="number" className="form-control" onChange={handleChange} name="phone" value={profileData.phone} placeholder="Mobile Number" />
                   </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputname3" className="col-sm-3 col-form-label">About Your Business</label>
-                    <div className="col-sm-4">
-                      <textarea name="w3review" rows={4} cols={50} placeholder="Lorem Ipsum" className="form-control" disabled defaultValue={""} />
-                    </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-12">
+                    <label htmlFor="inputname3" className="col-form-label">Address</label>
+                    <textarea onChange={handleChange} name="w3review" rows={4} cols={50} placeholder="Address" className="form-control" onChange={handleChange} name="address" value={profileData.address} />
                   </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputPassword3" className="col-sm-3 col-form-label">Pincode</label>
-                    <div className="col-sm-4">
-                      <input type="number" className="form-control" placeholder={110025} disabled />
-                    </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Pincode</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="pincode" value={profileData.pincode} placeholder="Pincode" />
                   </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputnmae3" className="col-sm-3 col-form-label">City</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="New Delhi" disabled />
-                    </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">City</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="city" value={profileData.city} placeholder="City" />
                   </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputnmae3" className="col-sm-3 col-form-label">State</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="Delhi" disabled />
-                    </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputState">State</label>
+                    <select onChange={handleChange} name="state"  value={profileData.state} className="form-control">
+                      <option>Select State</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                    </select>
                   </div>
-                  <div className="form-group businessselect">
-                    <div className="col-sm-3" />
-                    <div className="row">
-                      <label className="col-form-label col-sm-5 pt-0">Is your Operating address same as business address?</label>
-                      <div className="col-sm-2">
-                        <div className="form-check">
-                          <input className="form-check-input" type="radio" name="gridRadios" id="gridRadios1" defaultValue="option1" defaultChecked />
-                          <label className="form-check-label" htmlFor="gridRadios1">
-                            Yes
-                          </label>
-                          <input className="form-check-input" type="radio" name="gridRadios" id="gridRadios2" defaultValue="option2" />
-                          <label className="form-check-label" htmlFor="gridRadios2">
-                            No
-                          </label>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputState">Country</label>
+                    <select onChange={handleChange} name="country"  value={profileData.country} className="form-control">
+                      <option>Select Country</option>
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Alternate Number</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="alt_number" value={profileData.alt_number} placeholder="Alternate Number" />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Date of Birth</label>
+                    <input type="date" className="form-control" onChange={handleChange} name="dob" value={profileData.dob} placeholder="Date of Birth" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Town of Birth</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="birth_place" value={profileData.birth_place} placeholder="Town of Birth" />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputState">Marital Status</label>
+                    <select onChange={handleChange} name="marital_state"  value={profileData.marital_state} className="form-control">
+                      <option>Select Marital Status</option>
+                      <option value="married" >Maired</option>
+                      <option value="unmarried">Single</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputState">Category</label>
+                    <select onChange={handleChange} name="category"  value={profileData.category} className="form-control">
+                      <option>Select Category</option>
+                      <option onChange={handleChange} name="1">1</option>
+                      <option onChange={handleChange} name="2">2</option>
+                      <option onChange={handleChange} name="3">3</option>
+                    </select>
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Password</label>
+                    <input readOnly type="password" onChange={handleChange} name="password" value={profileData.password} className="form-control" placeholder="Password" />
+                  </div>
+                </div>
+              </div>
+              <div className="clearfix" />
+              <div className="personalkyc">
+                <h3>Personal KYC (ID Proof Details)</h3>
+                <div className="col-sm-12">
+                  <div className="row">
+                    <div className="col-sm-5">
+                      <div className="row">
+                        <div className="col-md-6">
+                          <label htmlFor="inputname3" className="col-form-label">Passport Photo</label>
+                          <div className="upload-field2">
+                            <input type="text" onChange={handleChange} name="passport_size_photo" className="form-control" />
+                            <ul className="list-inline upload-icon2">
+                              <li>
+                                <a href="#">
+                                  <div className="file-upload1">
+                                    <input type="file" onChange={handleChange} name="" /><i className="fa fa-cloud-upload" />
+                                  </div>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <label htmlFor="inputname3" className="col-form-label">Upload Signature</label>
+                          <div className="upload-field2">
+                            <input type="text" onChange={handleChange} name="signature_photo" className="form-control" />
+                            <ul className="list-inline upload-icon2">
+                              <li>
+                                <a href="#">
+                                  <div className="file-upload1">
+                                    <input type="file" onChange={handleChange} name="" /><i className="fa fa-cloud-upload" />
+                                  </div>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-sm-7">
+                      <div className="row">
+                        <div className="col-md-12">
+                          <div className="row">
+                            <div className="col-md-6">
+                              <label htmlFor="inputname3" className="col-form-label">Upload Aadhaar Card</label>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <div className="upload-field">
+                                    <input type="text" className="form-control" onChange={handleChange} name="aadhar_front_photo" placeholder="Front" />
+                                    <ul className="list-inline upload-icon">
+                                      <li>
+                                        <a href="#">
+                                          <div className="file-upload1">
+                                            <input type="file" onChange={handleChange} name="" />
+                                          </div>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div className="col-md-6">
+                                  <div className="upload-field">
+                                    <input type="text" className="form-control" onChange={handleChange} name="aadhar_back_photo" placeholder="Back" />
+                                    <ul className="list-inline upload-icon">
+                                      <li>
+                                        <a href="#">
+                                          <div className="file-upload1">
+                                            <input type="file" onChange={handleChange} name="" />
+                                          </div>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <label htmlFor="inputname3" className="col-form-label">Upload Driving License</label>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <div className="upload-field">
+                                    <input type="text" className="form-control" onChange={handleChange} name="driving_license_front_photo" placeholder="Front" />
+                                    <ul className="list-inline upload-icon">
+                                      <li>
+                                        <a href="#">
+                                          <div className="file-upload1">
+                                            <input type="file" onChange={handleChange} name="" />
+                                          </div>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div className="col-md-6">
+                                  <div className="upload-field">
+                                    <input type="text" className="form-control" onChange={handleChange} name="driving_license_back_photo" placeholder="Back" />
+                                    <ul className="list-inline upload-icon">
+                                      <li>
+                                        <a href="#">
+                                          <div className="file-upload1">
+                                            <input type="file" onChange={handleChange} name="" />
+                                          </div>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row pancard">
+                        <div className="col-md-6">
+                          <label htmlFor="inputname3" className="col-form-label">Upload Pan Card</label>
+                          <div className="row">
+                            <div className="col-md-12">
+                              <div className="upload-field5">
+                                <input type="text" className="form-control" onChange={handleChange} name="pancard_photo" placeholder="Upload Pan Card" />
+                                <ul className="list-inline upload-icon">
+                                  <li>
+                                    <a href="#">
+                                      <div className="file-upload6">
+                                        <input type="file" onChange={handleChange} name="" />
+                                      </div>
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <label htmlFor="inputname3" className="col-form-label">Upload Passport (Optional)</label>
+                          <div className="row">
+                            <div className="col-md-6">
+                              <div className="upload-field">
+                                <input type="text" className="form-control" onChange={handleChange} name="passport_front_photo" placeholder="Front" />
+                                <ul className="list-inline upload-icon">
+                                  <li>
+                                    <a href="#">
+                                      <div className="file-upload1">
+                                        <input type="file" onChange={handleChange} name="" />
+                                      </div>
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="upload-field">
+                                <input type="text" className="form-control" onChange={handleChange} name="passport_back_photo" placeholder="Back" />
+                                <ul className="list-inline upload-icon">
+                                  <li>
+                                    <a href="#">
+                                      <div className="file-upload1">
+                                        <input type="file" onChange={handleChange} name="" />
+                                      </div>
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="generaldetail informationform">
-                  <h3>Bank Details</h3>
-                  <div className="form-group row">
-                    <label htmlFor="inputnmae3" className="col-sm-3 col-form-label">Account Holder's Name</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="Lorem Ipsum Doler" disabled />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputname3" className="col-sm-3 col-form-label">Bank Account Number</label>
-                    <div className="col-sm-4">
-                      <input type="number" className="form-control" placeholder="XXXXXXXXXXXXXXXX" disabled />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputname3" className="col-sm-3 col-form-label">IFSC Code</label>
-                    <div className="col-sm-4">
-                      <input type="text" className="form-control" placeholder="XXXXXXXXXXX" disabled />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <label htmlFor="inputPassword3" className="col-sm-3 col-form-label">GST No</label>
-                    <div className="col-sm-4">
-                      <input type="number" className="form-control" placeholder="XXXXXXXXXXX" disabled />
+              </div>
+              <div className="clearfix" />
+              <div className="generaldetail informationform">
+                <h3>Business KYC (Office Details)</h3>
+                <div className="form-group">
+                  <div className="row">
+                    <label className="col-form-label col-sm-4 pt-0">Please Select your business type:</label>
+                    <div className="col-sm-3">
+                      <select onChange={handleChange} name="business_type"  value={profileData.business_type} className="form-control">
+                        <option>Select Business</option>
+                        <option value="individual">Individual</option>
+                        <option value="company">Company</option>
+                      </select>
                     </div>
                   </div>
                 </div>
-              </form>
-            </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Company Name</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="company" value={profileData.company} placeholder="Company Name" />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Website (Optional)</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="website" value={profileData.website} placeholder="Website (Optional)" />
+                  </div>
+                </div>
+                <div className="col-sm-12">
+                  <div className="row">
+                    <div className="col-md-3">
+                      <label htmlFor="inputname3" className="col-form-label">CIN Number if PVT LTD</label>
+                      <div className="upload-field4">
+                        <input type="text" className="form-control" onChange={handleChange} name="cinno_photo" placeholder="Upload COI" />
+                        <ul className="list-inline upload-icon">
+                          <li>
+                            <a href="#">
+                              <div className="file-upload3">
+                                <input type="file" onChange={handleChange} name="" />
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <label htmlFor="inputname3" className="col-form-label">Company Pan Card</label>
+                      <div className="upload-field4">
+                        <input type="text" className="form-control" onChange={handleChange} name="company_pancard_photo" placeholder="Upload Company Pan" />
+                        <ul className="list-inline upload-icon">
+                          <li>
+                            <a href="#">
+                              <div className="file-upload3">
+                                <input type="file" onChange={handleChange} name="" />
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <label htmlFor="inputname3" className="col-form-label">Office address proof</label>
+                      <div className="upload-field4">
+                        <input type="text" className="form-control" onChange={handleChange} name="office_address_proof_photo" placeholder="Upload Office Address Proof" />
+                        <ul className="list-inline upload-icon">
+                          <li>
+                            <a href="#">
+                              <div className="file-upload3">
+                                <input type="file" onChange={handleChange} name="" />
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <label htmlFor="inputname3" className="col-form-label">GST Number (Optional)</label>
+                      <div className="upload-field4">
+                        <input type="text" className="form-control" onChange={handleChange} name="gstno_photo" value={profileData.gstno_photo} placeholder="Upload GST Certificate" />
+                        <ul className="list-inline upload-icon">
+                          <li>
+                            <a href="#">
+                              <div className="file-upload3">
+                                <input type="file" onChange={handleChange} name="" />
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <label htmlFor="inputname3" className="col-form-label">About your Business</label>
+                      <textarea onChange={handleChange} name="w3review" rows={4} cols={50} onChange={handleChange} value={profileData.business_description} name="business_description" placeholder="About your Business..." className="form-control" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="clearfix" />
+              <div className="generaldetail2 bankdetail informationform">
+                <h3>Bank Details</h3>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Beneficiary Name</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="beneficiary_name" value={profileData.beneficiary_name} placeholder="Beneficiary Name" />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Branch IFSC Code</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="branch_ifsc_code" value={profileData.branch_ifsc_code} placeholder="Branch IFSC Code" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Account Number</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="account_number" value={profileData.account_number} placeholder="Account Number" />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Re Enter Account Number</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="confirm_account_number" value={profileData.confirm_account_number} placeholder="Re Enter Account Number" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputname3" className="col-form-label">Paytm (If Any)</label>
+                    <input type="text" className="form-control" onChange={handleChange} name="paytm_number" value={profileData.paytm_number} placeholder="Paytm (If Any)" />
+                  </div>
+                </div>
+              </div>
+              <div className="form-group row">
+                <div className="col-sm-10 text-center"> <a onClick={saveProfile} className="btn btn-primary">Save</a>
+                </div>
+              </div>
+            </form>
           </div>
+          {/*Edit Form*/}
         </div>
+      </div>
 
     );
 }
