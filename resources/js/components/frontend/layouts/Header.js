@@ -13,6 +13,8 @@ import BookingDetails from '../BookingDetails';
 import ViewProfile from '../ViewProfile';
 import Queries from '../queries/Index';
 import Add from '../queries/Add';
+import BookingTrip from '../BookingTrip';
+import BookingRoundTrip from '../BookingRoundTrip';
 import GoogleeAdd from '../queries/GoogleeAdd';
 
 
@@ -58,13 +60,14 @@ function Header(props) {
                     </li>
                     <li><Link to="/CompanyInfo">Company Info</Link>
                     </li>
-                    <li className="calltoAction"><a className="btn btn-primary" href="/query/add">Book Now</a>
-                    </li>
                     {(userId === false) && 
                       <li><a href="/login">Login</a></li>
                     }
                     {(userId === false) && 
-                      <li ><a href="/register">Register</a></li>
+                      <span>|</span>
+                    }
+                    {(userId === false) && 
+                      <li ><a href="/register">Become a Vender</a></li>
                     }
                     {(userId) &&
                       <li ><a href="/login">My Account</a></li>
@@ -91,7 +94,13 @@ function Header(props) {
       <Route exact path='/Bookings/:id' component={Bookings} />
       <Route exact path='/queries' component={Queries} />
 
+      <Route exact path="/bookingtrip"><BookingTrip user_id={userId}/></Route>
+
+      <Route exact path="/bookingroundtrip"><BookingRoundTrip user_id={userId}/></Route>
+
       <Route exact path="/query/add"><Add user_id={userId}/></Route>
+
+
       <Route exact path='/query/addgoogle' component={GoogleeAdd} />
   </Router>
   );

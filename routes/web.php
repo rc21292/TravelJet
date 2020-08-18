@@ -103,6 +103,8 @@ Route::group(['middleware' => 'App\Http\Middleware\Customer'], function()
 {
 Route::get('/customer', 'HomeController@customer')->name('customerhome');
 Route::get('/query/add', 'HomeController@booknow')->name('booknow');
+Route::get('/bookingtrip', 'HomeController@booknow')->name('booknow');
+Route::get('/bookingroundtrip', 'HomeController@booknow')->name('booknow');
 Route::get('/query/addgoogle', 'HomeController@booknow')->name('booknow');
 Route::get('/query/store', 'Api\QueryController@store')->name('storequery');
 });

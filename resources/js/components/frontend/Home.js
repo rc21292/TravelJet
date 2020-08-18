@@ -1,313 +1,70 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { useState, useEffect } from 'react'
+
 function Home() {
+
+
+  const [trip_type, setTrip_type] = useState('');
+  const [error, setError] = useState('');
+
+
+  const handleChange = (event) => {
+    setTrip_type(event.target.value);
+  }
+
+  const bookNow = (event) => {
+    event.preventDefault();
+    if (trip_type == '') {
+      setError('Please select Trip Type!');
+      return;
+    }
+    alert(trip_type);
+    if (trip_type == 1) {
+      window.location.href = "/bookingtrip";
+    }else{
+      window.location.href = "/bookingroundtrip";
+    }
+  }
+
+
     return (
       <div>
   {/* BANNER */}
   <div className="banner">
     <div className="container">
-      <h1>Book your Cars for Airport, Outstation and Weekend Rides</h1>
-      <p className="bestDeals">
-        Now available at affordable rates, choose your best deals from multiple
-        agents
-      </p>
-      <div className="row">
-        {/* FORM */}
-        <div className="col-sm-5">
-          <form className="bookForm form-inline">
-            <span className="type">Choose your booking type</span>
-            <ul className="nav nav-tabs">
-              <li className="active">
-                <a data-toggle="tab" href="#single">
-                  One Way Trip
-                </a>
-              </li>
-              <li>
-                <a data-toggle="tab" href="#round">
-                  Round Trip
-                </a>
-              </li>
-              <li>
-                <a data-toggle="tab" href="#sight">
-                  Round Trip with Sightseeing
-                </a>
-              </li>
-            </ul>
-            <hr />
-            <div className="tab-content">
-              {/* SINGLE TRIP */}
-              <div id="single" className="tab-pane fade in active">
-                <div className="form-group greybg">
-                  <label className="control-label">Pickup</label>
-                  <input
-                    type="text"
-                    name="Pickup"
-                    className="form-control location"
-                    placeholder="Enter your location"
-                  />
+        <h1>Book your Cars for Airport, Outstation and Weekend Rides</h1>
+        <p className="bestDeals">Now available at affordable rates, choose your best deals from multiple agents</p>
+        <div className="row">
+          {/* FORM */}
+          <div className="col-sm-4">
+            <div className="bookForm form-inline">
+              <span className="type">Choose your booking type</span>
+              <div className="triptypeselect">
+                <div className="div-check onewaytrip">
+                  <input className="form-check-input" onClick={handleChange} defaultValue={1} type="radio" name="trip_type" />
+                  <label className="form-check-label" htmlFor="exampleRadios1">
+                    One Way Trip
+                  </label>
                 </div>
-                <div className="form-group greybg">
-                  <label className="control-label">Drop</label>
-                  <input
-                    type="text"
-                    name="Drop"
-                    className="form-control destination"
-                    placeholder="Enter your Destination"
-                  />
+                <div className="div-check roundtrip">
+                  <input className="form-check-input" onClick={handleChange} defaultValue={2} type="radio" name="trip_type" />
+                  <label className="form-check-label" htmlFor="exampleRadios2">
+                    Round Trip with Sightseeing
+                  </label>
                 </div>
-                <div className="form-group greybg">
-                  <label className="control-label">When</label>
-                  <select name="schedule">
-                    <option value="Urgently">Urgently</option>
-                    <option value="Within 2 Days">Within 2 Days</option>
-                    <option value="Within 1 Week">Within 1 Week</option>
-                    <option value="Within 1 Month">Within 1 Month</option>
-                    <option value="Months+">Months+</option>
-                  </select>
+                <div style={{color:'red'}}>
+                {error && error}
                 </div>
-                <div className="form-group searchCabs fullwidth">
-                  <button className="btn btn-primary btn-block">
-                    Search Cars
-                  </button>
-                </div>
-              </div>
-              {/* ROUND TRIP */}
-              <div id="round" className="tab-pane fade">
-                <div className="form-group greybg">
-                  <label className="control-label">Pickup</label>
-                  <input
-                    type="text"
-                    name="Pickup"
-                    className="form-control location"
-                    placeholder="Enter your location"
-                  />
-                </div>
-                <div className="form-group greybg mb-8">
-                  <label className="control-label">Where to go</label>
-                  <input
-                    type="text"
-                    name="Drop"
-                    className="form-control destination"
-                    placeholder="Enter your Destination"
-                  />
-                </div>
-                <div className="row returnArrival">
-                  <div className="col-sm-6">
-                    <label className="control-label">Depart</label>
-                    <div className="form-group greybg">
-                      <input
-                        type="date"
-                        name="depart"
-                        className="form-control"
-                        placeholder="Depart"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <label className="control-label">Arrival</label>
-                    <div className="form-group greybg">
-                      <input
-                        type="date"
-                        name="arrival"
-                        className="form-control"
-                        placeholder="Arrival"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="form-group searchCabs fullwidth">
-                  <button className="btn btn-primary btn-block">
-                    Search Cars
-                  </button>
-                </div>
-              </div>
-              {/* ROUND TRIP WITH SIGHT SEEING*/}
-              <div id="sight" className="tab-pane fade">
-                <div className="form-group greybg">
-                  <label className="control-label">Pickup</label>
-                  <input
-                    type="text"
-                    name="Pickup"
-                    className="form-control location"
-                    placeholder="Enter your location"
-                  />
-                </div>
-                <div className="form-group greybg mb-8">
-                  <label className="control-label">Where to go</label>
-                  <input
-                    type="text"
-                    name="Drop"
-                    className="form-control destination"
-                    placeholder="Enter your Destination"
-                  />
-                </div>
-                <div className="row returnArrival">
-                  <div className="col-sm-6">
-                    <label className="control-label">Depart</label>
-                    <div className="form-group greybg">
-                      <input
-                        type="date"
-                        name="depart"
-                        className="form-control"
-                        placeholder="Depart"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <label className="control-label">Arrival</label>
-                    <div className="form-group greybg">
-                      <input
-                        type="date"
-                        name="arrival"
-                        className="form-control"
-                        placeholder="Arrival"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="form-group searchCabs fullwidth">
-                  <button className="btn btn-primary btn-block">
-                    Search Cars
-                  </button>
-                </div>
-              </div>
-              <div className="locationPanel">
-                <div className="panelHeader">
-                  <button className="goBack">
-                    <i className="fas fa-arrow-left" />
-                  </button>
-                  <h5>Enter pickup location</h5>
-                </div>
-                <div className="selectAddress">
-                  <select
-                    className="select-state"
-                    placeholder="Pick a state..."
-                  >
-                    <option value="Andhra Pradesh">Pick a state...</option>
-                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                    <option value="Andaman and Nicobar Islands">
-                      Andaman and Nicobar Islands
-                    </option>
-                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                    <option value="Assam">Assam</option>
-                    <option value="Bihar">Bihar</option>
-                    <option value="Chandigarh">Chandigarh</option>
-                    <option value="Chhattisgarh">Chhattisgarh</option>
-                    <option value="Dadar and Nagar Haveli">
-                      Dadar and Nagar Haveli
-                    </option>
-                    <option value="Daman and Diu">Daman and Diu</option>
-                    <option value="Delhi NCR">Delhi NCR</option>
-                    <option value="Lakshadweep">Lakshadweep</option>
-                    <option value="Puducherry">Puducherry</option>
-                    <option value="Goa">Goa</option>
-                    <option value="Gujarat">Gujarat</option>
-                    <option value="Haryana">Haryana</option>
-                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                    <option value="Jharkhand">Jharkhand</option>
-                    <option value="Karnataka">Karnataka</option>
-                    <option value="Kerala">Kerala</option>
-                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                    <option value="Manipur">Manipur</option>
-                    <option value="Meghalaya">Meghalaya</option>
-                    <option value="Mizoram">Mizoram</option>
-                    <option value="Nagaland">Nagaland</option>
-                    <option value="Odisha">Odisha</option>
-                    <option value="Punjab">Punjab</option>
-                    <option value="Rajasthan">Rajasthan</option>
-                    <option value="Sikkim">Sikkim</option>
-                    <option value="Tamil Nadu">Tamil Nadu</option>
-                    <option value="Telangana">Telangana</option>
-                    <option value="Tripura">Tripura</option>
-                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                    <option value="Uttarakhand">Uttarakhand</option>
-                    <option value="West Bengal">West Bengal</option>
-                  </select>
-                  <input
-                    type="text"
-                    name="searchArea"
-                    defaultValue
-                    placeholder="Tell us your starting point.."
-                    className="startpoint form-control"
-                  />
-                </div>
-                <div className="form-group fullwidth text-center">
-                  <button className="btn btn-default">
-                    Use Current Location
-                  </button>
-                </div>
-              </div>
-              <div className="destinationPanel">
-                <div className="panelHeader">
-                  <button className="goBack">
-                    <i className="fas fa-arrow-left" />
-                  </button>
-                  <h5>Enter destination location</h5>
-                </div>
-                <div className="selectAddress">
-                  <select
-                    className="select-state"
-                    placeholder="Pick a state..."
-                  >
-                    <option value="Andhra Pradesh">Pick a state...</option>
-                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                    <option value="Andaman and Nicobar Islands">
-                      Andaman and Nicobar Islands
-                    </option>
-                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                    <option value="Assam">Assam</option>
-                    <option value="Bihar">Bihar</option>
-                    <option value="Chandigarh">Chandigarh</option>
-                    <option value="Chhattisgarh">Chhattisgarh</option>
-                    <option value="Dadar and Nagar Haveli">
-                      Dadar and Nagar Haveli
-                    </option>
-                    <option value="Daman and Diu">Daman and Diu</option>
-                    <option value="Delhi NCR">Delhi NCR</option>
-                    <option value="Lakshadweep">Lakshadweep</option>
-                    <option value="Puducherry">Puducherry</option>
-                    <option value="Goa">Goa</option>
-                    <option value="Gujarat">Gujarat</option>
-                    <option value="Haryana">Haryana</option>
-                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                    <option value="Jharkhand">Jharkhand</option>
-                    <option value="Karnataka">Karnataka</option>
-                    <option value="Kerala">Kerala</option>
-                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                    <option value="Manipur">Manipur</option>
-                    <option value="Meghalaya">Meghalaya</option>
-                    <option value="Mizoram">Mizoram</option>
-                    <option value="Nagaland">Nagaland</option>
-                    <option value="Odisha">Odisha</option>
-                    <option value="Punjab">Punjab</option>
-                    <option value="Rajasthan">Rajasthan</option>
-                    <option value="Sikkim">Sikkim</option>
-                    <option value="Tamil Nadu">Tamil Nadu</option>
-                    <option value="Telangana">Telangana</option>
-                    <option value="Tripura">Tripura</option>
-                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                    <option value="Uttarakhand">Uttarakhand</option>
-                    <option value="West Bengal">West Bengal</option>
-                  </select>
-                  <input
-                    type="text"
-                    name="searchArea"
-                    defaultValue
-                    placeholder="Tell us your starting point.."
-                    className="startpoint form-control"
-                  />
-                </div>
+              </div>              
+              <div className="form-group searchCabs fullwidth">
+                <button onClick={bookNow} className="btn btn-primary btn-block click">Book Now</button>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
   </div>
   {/* END OF BANNER AND FORM */}
   {/* BENEFITS OF TRAVEL JET */}
