@@ -37,7 +37,7 @@ class QueryController extends Controller
         }else if($request->type == 'booked'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+                     ->select('bookings.*')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('quotations.user_id',$id)
                      ->paginate(5);
@@ -64,7 +64,7 @@ class QueryController extends Controller
     {
          return $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+                     ->select('bookings.*')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('bookings.user_id',$id)
                      ->paginate(5);
@@ -341,6 +341,26 @@ class QueryController extends Controller
         $query = Booking::find($id);
         $query->delete();
     }
+
+
+    public function moveToBooked($id)
+    {
+       $booking = Booking::find($id);
+       $booking->status = 'booked';
+       $booking->save();
+
+        DB::table('quotations')
+            ->where('booking_id', $id)
+            ->update(['status' => 'booked']);
+
+       $quotation = Quotation::where('booking_id',$id)->first();
+        $user = User::where('id',$quotation->user_id)->first();
+
+        $message = "<a href='/profile/".$user->user_id."'> ".$user->name." </a> <span> confirmed booking </span> <a href='/booked/". $id."'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $user->user_id, 'receiver_id' => $booking->user_id, 'data' => $message , 'type' => 'booked', 'created_at' => \Carbon\Carbon::now()]);
+
+   }
 
 
     public function cancel($id)

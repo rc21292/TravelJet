@@ -46,7 +46,7 @@ class NoticeController extends Controller
         $user_data = User::where('id',$user_id)->select('role')->first();
         $user_created_at = User::where('id',$user_id)->value('created_at');
         if ($user_data->role === 'agent') {
-            $notices = $this->notice::where('type', 'job_post')->orderBy('created_at','DESC');
+            $notices = $this->notice::where('type', 'job_post')->orwhere('type','award')->whereIn('receiver_id',['0',$user_id])->orderBy('created_at','DESC');
             Notice::where('receiver_id',$user_id)->update(['status'=>1]);
             Notice::where('type', 'notice')->update(['status'=>1]);
             return $notices->get();
@@ -54,12 +54,32 @@ class NoticeController extends Controller
             $notices = $this->notice::orderBy('created_at','DESC');
             return $notices->get();
         } else {
-            $notices = $this->notice::where('type', 'quotation')->where('receiver_id',$user_id)->orderBy('created_at','DESC');
+            $notices = $this->notice::where('type', 'quotation')->orwhere('type','booked')->where('receiver_id',$user_id)->orderBy('created_at','DESC');
             Notice::where('receiver_id',$user_id)->update(['status'=>1]);
             Notice::where('type', 'job_post')->update(['status'=>1]);
             return $notices->get();
         }
     }
+
+     public function getAgentNotifications($id)
+    {
+        $user_id = $id;
+        $user_data = User::where('id',$user_id)->select('role')->first();
+        $user_created_at = User::where('id',$user_id)->value('created_at');
+        $notices = $this->notice::where('type', 'job_post')->orwhere('type','award')->whereIn('receiver_id',['0',$user_id])->orderBy('created_at','DESC');
+        return $notices->take(5)->get();
+        
+    }
+
+     public function getCustomerNotificattions($id)
+    {
+        $user_id = $id;
+        $user_data = User::where('id',$user_id)->select('role')->first();
+        $user_created_at = User::where('id',$user_id)->value('created_at');
+            $notices = $this->notice::where('type', 'quotation')->orwhere('type','booked')->where('receiver_id',$user_id)->orderBy('created_at','DESC');
+            return $notices->take(5)->get();
+    }
+
 
     /**
      * Show the form for creating a new resource.

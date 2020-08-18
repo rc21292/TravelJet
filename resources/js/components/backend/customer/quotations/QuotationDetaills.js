@@ -62,9 +62,9 @@ function QuotationDetaills({id}) {
     axios.post('/api/quotations/awardBooking/'+ id)  
     .then((result) => { 
     if (result.data.success) {
-      alert('Awarded');
+      // alert('Awarded');
+      window.location.reload(false);
     } 
-      //window.location.reload(false);
     });  
   };  
 

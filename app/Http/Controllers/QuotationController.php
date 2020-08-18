@@ -56,6 +56,15 @@ class QuotationController extends Controller
         ->where('id', $quotation->booking_id)
         ->update(['status'=> 'awarded']);
 
+        $booking =  Booking::where('id',$quotation->booking_id)->first();
+
+        $user = User::where('id', $booking->user_id)->first();
+
+        $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> awarded booking </span> <a href='/bookings/".$quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
+
+
         return response()->json([
             'success' => true,
             'message' => 'Booking awarded!'
@@ -169,7 +178,7 @@ class QuotationController extends Controller
              $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
         }else{
 
-        $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->get();
+        $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->get();
         }
         return $quotation;
     }

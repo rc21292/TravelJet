@@ -40,9 +40,10 @@ function Bookings({match}) {
 
 
   const bookBooking = (id) => {  
-    axios.delete('/api/queries/cancel/'+ id)  
+    axios.post('/api/queries/moveToBooked/'+ id)  
     .then((result) => {  
-      setBookingData(result.data);  
+      window.location.href = "/agent/leads";
+     // window.location.reload(false);
     });  
   };  
 

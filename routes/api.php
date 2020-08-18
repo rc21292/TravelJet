@@ -32,6 +32,7 @@ Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationCon
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
 Route::delete('queries/cancel/{id}','Api\QueryController@cancel');
+Route::post('queries/moveToBooked/{id}','Api\QueryController@moveToBooked');
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
 Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
@@ -70,3 +71,6 @@ Route::get('getdashboardData/{id}','HomeController@index');
 
 
 Route::get('notifications/{id}', 'NoticeController@index');
+
+Route::get('getCustomerNotificattions/{id}', 'NoticeController@getCustomerNotificattions');
+Route::get('getAgentNotifications/{id}', 'NoticeController@getAgentNotifications');

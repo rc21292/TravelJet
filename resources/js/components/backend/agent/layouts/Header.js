@@ -6,6 +6,7 @@ import HowitWorks from '../../../frontend/HowitWorks';
 import CompanyInfo from '../../../frontend/CompanyInfo';
 import Queries from '../../../frontend/queries/Index';
 import Add from '../../../frontend/queries/Add';
+import ViewProfile from '../profile/ViewProfile';
 
 
 function Header() {
@@ -72,6 +73,7 @@ function Header() {
     <Route exact path='/CompanyInfo' component={CompanyInfo} />
     <Route exact path='/queries' component={Queries} />
     <Route exact path='/query/add' component={Add} />
+    <Route exact path='/agent/profile/:id' component={ViewProfile} />
   </Router>
   );
 }

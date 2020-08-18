@@ -10,6 +10,7 @@ import Qutations from '../Qutations';
 import Booked from '../Booked';
 import Bookings from '../Bookings';
 import BookingDetails from '../BookingDetails';
+import ViewProfile from '../ViewProfile';
 import Queries from '../queries/Index';
 import Add from '../queries/Add';
 import GoogleeAdd from '../queries/GoogleeAdd';
@@ -83,6 +84,7 @@ function Header(props) {
       <Route exact path='/CompanyInfo' component={CompanyInfo} />
       <Route exact path='/browse-bookings' component={BrowseBookings} />
       <Route exact path='/booking-details/:id' component={BookingDetails} />
+      <Route exact path='/profile/:id' component={ViewProfile} />
       <Route exact path='/customer-booking/:id' component={CustomerBookings} />
       <Route exact path='/quotations/:id' component={Qutations} />
       <Route exact path='/booked/:id' component={Booked} />
