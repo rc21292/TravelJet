@@ -20,7 +20,6 @@ function Home() {
       setError('Please select Trip Type!');
       return;
     }
-    alert(trip_type);
     if (trip_type == 1) {
       window.location.href = "/bookingtrip";
     }else{
