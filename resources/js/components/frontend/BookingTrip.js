@@ -239,21 +239,21 @@ const BookingTrip = (props) => {
 			errors["from_places"] = "*Please Enter Starting Point.";
 			setErrors(errors);
 			setIsErrors(1);
-			//return
+			return;
 		}
 		if ((bookings.destinationstate === '') || (!bookings.destinationstate)) {  
 			formIsValid = false;
 			errors["destinationstate"] = "*Please Select Destination State.";
 			setErrors(errors);
 			setIsErrors(1);
-			return
+			return;
 		}
 		if ((query1 === '') || (!query1)) {  
 			formIsValid = false;
 			errors["to_places"] = "*Please Enter End Point.";
 			setErrors(errors);
 			setIsErrors(1);
-			//return
+			return;
 		}
 		setShow(1);
 	}
