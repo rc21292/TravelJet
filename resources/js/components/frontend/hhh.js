@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Link, Route, useHistory} from 'react-router-dom
 
 let autoComplete;
 let autoComplete1;
+let origin, destination, map;
 
 const loadScript = (url, callback) => {
 	let script = document.createElement("script");
@@ -32,22 +33,6 @@ function handleScriptLoad(
 	autoCompleteRef
 	) {
 
-	var myLatLng = {
-		lat: 20.59,
-		lng: 78.96
-	};
-	var map = new google.maps.Map(document.getElementById('google-map'), {zoom: 5, center: myLatLng});
-
-
-	autoComplete1 = new window.google.maps.places.Autocomplete(
-		autoCompleteRef1.current,
-		{ types: ["(regions)"], componentRestrictions: { country: "in" } }
-		);
-	autoComplete1.setFields(["address_components", "formatted_address"]);
-	autoComplete1.addListener("place_changed", () =>
-		handlePlaceSelect1(updateQuery1)
-		);
-
 	autoComplete = new window.google.maps.places.Autocomplete(
 		autoCompleteRef.current,
 		{ types: ["(regions)"], componentRestrictions: { country: "in" } }
@@ -56,51 +41,110 @@ function handleScriptLoad(
 	autoComplete.addListener("place_changed", () =>
 		handlePlaceSelect(updateQuery)
 		);
+
+	autoComplete1 = new window.google.maps.places.Autocomplete(
+		autoCompleteRef1.current,
+		{ types: ["(regions)"], componentRestrictions: { country: "in" } }
+		);
+	autoComplete1.setFields(["address_components", "formatted_address"]);
+	autoComplete1.addListener("place_changed", () =>
+		handlePlaceSelect1(updateQuery1,updateQuery)
+		);
+
 }
 
-async function handlePlaceSelect1(updateQuery1) {
+async function handlePlaceSelect1(updateQuery1,updateQuery) {
 	const addressObject = autoComplete1.getPlace();
 	const query = addressObject.formatted_address;
+	destination = query;
 	updateQuery1(query);
-	calcRoute(query);
+	submitdestination();
 }
 
 async function handlePlaceSelect(updateQuery) {
 	const addressObject = autoComplete.getPlace();
 	const query = addressObject.formatted_address;
+	origin = query;
 	updateQuery(query);
+	
 }
 
 
-function calcRoute(destination) {
-    //create request
-    console.log(document.getElementById("from_places").value);
-    console.log(destination);
-    var request = {
-        origin: document.getElementById("from_places").value,
-        destination: destination,
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC
-    }
+function submitdestination () {
+	var origin = origin;
+	var destination = destination;
+	var travel_mode = 'DRIVING';
+	var directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+	var directionsService = new google.maps.DirectionsService();
+	displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
+	calculateDistance(travel_mode, origin, destination);
+};
 
-    var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer();
-    directionsService.route(request, function (result, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-            
-            $("#output").html("<div class='result-table'> Driving distance: " + result.routes[0].legs[0].distance.text + ".<br />Duration: " + result.routes[0].legs[0].duration.text + ".</div>");
-            document.getElementById("output").style.display = "block";
-
-            directionsDisplay.setDirections(result);
-        } else {
-            directionsDisplay.setDirections({ routes: [] });
-             directionsDisplay.setDirections({ routes: [] });
+function displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay) {
+            directionsService.route({
+                origin: origin,
+                destination: destination,
+                travelMode: travel_mode,
+                avoidTolls: true
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setMap(map);
+                    directionsDisplay.setDirections(response);
+                } else {
+                    directionsDisplay.setMap(null);
+                    directionsDisplay.setDirections(null);
+                    alert('Could not display directions due to: ' + status);
+                }
+            });
         }
-    });
 
+function calculateDistance(travel_mode, origin, destination) {
+	console.log('jjj',origin);
+	console.log('krishna',destination);
+
+	var DistanceMatrixService = new google.maps.DistanceMatrixService();
+	DistanceMatrixService.getDistanceMatrix(
+	{
+		origins: [origin],
+		destinations: [destination],
+		travelMode: google.maps.TravelMode[travel_mode],
+		unitSystem: google.maps.UnitSystem.IMPERIAL, 
+		avoidHighways: false,
+		avoidTolls: false
+	}, save_results);
 }
+
+function save_results(response, status) {
+
+	if (status != google.maps.DistanceMatrixStatus.OK) {
+		$('#result').html(err);
+	} else {
+		var origin = response.originAddresses[0];
+		var destination = response.destinationAddresses[0];
+		if (response.rows[0].elements[0].status === "ZERO_RESULTS") {
+			$('#result').html("Sorry , not available to use this travel mode between " + origin + " and " + destination);
+		} else {
+			var distance = response.rows[0].elements[0].distance;
+			var duration = response.rows[0].elements[0].duration;
+			var distance_in_kilo = (distance.value / 1000); 
+			var distance_in_mile = (distance.value / 1609.34); 
+			var duration_text = duration.text;
+			appendResults(distance_in_kilo, distance_in_mile, duration_text);
+		}
+	}
+}
+
+function appendResults(distance_in_kilo, distance_in_mile, duration_text) {
+	$("#result").removeClass("hide");
+	$('#in_mile').html("<?= $lang['distance_in_mile'] ?> : <span class='badge badge-pill badge-secondary'>" + distance_in_mile.toFixed(2) + "</span>");
+	$('#in_kilo').html("<?= $lang['distance_in_kilo'] ?>: <span class='badge badge-pill badge-secondary'>" + distance_in_kilo.toFixed(2) + "</span>");
+	$('#duration_text').html("<?= $lang['in_text'] ?>: <span class='badge badge-pill badge-success'>" + duration_text + "</span>");
+}
+
+
 
 const BookingTrip = (props) => {
+
 
 	const history = useHistory();
 
@@ -143,16 +187,30 @@ const BookingTrip = (props) => {
 	const [isUpdated, setIsUpdated] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [isErrors, setIsErrors] = useState(0);
-	const [show, setShow] = useState(0);
+
 
 	const [query1, setQuery1] = useState("");
 	const [query, setQuery] = useState("");
 
+
 	const autoCompleteRef1 = useRef(null);
 	const autoCompleteRef = useRef(null);
 
-	useEffect(()=>{
-	
+	useEffect(()=>{	
+		const script = document.createElement("script");
+
+		script.src = "/frontend/js/main/book.js";
+		script.async = true;
+
+		document.body.appendChild(script);
+
+		const script1 = document.createElement("script");
+
+		script1.src = "/frontend/js/main/map.js";
+		script1.async = true;
+
+		document.body.appendChild(script1);
+
 		loadScript(
 			`https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places`,
 			() => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
@@ -160,18 +218,7 @@ const BookingTrip = (props) => {
 
 	},[])
 
-	const saveBooking = (event) => {
-
-		event.preventDefault();
-		let errors = {};
-		let formIsValid = true;
-
-		if ((bookings.vehicle_when === '') || (!bookings.vehicle_when)) {  
-			formIsValid = false;
-			errors["vehicle_when"] = "*Please Select your Budget.";
-			setErrors(errors);
-			return;
-		}
+	const saveProduct = () => {
 		var data = {
 			user_id: bookings.user_id,
 			pickupstate: bookings.pickupstate,
@@ -230,107 +277,10 @@ const BookingTrip = (props) => {
 
 		if ((bookings.pickupstate === '') || (!bookings.pickupstate)) {  
 			formIsValid = false;
-			errors["pickupstate"] = "*Please Select Pickup State.";
-			setErrors(errors);
-			return;
-		}
-		if ((query === '') || (!query)) {  
-			formIsValid = false;
-			errors["from_places"] = "*Please Enter Starting Point.";
+			errors["pickupstate"] = "*Please Select State.";
 			setErrors(errors);
 			setIsErrors(1);
-			//return
 		}
-		if ((bookings.destinationstate === '') || (!bookings.destinationstate)) {  
-			formIsValid = false;
-			errors["destinationstate"] = "*Please Select Destination State.";
-			setErrors(errors);
-			setIsErrors(1);
-			return
-		}
-		if ((query1 === '') || (!query1)) {  
-			formIsValid = false;
-			errors["to_places"] = "*Please Enter End Point.";
-			setErrors(errors);
-			setIsErrors(1);
-			//return
-		}
-		setShow(1);
-	}
-
-	const validateStep2 = event => {
-
-		event.preventDefault();
-		let errors = {};
-		let formIsValid = true;
-
-		if ((bookings.depart === '') || (!bookings.depart)) {  
-			formIsValid = false;
-			errors["depart"] = "*Please Select Date of Depart.";
-			setErrors(errors);
-			return;
-		}
-		if ((bookings.arrival === '') || (!bookings.arrival)) {  
-			formIsValid = false;
-			errors["arrival"] = "*Please Select Date to Arrival.";
-			setErrors(errors);
-			setIsErrors(1);
-			return
-		}
-		if ((bookings.pickup_time === '') || (!bookings.pickup_time)) {  
-			formIsValid = false;
-			errors["pickup_time"] = "*Please Select Pickup Time.";
-			setErrors(errors);
-			setIsErrors(1);
-			return
-		}
-		setShow(2);
-	}
-
-	const validateStep3 = event => {
-
-		event.preventDefault();
-		let errors = {};
-		let formIsValid = true;
-
-		if ((bookings.booking_name === '') || (!bookings.booking_name)) {  
-			formIsValid = false;
-			errors["booking_name"] = "*Please give a Title to Your Booking.";
-			setErrors(errors);
-			return;
-		}
-		setShow(3);
-	}
-
-	const validateStep6 = event => {
-
-		event.preventDefault();
-		let errors = {};
-		let formIsValid = true;
-
-		if ((bookings.vehicle_type === '') || (!bookings.vehicle_type)) {  
-			formIsValid = false;
-			errors["vehicle_type"] = "*Please select type of Vehicle.";
-			setErrors(errors);
-			return;
-		}
-		setShow(5);
-	}
-
-
-	const validateStep7 = event => {
-
-		event.preventDefault();
-		let errors = {};
-		let formIsValid = true;
-
-		if ((bookings.vehicle_budget === '') || (!bookings.vehicle_budget)) {  
-			formIsValid = false;
-			errors["vehicle_budget"] = "*Please Select your Budget.";
-			setErrors(errors);
-			return;
-		}
-		setShow(7);
 	}
 
 	const handleInputChanges = event => {
@@ -369,6 +319,7 @@ const BookingTrip = (props) => {
 	
 	const handleSubmit = e => {
 		e.preventDefault();
+		console.log("inputFields", inputFields);
 	};
 
 	const handleInputChange = (index, event) => {
@@ -396,6 +347,8 @@ const BookingTrip = (props) => {
 
 	};
 
+	console.log(bookings);
+
     return (			
 
 		<div>
@@ -411,9 +364,6 @@ const BookingTrip = (props) => {
 	            </div>
 	          </div>
 	        </div>
-
-	        <div className="col-lg-5 mapspace" id="google-map" style={{width:'41%',height:'100%',float:'right'}}></div> 
-	         
 	        {/* END */}
 	        {/* BOOKING FORM */}
 	        <div className="container">
@@ -430,7 +380,7 @@ const BookingTrip = (props) => {
 	            </div>
 	            <div className="alert alert-success hide" />
 	            <form id="regiration_form" name="regiration_form" noValidate>
-	              <fieldset style={show==0 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Your Current Location
 	                </div>
@@ -481,9 +431,8 @@ const BookingTrip = (props) => {
 	                            <option value="Uttarakhand">Uttarakhand</option>
 	                            <option value="West Bengal">West Bengal</option>
 	                          </select>
-	                          <input type="text" id="from_places" name="from_places" ref={autoCompleteRef}  placeholder="Tell us your starting point.." className="startpoint form-control" />
+	                          <input type="text" name="from_places" ref={autoCompleteRef}  placeholder="Tell us your starting point.." className="startpoint form-control" />
 	                        </div>
-	                        <div style={{color:'red',marginTop:'-15px'}}>{errors.pickupstate}{errors.from_places}</div>
 	                        <div className="add-stop">
 	                          <div className="addstop-title" onClick={() => handleAddFields()}>
 								<i className="fa fa-plus-circle" /> <span>Add Stop</span>
@@ -557,9 +506,8 @@ const BookingTrip = (props) => {
 	                            <option value="Uttarakhand">Uttarakhand</option>
 	                            <option value="West Bengal">West Bengal</option>
 	                          </select>
-	                          <input id="to_places" type="text" defaultValue={''} ref={autoCompleteRef1} onChange={event => setQuery1(event.target.value)} name="to_places" onTouchEnd={(event) => handleChange(event.target.value)} placeholder="Tell us your starting point.." className="startpoint form-control" />
+	                          <input type="text" ref={autoCompleteRef1} onChange={event => setQuery1(event.target.value)} name="to_places" onTouchEnd={(event) => handleChange(event.target.value)} placeholder="Tell us your starting point.." className="startpoint form-control" />
 	                        </div>
-	                        <div style={{color:'red',marginTop:'-15px'}}>{errors.destinationstate}{errors.to_places}</div>
 	                      </div>
 	                      <div className="clearfix" />
 	                      <div className="kilometrediv">
@@ -579,9 +527,9 @@ const BookingTrip = (props) => {
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={validateStep1} name="password" className="btn btn-success" defaultValue="Next" />
+	                <input type="button" name="password" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==1 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Select your date and timing
 	                </div>
@@ -607,17 +555,16 @@ const BookingTrip = (props) => {
 	                        </div>
 	                      </div>
 	                    </div>
-	                    <div style={{color:'red',marginTop:'-15px'}}>{errors.depart}{errors.arrival}{errors.pickup_time}</div>
 	                  </div>
 	                  <div className="col-sm-5 col-xs-12">
 	                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(0)} name="previous" className=" btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={validateStep2} name="next" className=" btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==2 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Give your Booking a title
 	                </div>
@@ -625,7 +572,6 @@ const BookingTrip = (props) => {
 	                  <div className="col-sm-7 col-xs-12">
 	                    <div className="form-group booking-title">
 	                      <input type="text" name="booking_name" onChange={handleInputChanges} className="form-control" placeholder="Booking Name" />
-	                      <div style={{color:'red',marginTop:'-15px'}}>{errors.booking_name}</div>
 	                    </div>
 	                  </div>
 	                  <div className="col-sm-5 col-xs-12">
@@ -633,10 +579,10 @@ const BookingTrip = (props) => {
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(1)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={validateStep3} name="next" className="next btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==3 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Number of Person
 	                </div>
@@ -698,10 +644,10 @@ const BookingTrip = (props) => {
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(2)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={event => setShow(4)} name="next" className="next btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==4 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Type of Vehicle 
 	                </div>
@@ -789,17 +735,16 @@ const BookingTrip = (props) => {
 	                        </div>
 	                      </div>
 	                    </div>
-	                    <div style={{color:'red',marginTop:'-15px'}}>{errors.vehicle_type}</div>	                 
 	                  </div>
 	                  <div className="col-sm-5 col-xs-12">
 	                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(3)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={validateStep6} name="next" className="next btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==5 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Description 
 	                </div>
@@ -814,10 +759,10 @@ const BookingTrip = (props) => {
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(4)} name="previous" className="previous btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={event => setShow(6)} name="next" className="next btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==6 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Budget
 	                </div>
@@ -827,7 +772,7 @@ const BookingTrip = (props) => {
 	                      <div className="col-sm-10">
 	                        <div className="radio custom-radio">
 	                          <label>
-	                            <input type="radio"  name="vehicle_budget" onChange={vehicleBudgetClick} value="3500-5500" className="route-stop" />
+	                            <input type="radio"  name="budget" onChange={vehicleBudgetClick} value="3500-5500" className="route-stop" />
 	                            <span>3500-5500</span>
 	                          </label>
 	                        </div>
@@ -835,7 +780,7 @@ const BookingTrip = (props) => {
 	                      <div className="col-sm-10">
 	                        <div className="radio custom-radio">
 	                          <label>
-	                            <input type="radio"  name="vehicle_budget" onChange={vehicleBudgetClick} value="6500-12,000" className="route-stop" />
+	                            <input type="radio"  name="budget" onChange={vehicleBudgetClick} value="6500-12,000" className="route-stop" />
 	                            <span>6500-12,000</span>
 	                          </label>
 	                        </div>
@@ -843,7 +788,7 @@ const BookingTrip = (props) => {
 	                      <div className="col-sm-10">
 	                        <div className="radio custom-radio">
 	                          <label>
-	                            <input type="radio"  name="vehicle_budget" onChange={vehicleBudgetClick} value="15000- 25000" className="route-stop" />
+	                            <input type="radio"  name="budget" onChange={vehicleBudgetClick} value="15000- 25000" className="route-stop" />
 	                            <span>15000- 25000</span>
 	                          </label>
 	                        </div>
@@ -851,7 +796,7 @@ const BookingTrip = (props) => {
 	                      <div className="col-sm-10">
 	                        <div className="radio custom-radio">
 	                          <label>
-	                            <input type="radio"  name="vehicle_budget" onChange={vehicleBudgetClick} value="35000- 55000" className="route-stop" />
+	                            <input type="radio"  name="budget" onChange={vehicleBudgetClick} value="35000- 55000" className="route-stop" />
 	                            <span>35000- 55000</span>
 	                          </label>
 	                        </div>
@@ -859,23 +804,22 @@ const BookingTrip = (props) => {
 	                      <div className="col-sm-10">
 	                        <div className="radio custom-radio">
 	                          <label>
-	                            <input type="radio"  name="vehicle_budget" onChange={vehicleBudgetClick} value="80000- 150000" className="route-stop" />
+	                            <input type="radio"  name="budget" onChange={vehicleBudgetClick} value="80000- 150000" className="route-stop" />
 	                            <span>80000- 150000</span>
 	                          </label>
 	                        </div>
 	                      </div>
 	                    </div>
-	                    <div style={{color:'red',marginTop:'-15px'}}>{errors.vehicle_budget}</div>	                  
 	                  </div>
 	                  <div className="col-sm-5 col-xs-12">
 	                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(5)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={validateStep7} name="next" className="next btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==7 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  Contact Details
 	                </div>
@@ -912,10 +856,10 @@ const BookingTrip = (props) => {
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
-	                <input type="button" onClick={event => setShow(6)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={event => setShow(8)} name="next" className="next btn btn-success" defaultValue="Next" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" name="next" className="next btn btn-success" defaultValue="Next" />
 	              </fieldset>
-	              <fieldset style={show==8 ? {display:'block'} : {display:'none'}}>
+	              <fieldset>
 	                <div className="field-title">
 	                  When would you like to book your cab ?
 	                </div>
@@ -963,11 +907,10 @@ const BookingTrip = (props) => {
 	                        </div>
 	                      </div>
 	                    </div>
-	                    <div style={{color:'red',marginTop:'-15px'}}>{errors.vehicle_when}</div>
 	                  </div>
 	                </div>
-	                <input type="button" name="previous" onClick={event => setShow(7)} className="previous btn btn-secondary" defaultValue="Previous" />
-	                <input type="button" onClick={saveBooking} name="submit" className="submit btn btn-success" defaultValue="Done" />
+	                <input type="button" name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" onClick={saveProduct} name="submit" className="submit btn btn-success" defaultValue="Done" />
 	              </fieldset>
 	            </form>
 	          </div>
