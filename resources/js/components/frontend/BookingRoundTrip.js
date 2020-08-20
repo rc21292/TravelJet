@@ -158,7 +158,7 @@ const BookingRoundTrip = (props) => {
 		var data = {
 			user_id: bookings.user_id,
 			pickupstate: bookings.pickupstate,
-			destinationstate: bookings.destinationstate,
+			destinationstate: bookings.pickupstate,
 			pickup: bookings.from_places,
 			origin: bookings.origin,
 			depart: bookings.depart,
