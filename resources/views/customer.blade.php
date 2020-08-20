@@ -8,7 +8,7 @@
 </head>
 <body>
 	<script>
-		var user_id = "<?php echo json_encode(Auth::user()->id); ?>";
+		var user_id = "<?php echo (Auth::user()) ? json_encode(Auth::user()->id) : '' ?>";
 	</script>
 	<div id="customer-app"></div>
 	<script type="text/javascript" src="{{asset('js/app.js')}}"></script>

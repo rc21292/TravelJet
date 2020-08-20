@@ -87,12 +87,14 @@ class HomeController extends Controller
 
     public function booknow()
     {
-        if(Auth::check() && Auth::User()->role == 'customer'){
+        return view('welcome');
+        
+        /*if(Auth::check() && Auth::User()->role == 'customer'){
             return view('welcome');
         }else
         {
             return redirect()->guest('login');
-        }
+        }*/
     }
     public function logout () {
         Auth()->logout();

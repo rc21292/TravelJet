@@ -52,6 +52,7 @@
         }
 
         function onPlaceSelected (Place){
+            console.log(Place.formatted_address);
             document.getElementById('from_places').setAttribute("data-id", Place.formatted_address);
         }
 

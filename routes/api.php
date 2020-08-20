@@ -47,6 +47,9 @@ Route::post('save_address/{id}','AddressController@store');
 Route::get('getAddresses/{id}','AddressController@index');
 Route::get('transaction_history/{id}', 'UserTransactionController@index');
 
+Route::post('sendotp', 'LoginController@otp');
+Route::post('verifyotp', 'LoginController@verify');
+
 Route::get('payouts/{id}', 'PayoutController@index');
 
 Route::get('/users/getbalance/{id}','UserController@balance');

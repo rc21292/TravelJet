@@ -29,25 +29,32 @@ function handleScriptLoad(
   updateQuery,
   autoCompleteRef1,
   autoCompleteRef
-) {
-  autoComplete1 = new window.google.maps.places.Autocomplete(
-    autoCompleteRef1.current,
-    { types: ["(regions)"], componentRestrictions: { country: "in" } }
-  );
-  autoComplete1.setFields(["address_components", "formatted_address"]);
-  autoComplete1.addListener("place_changed", () =>
-    handlePlaceSelect1(updateQuery1)
-  );
+  ) {
 
-  autoComplete = new window.google.maps.places.Autocomplete(
-    autoCompleteRef.current,
-    { types: ["(regions)"], componentRestrictions: { country: "in" } }
-  );
-  autoComplete.setFields(["address_components", "formatted_address"]);
-  autoComplete.addListener("place_changed", () =>
-    handlePlaceSelect(updateQuery)
-  );
-}
+	var myLatLng = {
+		lat: 28.29,
+		lng: 79.86
+	};
+	var map = new google.maps.Map(document.getElementById('google-map'), {zoom: 5, center: myLatLng});
+
+	autoComplete1 = new window.google.maps.places.Autocomplete(
+		autoCompleteRef1.current,
+		{ types: ["(regions)"], componentRestrictions: { country: "in" } }
+		);
+	autoComplete1.setFields(["address_components", "formatted_address"]);
+	autoComplete1.addListener("place_changed", () =>
+		handlePlaceSelect1(updateQuery1)
+		);
+
+	autoComplete = new window.google.maps.places.Autocomplete(
+		autoCompleteRef.current,
+		{ types: ["(regions)"], componentRestrictions: { country: "in" } }
+		);
+	autoComplete.setFields(["address_components", "formatted_address"]);
+	autoComplete.addListener("place_changed", () =>
+		handlePlaceSelect(updateQuery)
+		);
+	}
 
 async function handlePlaceSelect1(updateQuery1) {
   const addressObject = autoComplete1.getPlace();
@@ -104,7 +111,8 @@ const BookingRoundTrip = (props) => {
 	const [inputFields, setInputFields] = useState([{ stopage: ''}]);
 
 	const [isUpdated, setIsUpdated] = useState(false);
-	const [errors, setErrors] = useState({});
+	const [errors, setErrors] = useState({});	
+	const [success, setSuccess] = useState({});
 	const [isErrors, setIsErrors] = useState(0);
 
 	const [show, setShow] = useState(0);
@@ -113,11 +121,21 @@ const BookingRoundTrip = (props) => {
 	const [query1, setQuery1] = useState("");
 	const [query, setQuery] = useState("");
 
+	const [widthProgressBar, setWidthProgressBar] = useState('');
+
 
 	const autoCompleteRef1 = useRef(null);
 	const autoCompleteRef = useRef(null);
 
 	useEffect(()=>{	
+
+		let current = 1;
+		let curStep = parseInt(show)+1;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
+
 		loadScript(
 			`https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places`,
 			() => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
@@ -173,12 +191,93 @@ const BookingRoundTrip = (props) => {
 		})
 		.then(response => {
 			setSubmitted(true);
-			window.location = '/customer/bookings';			
+			window.location = '/login/';			
 		})
 		.catch(e => {
 			console.log(e);
 		});
 	};
+
+	const validateLoginRegister = event => {
+		event.preventDefault();
+		let errors = {};
+		if ((bookings.name === '') || (!bookings.name)) {  
+			errors["name"] = "*Please Enter Name.";
+			setErrors(errors);
+			return;
+		}
+
+		if (!bookings.email) {    
+            errors["email"] = "Email id is required.";    
+            setErrors(errors);
+			return;
+        }    
+        else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(bookings.email))) {        
+            errors["email"] = "Invalid email id.";    
+            setErrors(errors);
+			return;
+        }    
+
+		if ((bookings.password === '') || (!bookings.password)) {  
+			errors["password"] = "*Please Enter Password.";
+			setErrors(errors);
+			return;
+		}
+
+
+		if (!bookings.mobile) {    
+			errors["mobile"] = "Phone number is required.";    
+			setErrors(errors);
+			return;
+		}    
+		else {    
+			var mobPattern = /^(?:(?:\\+|0{0,2})91(\s*[\\-]\s*)?|[0]?)?[789]\d{9}$/;    
+			if (!mobPattern.test(bookings.mobile)) {    
+				errors["mobile"] = "Invalid phone number.";  
+				setErrors(errors);
+				return;  
+			}    
+		}    
+
+		if ((bookings.otp === '') || (!bookings.otp)) {  
+			errors["otp"] = "*Please Enter Otp (Generate Otp and enter here).";
+			setErrors(errors);
+			return;
+		}
+
+		var data = {
+			name: bookings.name,
+			email: bookings.email,
+			phone: bookings.mobile,
+			password: bookings.password,
+			otp: bookings.otp
+		};
+		axios({
+			method: 'post',
+			url: '/api/verifyotp',
+			data: data,
+		})
+		.then(response => {
+			console.log(response);
+			if ((response.data.message == 'success') || (response.data.message == 'Success') || (response.data.message =='Otp Verified Succesfully')) {
+				setBookings({...bookings,user_id:response.data.id});
+			setShow(8);
+			let curStep = 9;
+			let steps = $("fieldset").length;
+			let percent = parseFloat(100 / steps) * curStep;
+			percent = percent.toFixed();
+			setWidthProgressBar(percent);
+			}else{
+				errors["otp"] = "*Otp not varified (Generate Otp and enter here).";
+			setErrors(errors);
+				return;
+			}
+		})
+		.catch(e => {
+			console.log(e);
+			return;
+		});
+	}
 
 	const handleChecked = (event) => {
 		if (bookings.in_city == 0) {
@@ -208,65 +307,130 @@ const BookingRoundTrip = (props) => {
 			return
 		}
 		setShow(1);
+
+		let curStep = 2;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
 	}
+
+	const generateOTP = (event) => {
+		event.preventDefault();
+		if(!bookings.mobile){
+			setErrors({mobile:'Please enter mobile number!'});
+			return false;
+		}else{
+			var data = {
+				phone: bookings.mobile
+			};
+			axios({
+				method: 'post',
+				url: '/api/sendotp',
+				data: data,
+			})
+			.then(response => {
+				setSuccess({otpSended:'Otp sended successfully!'});
+			})
+			.catch(e => {
+				console.log(e);
+			});
+		}
+	}
+
+	const validateStep4 = event => {
+		setShow(4);
+		let curStep = 5;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
+	}
+
+	const validateStep5 = event => {
+		setShow(6);
+		let curStep = 7;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
+	}
+
+
+	const previousStep = (count) => { 
+		setShow(count);
+		let curStep = parseInt(count)+1;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
+
+	};  
 
 	const validateStep2 = event => {
 
 		event.preventDefault();
 		let errors = {};
-		let formIsValid = true;
 
 		if ((bookings.depart === '') || (!bookings.depart)) {  
-			formIsValid = false;
 			errors["depart"] = "*Please Select Date of Depart.";
 			setErrors(errors);
 			return;
 		}
 		if ((bookings.arrival === '') || (!bookings.arrival)) {  
-			formIsValid = false;
 			errors["arrival"] = "*Please Select Date to Arrival.";
 			setErrors(errors);
 			setIsErrors(1);
 			return
 		}
 		if ((bookings.pickup_time === '') || (!bookings.pickup_time)) {  
-			formIsValid = false;
 			errors["pickup_time"] = "*Please Select Pickup Time.";
 			setErrors(errors);
 			setIsErrors(1);
 			return
 		}
 		setShow(2);
+		let curStep = 3;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
 	}
 
 	const validateStep3 = event => {
 
 		event.preventDefault();
 		let errors = {};
-		let formIsValid = true;
 
 		if ((bookings.booking_name === '') || (!bookings.booking_name)) {  
-			formIsValid = false;
 			errors["booking_name"] = "*Please give a Title to Your Booking.";
 			setErrors(errors);
 			return;
 		}
 		setShow(3);
+		let curStep = 4;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
 	}
 
 	const validateStep6 = event => {
 
 		event.preventDefault();
 		let errors = {};
-		let formIsValid = true;
 
 		if ((bookings.vehicle_type === '') || (!bookings.vehicle_type)) {  
-			formIsValid = false;
 			errors["vehicle_type"] = "*Please select type of Vehicle.";
 			setErrors(errors);
 			return;
 		}
 		setShow(5);
+		let curStep = 6;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
 	}
 
 
@@ -274,15 +438,18 @@ const BookingRoundTrip = (props) => {
 
 		event.preventDefault();
 		let errors = {};
-		let formIsValid = true;
 
 		if ((bookings.vehicle_budget === '') || (!bookings.vehicle_budget)) {  
-			formIsValid = false;
 			errors["vehicle_budget"] = "*Please Select your Budget.";
 			setErrors(errors);
 			return;
 		}
 		setShow(7);
+		let curStep = 8;
+		let steps = $("fieldset").length;
+		let percent = parseFloat(100 / steps) * curStep;
+		percent = percent.toFixed();
+		setWidthProgressBar(percent);
 	}
 
 	const handleInputChanges = event => {
@@ -378,7 +545,7 @@ const BookingRoundTrip = (props) => {
               </div>
             </div>
             <div className="progress">
-              <div className="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin={0} aria-valuemax={100} />
+              <div className="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin={0} aria-valuemax={100} style={{width:widthProgressBar+"%"}} />
             </div>
             <div className="alert alert-success hide" />
             <form id="regiration_form" name="regiration_form" autoComplete="off">
@@ -537,7 +704,7 @@ const BookingRoundTrip = (props) => {
                     </div>
                   </div>
                   <div className="col-sm-5 col-xs-12">
-                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
+                    <div className="col-lg-5 mapspace" id="google-map" style={{width:'100%',height:'350px',float:'right'}}></div>
                   </div>
                 </div>
                 <div className="clearfix" />
@@ -576,7 +743,7 @@ const BookingRoundTrip = (props) => {
                   </div>
                 </div>
                 <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(0)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+                <input type="button"  type="button" onClick={event => previousStep(0)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
                 <input type="button"  type="button" onClick={validateStep2} name="next" className="next btn btn-success" defaultValue="Next" />
               </fieldset>
               <fieldset style={show==2 ? {display:'block'} : {display:'none'}}>
@@ -595,7 +762,7 @@ const BookingRoundTrip = (props) => {
                   </div>
                 </div>
                 <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(1)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+                <input type="button"  type="button" onClick={event => previousStep(1)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
                 <input type="button"  type="button" onClick={validateStep3} name="next" className="next btn btn-success" defaultValue="Next" />
               </fieldset>
               <fieldset style={show==3 ? {display:'block'} : {display:'none'}}>
@@ -660,8 +827,8 @@ const BookingRoundTrip = (props) => {
                   </div>
                 </div>
                 <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(2)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-                <input type="button"  type="button" onClick={event => setShow(4)} name="next" className="next btn btn-success" defaultValue="Next" />
+                <input type="button"  type="button" onClick={event => previousStep(2)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+                <input type="button"  type="button" onClick={validateStep4} name="next" className="next btn btn-success" defaultValue="Next" />
               </fieldset>
               <fieldset style={show==4 ? {display:'block'} : {display:'none'}}>
                 <div className="field-title">
@@ -758,7 +925,7 @@ const BookingRoundTrip = (props) => {
                   </div>
                 </div>
                 <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(3)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+                <input type="button"  type="button" onClick={event => previousStep(3)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
                 <input type="button"  type="button" onClick={validateStep6} name="next" className="next btn btn-success" defaultValue="Next" />
               </fieldset>
               <fieldset style={show==5 ? {display:'block'} : {display:'none'}}>
@@ -776,8 +943,8 @@ const BookingRoundTrip = (props) => {
                   </div>
                 </div>
                 <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(4)} name="previous" className="previous btn-secondary" defaultValue="Previous" />
-                <input type="button"  type="button" onClick={event => setShow(6)} name="next" className="next btn btn-success" defaultValue="Next" />
+                <input type="button"  type="button" onClick={event => previousStep(4)} name="previous" className="previous btn-secondary" defaultValue="Previous" />
+                <input type="button"  type="button" onClick={validateStep5} name="next" className="next btn btn-success" defaultValue="Next" />
               </fieldset>
               <fieldset style={show==6 ? {display:'block'} : {display:'none'}}>
                 <div className="field-title">
@@ -834,49 +1001,58 @@ const BookingRoundTrip = (props) => {
                   </div>
                 </div>
                 <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(5)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+                <input type="button"  type="button" onClick={event => previousStep(5)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
                 <input type="button"  type="button" onClick={validateStep7} name="next" className="next btn btn-success" defaultValue="Next" />
               </fieldset>
               <fieldset style={show==7 ? {display:'block'} : {display:'none'}}>
-                <div className="field-title">
-                  Contact Details
-                </div>
-                <div className="row">
-                  <div className="col-sm-7 col-xs-12">
-                    <div className="contact-detail">	
-                      <div className="form-group col-sm-9">
-                        <input type="text" className="form-control" onChange={handleInputChanges} name="name" placeholder="Name" />
-                      </div>
-                      <div className="form-group col-sm-9">
-                        <input type="text" className="form-control" onChange={handleInputChanges} name="email" placeholder="Email" />
-                      </div>
-                      <div className="form-group col-sm-9">
-                        <input type="number" className="form-control" onChange={handleInputChanges} name="mobile" placeholder="Mobile" />
-                      </div>
-                      <div className="row">
-                        <div className="form-group col-sm-5">
-                          <p>OTP will send your number</p>
-                        </div>
-                        <div className="form-group col-sm-4">
-                          <button className="btn btn-default generateOTP">Generate OTP</button>
-                        </div>
-                      </div>
-                      <div className="form-group col-sm-9">
-                        <input type="number" className="form-control" onChange={handleInputChanges} name="otp" placeholder="Enter OTP" />
-                      </div>
-                      <div className="form-group col-sm-9">
-                        <input type="password" className="form-control" onChange={handleInputChanges} name="password" placeholder="Password" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-5 col-xs-12">
-                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
-                  </div>
-                </div>
-                <div className="clearfix" />
-                <input type="button"  type="button" onClick={event => setShow(6)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
-                <input type="button"  type="button" onClick={event => setShow(8)} name="next" className="next btn btn-success" defaultValue="Next" />
-              </fieldset>
+	                <div className="field-title">
+	                  Contact Details
+	                </div>
+	                <div className="row">
+	                  <div className="col-sm-7 col-xs-12">
+	                    <div className="contact-detail">	
+	                      <div className="form-group col-sm-9">
+	                        <input type="text" className="form-control"  onChange={handleInputChanges} name="name" placeholder="Name" />
+	                      <div style={{color:'red'}}>{errors.name}</div>
+	                      </div>
+	                      <div className="form-group col-sm-9">
+	                        <input type="text" className="form-control"  onChange={handleInputChanges} name="email" placeholder="Email" />
+	                      <div style={{color:'red'}}>{errors.email}</div>
+	                      </div>
+	                      <div className="form-group col-sm-9">
+	                        <input type="number" className="form-control"  onChange={handleInputChanges} name="mobile" placeholder="Mobile" />
+	                      <div style={{color:'red'}}>{errors.mobile}</div>
+	                      </div>
+	                      <div className="row">
+	                        <div className="form-group col-sm-5">
+	                          <p>OTP will send your number</p>
+	                        </div>
+	                        <div className="form-group col-sm-4">
+	                          <button onClick={generateOTP} className="btn btn-default generateOTP">Generate OTP</button>
+	                        </div>
+	                        <div className="row col-md-12 col-md-offset-5 ">
+	                        <div style={{color:'blue'}}>{success.otpSended}</div>
+	                        <div style={{color:'red'}}>{errors.otpSended}</div>
+	                        </div>
+	                      </div>
+	                      <div className="form-group col-sm-9">
+	                        <input type="number" className="form-control"  onChange={handleInputChanges} name="otp" placeholder="Enter OTP" />
+	                      <div style={{color:'red'}}>{errors.otp}</div>
+	                      </div>
+	                      <div className="form-group col-sm-9">
+	                        <input type="password" className="form-control"  onChange={handleInputChanges} name="password" placeholder="Password" />
+	                        <div style={{color:'red'}}>{errors.password}</div>
+	                      </div>
+	                    </div>
+	                  </div>
+	                  <div className="col-sm-5 col-xs-12">
+	                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
+	                  </div>
+	                </div>
+	                <div className="clearfix" />
+	                <input type="button" onClick={event => previousStep(6)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />
+	                <input type="button" onClick={validateLoginRegister} name="next" className="next btn btn-success" defaultValue="Next" />
+	              </fieldset>
               <fieldset style={show==8 ? {display:'block'} : {display:'none'}}>
                 <div className="field-title">
                   When would you like to book your cab ?
@@ -928,7 +1104,7 @@ const BookingRoundTrip = (props) => {
                     <div style={{color:'red',marginTop:'-15px'}}>{errors.vehicle_when}</div>
                   </div>
                 </div>
-                <input type="button" name="previous" onClick={event => setShow(7)} className="previous btn btn-secondary" defaultValue="Previous" />
+                <input type="button" name="previous" onClick={event => previousStep(7)} className="previous btn btn-secondary" defaultValue="Previous" />
                 <input type="button" onClick={saveBooking} name="submit" className="submit btn btn-success" defaultValue="Done" />
               </fieldset>
             </form>
