@@ -93,8 +93,8 @@ class QueryController extends Controller
         DB::connection()->enableQueryLog();
 
          $result = Booking::
-         join('quotations', 'bookings.id' ,'quotations.booking_id')
-         ->select('bookings.booking_name','bookings.id','quotations.created_at as date')
+         leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.booking_name','bookings.id','bookings.created_at as date')
          ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')
          ->groupBy('bookings.id')
          ->paginate(6);

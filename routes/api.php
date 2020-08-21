@@ -28,6 +28,7 @@ Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
 Route::post('quotations/awardBooking/{id}','QuotationController@awardBooking');
 Route::get('quotations/getQuotation/{id}','QuotationController@getQuotation');
 Route::get('quotations/getQuotationByBookingId/{id}','QuotationController@getQuotationByBookingId');
+Route::get('quotations/checkQuotaions/{id}','QuotationController@checkQuotaions');
 Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');

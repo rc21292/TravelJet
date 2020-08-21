@@ -170,15 +170,40 @@ class QuotationController extends Controller
        return $quotation = Quotation::where('user_id',$id)->first();
     }
 
+    public function checkQuotaions($id)
+    {
+        $qutations = Quotation::where('booking_id',$id)->first();
+
+        if ($qutations) {
+            $quotation = true;
+        }else{
+
+            $quotation = false;
+        }
+        return $quotation;
+    }
 
     public function getQuotationByBookingId(Request $request, $id)
     {
 
         if ($request->status == 'awarded') {
-             $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
+            $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
         }else{
 
-        $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->get();
+            $qutations = Quotation::where('booking_id',$id)->first();
+
+            if ($qutations) {
+                $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->get();
+            }else{
+
+                 $quotation = Booking::
+         leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.*')
+         ->where('bookings.id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')
+         ->get();
+            }
+
+
         }
         return $quotation;
     }

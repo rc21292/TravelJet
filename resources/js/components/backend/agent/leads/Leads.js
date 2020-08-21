@@ -64,7 +64,7 @@ function Leads(props) {
 
   const handlePageChange = (pageNumber) => {
     console.log(location.pathname)
-    axios.get('/api/queries/'+AppState.user.id+'?type=quotation'+'&page='+pageNumber)
+    axios.get('/api/queries/'+user.id+'?type=quotation'+'&page='+pageNumber)
 
     .then(result=>{
       setQuotationsData(result.data.data);
@@ -76,7 +76,7 @@ function Leads(props) {
 
    const handlePageChange1 = (pageNumber) => {
     console.log(location.pathname)
-    axios.get('/api/queries/'+AppState.user.id+'?type=booking'+'&page='+pageNumber)
+    axios.get('/api/queries/'+user.id+'?type=booking'+'&page='+pageNumber)
 
     .then(result=>{
       setBookingsData(result.data.data);
@@ -88,7 +88,7 @@ function Leads(props) {
 
    const handlePageChange2 = (pageNumber) => {
     console.log(location.pathname)
-    axios.get('/api/queries/'+AppState.user.id+'?type=booked'+'&page='+pageNumber)
+    axios.get('/api/queries/'+user.id+'?type=booked'+'&page='+pageNumber)
 
     .then(result=>{
       setBookedsData(result.data.data);

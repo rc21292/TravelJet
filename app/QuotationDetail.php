@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class QuotationDetails extends Model
+class QuotationDetail extends Model
 {
 	protected $fillable = array(
 

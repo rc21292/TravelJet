@@ -24,6 +24,7 @@ function QuotationDetaills({id}) {
   const [quotationData, setQuotationData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
+  const [isQuotation, setIsQuotation] = useState(false);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);  
 
@@ -40,8 +41,11 @@ function QuotationDetaills({id}) {
         setQuotationData(result.data);
       });
 
+      axios.get('/api/quotations/checkQuotaions/'+id).then(result2=>{
+        setIsQuotation(result2.data);
+      });
 
-       const result1 = axios('/api/queries/getStopagesData/'+id).then(result1=>{ 
+      const result1 = axios('/api/queries/getStopagesData/'+id).then(result1=>{ 
       setStopages(result1.data.stopages);  
     });
     
@@ -104,6 +108,7 @@ function QuotationDetaills({id}) {
         <div className="viewquotation" style={{display: 'block'}}>
           <h3>{bookingsData.booking_name}</h3>
           <div className="wt-userlistinghold wt-featured">
+          <div style={(isQuotation) ? {display:'block'} : {display:'none'} } >
           { quotationData.map((quotation3,l)=>{
                   return (
           <div style={(voucher_id == l ) ? {display:'block'} : {display:'none'} }>
@@ -115,9 +120,11 @@ function QuotationDetaills({id}) {
               )
                 })
               }
+              </div>
             <div className="bookid"> <span>Booking id : 000000{bookingsData.id}</span>
             </div>
             <div className="roundtrip">Quotes for {bookingsData.booking_name}</div>
+            <div style={(isQuotation) ? {display:'block'} : {display:'none'} } >
             { quotationData.map((quotation2,k)=>{
                   return (
                   <div style={(quotation_id == k ) ? {display:'block'} : {display:'none'} } >
@@ -156,10 +163,11 @@ function QuotationDetaills({id}) {
              )
                 })
               }
+             </div>
 
             <div className="clearfix" />
             <div id="exTab1">
-              <ul className="nav nav-pills">
+              <ul className="nav nav-pills" style={(isQuotation) ? {display:'block'} : {display:'none'} }>
               {
                 quotationData.map((quotation,i)=>{
                   return (
@@ -204,7 +212,7 @@ function QuotationDetaills({id}) {
                         </tr>
                         <tr>
                           <td>Destination Covered</td>
-                          <td>{ bookingsData.booking_name}</td>
+                          <td>{ ''}</td>
                           <td />
                           <td />
                         </tr>
