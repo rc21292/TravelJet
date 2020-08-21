@@ -86,6 +86,7 @@ function calcRoute(destination) {
     var directionsService = new google.maps.DirectionsService();
     var directionsDisplay = new google.maps.DirectionsRenderer();
     directionsService.route(request, function (result, status) {
+    	console.log(google.maps.DirectionsStatus);
         if (status == google.maps.DirectionsStatus.OK) {
             
             $("#output").html("<div class='result-table'> Driving distance: " + result.routes[0].legs[0].distance.text + ".<br />Duration: " + result.routes[0].legs[0].duration.text + ".</div>");
@@ -93,6 +94,9 @@ function calcRoute(destination) {
 
             directionsDisplay.setDirections(result);
         } else {
+        	/*26.449923
+        	80.331871
+        	map.setCenter(myLatLng);*/
             directionsDisplay.setDirections({ routes: [] });
              directionsDisplay.setDirections({ routes: [] });
         }
@@ -162,7 +166,7 @@ const BookingTrip = (props) => {
 		setWidthProgressBar(percent);
 
 		loadScript(
-			`https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places`,
+			`https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places,geometry,drawing`,
 			() => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
 			);
 	},[])

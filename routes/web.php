@@ -13,6 +13,8 @@ use Illuminate\Http\Response;
 |
 */
 
+
+
 // Front End View Routes
 Route::get('/', function () { return view('welcome'); });
 Route::get('/CompanyInfo', function () { return view('welcome'); });
@@ -112,6 +114,34 @@ Route::get('/query/store', 'Api\QueryController@store')->name('storequery');
 Auth::routes();
 
 Route::get('/logout', 'HomeController@logout');
+
+
+
+// Route::get('/', function()
+// {
+// 	return Auth::user();
+//     if( Session::has('user') ) return 'Welcome ' . Session::get('user')->u_username;
+//     return 'Please log in <a href="/login">login</a>';
+// });
+
+// Route::get('/login', function() {
+//     $credentials = array('email' => 'traveljet@customer.com', 'password' => '12345678');
+
+//     if( Auth::attempt($credentials, true) ){
+
+//         Session::put('user', Auth::user());
+//         return 'You have successfully logged in, ' . Auth::user()->name . '! <a href="/">Go back to Index</a>';
+//     } 
+
+//     return '<h1>Username/Password wrong.</h1>Your credentials seem to be wrong. Please re-check them.';
+
+// });
+
+// Route::get('/logout', function() {
+//     Auth::logout();
+//     Session::forget('user');
+//     return Redirect::to('/');
+// });
 
 
 

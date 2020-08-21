@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
+// use Illuminate\Support\Facades\Session;
 use App\User;
 use App\UserOtp;
 use DB;
+use Session;
 
 class LoginController extends Controller
 {
@@ -36,15 +37,12 @@ class LoginController extends Controller
 
           } 
         }
-
-
       }
     }
   }
 
   public function send($mob_num,$c)
   {   
-
     $url = "https://sms.azmobia.com/http-tokenkeyapi.php?authentic-key=383162656574726f3538371542130398&senderid=BEETRO&route=1&number=$mob_num&message=Your%20Otp%20for%20Beetro%20Gym%20is%20$c";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url); 
@@ -52,12 +50,10 @@ class LoginController extends Controller
     $output = curl_exec($ch);   
     $output = json_decode($output);
     curl_close($ch);
-
   }
 
   public function sendOtp($mob_num='')
   {
-
     $phone = $mob_num;
     $code = $this->setOTP();
     $user = new UserOtp;
@@ -71,7 +67,6 @@ class LoginController extends Controller
 
   public function updateOtp($mob_num='')
   {
-
     $phone = $mob_num;
     $code = $this->setOTP();
     $res = DB::table('user_otps')->where('phone',$phone)->update([ 
@@ -89,35 +84,22 @@ class LoginController extends Controller
 
   public function verify(Request $request) 
   {
-
     $phone = UserOtp::where('otp',$request->otp)->value('phone');
     $otp = UserOtp::where('phone',$request->phone)->value('otp');
     $phone_check = $this->checkUser($request);
     if($request->otp == $otp && $request->phone == $phone){
-
-
       if($phone_check){
-
         Auth::login($phone_check);
         $user = Auth::user();
         return response()->json(["message" => "Success","id" => $user->id]);
-      }
-
-      else
-
-      {
-
+      }else{
         $user_id =  $this->registerphone($request);
         return response()->json(["message" => "Otp Verified Succesfully","id"=>$user_id]);
-      }  
-
+      }
     } else {
-
       return response()->json(["message" => "Not Verified"]);
-
     }
   }
-
 
   public function registerphone($request)
   {
@@ -126,15 +108,13 @@ class LoginController extends Controller
     $user->phone = $request->phone;
     $user->email = $request->email;
     $user->role = 'customer';
-
-    $user->password   = bcrypt($request['password']);
+    $user->password = bcrypt($request['password']);
     $user->save();
     return $user->id;
   } 
 
   public function checkUser($request)
   {
-
     if (Auth::attempt(array('email' => $request->email, 'password' => $request->password))){
       return  $phone = User::where('email', '=', $request->email)->first();
     }
