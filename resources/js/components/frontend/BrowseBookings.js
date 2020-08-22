@@ -12,7 +12,12 @@ function BrowseBookings(props) {
   const history = useHistory()
   const location = useLocation()
 
+  const [initcabs, setInitCabs] = useState(['Hatchback','Sedan','Suv','Tempo Traveller','Mini Bus','Volvo']);
+  const [cabs, setCabs] = useState([]);
+
+
   const [user, setUser] = useState(false);
+  const [checkbox, setCheckbox] = useState([]);
 
   const [bookingsData, setBookingsData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
@@ -20,7 +25,14 @@ function BrowseBookings(props) {
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);  
 
+  const [searchByName, setSearchByName] = useState("");
+  const [searchByCategory, setSearchByCategory] = useState([]);
+  const [searchByLocation, setSearchByLocation] = useState("");
+  const [searchByCab, setSearchByCab] = useState([]);
+
   useEffect(() => {  
+
+    setCabs(initcabs);
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
@@ -36,11 +48,43 @@ function BrowseBookings(props) {
 
   }, []);  
 
+  const handleCheckbox = (event) => {
+    let nCheckbox = searchByCab.slice(); 
+    if(isValueExist(nCheckbox, event)){ 
+      const index = nCheckbox.indexOf(event.target.value);
+      nCheckbox.splice(index, 1); 
+    }else{
+      nCheckbox.push(event.target.value); 
+    }
+    setSearchByCab(nCheckbox);
+  }
+
+  const handleCatCheckbox = (event) => {
+    let nCheckbox = searchByCategory.slice(); 
+    if(isValueExist(nCheckbox, event)){ 
+      const index = nCheckbox.indexOf(event.target.value);
+      nCheckbox.splice(index, 1); 
+    }else{
+      nCheckbox.push(event.target.value); 
+    }
+    setSearchByCategory(nCheckbox);
+  }
+
+  const isValueExist = (data, event) => {
+    if(data.length == 0){
+      return false;
+    }
+
+    for(let i = 0; i<= data.length; i++){
+      if(event.target.value == data[i]){
+        return true;
+      }
+    }
+    return false;
+  }
 
   const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-    axios.get('/api/queries?status=posted'+'&page='+pageNumber)
-
+    axios.get('/api/queries?status=posted&name='+searchByName+'&category='+searchByCategory+'&location='+searchByLocation+'&cab='+searchByCab+'&page='+pageNumber)
     .then(result=>{
       setBookingsData(result.data.data);
       setItemsCountPerPage(result.data.per_page);  
@@ -48,6 +92,110 @@ function BrowseBookings(props) {
       setActivePage(result.data.current_page);
     });
   }
+
+  const onChangeSearchByName = e => {
+    const searchByName = e.target.value;
+    setSearchByName(searchByName);
+  };
+
+  const onChangeSearchByCategory = e => {
+    const searchByCategory = e.target.value;
+    setSearchByCategory(searchByCategory);
+  };
+
+  const onChangeSearchByLocation = e => {
+    const searchByLocation = e.target.value;
+    setSearchByLocation(searchByLocation);
+  };
+
+  const onChangeSearchByCab = e => {
+    const searchByCab = e.target.value;
+    setSearchByCab(searchByCab);
+  };
+
+
+
+  const resetFilter = () => {
+    window.location.reload(false);
+  }
+
+
+  const filterCab = ()  => {
+    var updatedList = initcabs;
+    updatedList = updatedList.filter(function(item) {
+      return item.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+    });
+    setCabs(updatedList);
+  }
+
+  const findByFilter = () => {
+    axios.get('/api/queries?status=posted&name='+searchByName+'&category='+searchByCategory+'&location='+searchByLocation+'&cab='+searchByCab)
+    .then(result => {
+      setBookingsData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+
+  const findByName = () => {
+    axios.get('/api/queries?status=posted&name='+searchByName+'&category='+searchByCategory+'&location='+searchByLocation+'&cab='+searchByCab)
+    .then(result => {
+      setBookingsData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const findByCategory = () => {
+    axios.get('/api/queries?status=posted&name='+searchByName+'&category='+searchByCategory+'&location='+searchByLocation+'&cab='+searchByCab)
+    .then(result => {
+      setBookingsData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const findByLocation = () => {
+    axios.get('/api/queries?status=posted&name='+searchByName+'&category='+searchByCategory+'&location='+searchByLocation+'&cab='+searchByCab)
+    .then(result => {
+      setBookingsData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const findByCab = () => {
+    axios.get('/api/queries?status=posted&cab='+searchByCab)
+    .then(result => {
+      console.log(result.data.data);
+      setBookingsData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  console.log(searchByCategory);
 
   return (  
      <div className="bookingvenderlist">
@@ -69,8 +217,8 @@ function BrowseBookings(props) {
                               <form className="wt-formtheme wt-formsearch">
                                 <fieldset>
                                   <div className="form-group">
-                                    <input type="text" name="Search" className="form-control" placeholder="Search Booking" />
-                                    <a href="javascrip:void(0);" className="wt-searchgbtn"><i className="fa fa-search" /></a>
+                                    <input type="text" name="Search" onChange={event => setSearchByName(event.target.value)} className="form-control" placeholder="Search Booking" />
+                                    <a onClick={findByName} className="wt-searchgbtn"><i className="fa fa-search" /></a>
                                   </div>
                                 </fieldset>
                               </form>
@@ -78,14 +226,14 @@ function BrowseBookings(props) {
                           </div>
                           <div className="wt-widget wt-effectiveholder">
                             <div className="wt-widgettitle">
-                              <h2>Categories</h2>
+                              <h2>Trip Type</h2>
                             </div>
                             <div className="wt-widgetcontent">
                               <form className="wt-formtheme wt-formsearch">
                                 <fieldset>
                                   <div className="form-group">
-                                    <input type="text" name="Search" className="form-control" placeholder="Search Categories" />
-                                    <a href="javascrip:void(0);" className="wt-searchgbtn"><i className="fa fa-search" /></a>
+                                    <input type="text" name="Search" className="form-control" placeholder="Search by Type of Trip" />
+                                    <a onClick={findByCategory} className="wt-searchgbtn"><i className="fa fa-search" /></a>
                                   </div>
                                 </fieldset>
                               </form>
@@ -95,12 +243,12 @@ function BrowseBookings(props) {
                                 <fieldset>
                                   <div className="wt-checkboxholder wt-verticalscrollbar">
                                     <span className="wt-checkbox">
-                                      <input id="wordpress" type="checkbox" name="description" defaultValue="company" defaultChecked />
+                                      <input id="wordpress" type="checkbox" name="searchByCategory" onChange={handleCatCheckbox} value="One Way Trip" />
                                       <label htmlFor="wordpress"> One Way Trip</label>
                                     </span>
                                     <span className="wt-checkbox">
-                                      <input id="graphic" type="checkbox" name="description" defaultValue="company" />
-                                      <label htmlFor="graphic"> Round with Sightseeing Trip</label>
+                                      <input id="graphic" type="checkbox" name="searchByCategory" onChange={handleCatCheckbox} value="Round Trip with Sightseeing" />
+                                      <label htmlFor="graphic"> Round Trip with Sightseeing</label>
                                     </span>
                                   </div>
                                 </fieldset>
@@ -148,42 +296,26 @@ function BrowseBookings(props) {
                           </div>
                           <div className="wt-widget wt-effectiveholder">
                             <div className="wt-widgettitle">
-                              <h2>Cabs</h2>
+                              <h2>Cabs Type</h2>
                             </div>
                             <div className="wt-widgetcontent">
                               <form className="wt-formtheme wt-formsearch">
                                 <fieldset>
                                   <div className="form-group">
-                                    <input type="text" name="Search" className="form-control" placeholder="Search Categories" />
-                                    <a href="javascrip:void(0);" className="wt-searchgbtn"><i className="fa fa-search" /></a>
+                                    <input type="text" name="Search" onChange={filterCab} className="form-control" placeholder="Search by Type of Cab" />
+                                    <a onClick={findByCab} className="wt-searchgbtn"><i className="fa fa-search" /></a>
                                   </div>
                                 </fieldset>
                                 <fieldset>
                                   <div className="wt-checkboxholder wt-verticalscrollbar">
-                                    <span className="wt-checkbox">
-                                      <input id="rate1" type="checkbox" name="description" defaultValue="company" defaultChecked />
-                                      <label htmlFor="rate1">Hatchback</label>
-                                    </span>
-                                    <span className="wt-checkbox">
-                                      <input id="rate2" type="checkbox" name="description" defaultValue="company" />
-                                      <label htmlFor="rate2">Sedan</label>
-                                    </span>
-                                    <span className="wt-checkbox">
-                                      <input id="rate3" type="checkbox" name="description" defaultValue="company" />
-                                      <label htmlFor="rate3">Suv</label>
-                                    </span>
-                                    <span className="wt-checkbox">
-                                      <input id="rate4" type="checkbox" name="description" defaultValue="company" />
-                                      <label htmlFor="rate4">Tempo Traveller</label>
-                                    </span>
-                                    <span className="wt-checkbox">
-                                      <input id="rate5" type="checkbox" name="description" defaultValue="company" />
-                                      <label htmlFor="rate5"> Mini Bus</label>
-                                    </span>
-                                    <span className="wt-checkbox">
-                                      <input id="rate2v" type="checkbox" name="description" defaultValue="company" />
-                                      <label htmlFor="rate2v">Volvo</label>
-                                    </span>
+                                    {
+                                      cabs.map((item, index) => {
+                                        return <span key={index} className="wt-checkbox">
+                                          <input type="checkbox" onChange={handleCheckbox} name="searchByCab" value={item}/>
+                                          <label htmlFor="rate1">{item}</label>
+                                        </span>
+                                      })
+                                    }
                                   </div>
                                 </fieldset>
                               </form>
@@ -192,7 +324,10 @@ function BrowseBookings(props) {
                           <div className="wt-widget wt-applyfilters-holder">
                             <div className="wt-widgetcontent">
                               <div className="wt-applyfilters">
-                                <a href="" className="wt-btn btn btn-primary">Apply Filters</a>
+                                <a onClick={findByFilter} className="wt-btn btn btn-primary">Apply Filters</a>
+                                <br/>
+                                <br/>
+                                <a onClick={resetFilter} className="btn btn-primary">Reset</a>
                               </div>
                             </div>
                           </div>

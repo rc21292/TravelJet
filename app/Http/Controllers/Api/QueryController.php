@@ -73,18 +73,39 @@ class QueryController extends Controller
 
     public function getQueries(Request $request)
     {
-        // DB::connection()->enableQueryLog();
+        DB::connection()->enableQueryLog();
 
-         $result = Booking::
-         leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
-         ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
-         ->where('bookings.status',$request->status)->where('bookings.status','!=','booked')
-         ->groupBy('bookings.id')
-         ->orderBy('bookings.id','DESC')
-         ->paginate(6);
+        $user_transaction_s = Booking::
+            leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
+            ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+            ->where('bookings.status',$request->status)->where('bookings.status','!=','booked');
 
-         // $queries = DB::getQueryLog();
-         // $last_query = end($queries);
+             if ($request->has('cab') && !empty($request->cab)) {
+            $cab = $request->cab;
+            $user_transaction_s->whereIn('bookings.vehicle_type',explode(',', $request->cab));
+        }
+
+         if ($request->has('name') && !empty($request->name)) {
+            $name = $request->name;
+            $user_transaction_s->where('bookings.booking_name', 'LIKE', "%$request->name%");
+        }
+         if ($request->has('location') && !empty($request->location)) {
+            $location = $request->location;
+            $user_transaction_s->whereIn('bookings.vehicle_type',explode(',', $request->location));
+        }
+
+        if ($request->has('category') && !empty($request->category)) {
+            $category = $request->category;
+            $user_transaction_s->whereIn('bookings.booking_type',explode(',', $request->category));
+        }
+
+        $result = $user_transaction_s->groupBy('bookings.id')
+            ->orderBy('bookings.id','DESC')
+            ->paginate(6);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+         // echo "<pre>";print_r($last_query);"</pre>";exit;
         return $result;
     }
 
