@@ -74,7 +74,7 @@ function Home(props) {
                 <div className="card-body py-3">
                   <div className="line-ellipsis">Wallet</div>
                   <div className="agentname">
-                    <h3>Balance <i className="fa fa-inr" /> 5931</h3>
+                    <h3>Balance <i className="fa fa-inr" /> {balance}</h3>
                     <span><br/></span>
                   </div>
                 </div>

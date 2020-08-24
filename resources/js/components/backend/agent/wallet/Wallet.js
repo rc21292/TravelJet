@@ -5,6 +5,30 @@ import axios from 'axios';
 import Pagination from "react-js-pagination";
 
 export default class Wallet extends Component {
+
+  constructor(props) {
+
+    super(props)
+    this.state = {
+      balance: 0
+    }
+  }
+
+
+    componentDidMount()
+    {
+      let logstate = localStorage["appState"];
+      if (logstate) {
+        let AppState = JSON.parse(logstate);
+        axios.get('/api/users/getbalance/'+AppState.user.id)
+        .then(response=>{
+          this.setState({
+            balance:response.data.balance
+          })
+        });
+      }  
+    }
+
 	render() {
 		return (
           <div className="wallet-page">
@@ -17,7 +41,7 @@ export default class Wallet extends Component {
                     Total Balance
                   </div>
                   <div className="price">
-                    <i className="fa fa-rupee" /> 4999
+                    <i className="fa fa-rupee" /> {this.state.balance}
                   </div>
                 </div>
               </div>

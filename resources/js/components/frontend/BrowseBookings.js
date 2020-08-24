@@ -113,13 +113,10 @@ function BrowseBookings(props) {
     setSearchByCab(searchByCab);
   };
 
-
-
   const resetFilter = () => {
     window.location.reload(false);
   }
-
-
+  
   const filterCab = ()  => {
     var updatedList = initcabs;
     updatedList = updatedList.filter(function(item) {

@@ -55,8 +55,10 @@ Route::get('payouts/{id}', 'PayoutController@index');
 
 Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');
+Route::post('/credits/save_user_credits','CreditsController@save_user_credits');
 Route::get('users/show/{id}','UserController@show');
 Route::get('users/getprofile/{id}','UserController@getProfile');
+Route::get('credits/getCredits/{id}','CreditsController@getCredits');
 Route::post('users/insertImages','UserController@insertImages');
 Route::post('users/insertPortfolioImages','UserController@insertPortfolioImages');
 

@@ -73,8 +73,8 @@ function Home(props) {
                 <div className="card-body py-3">
                   <div className="line-ellipsis">Pending Balance</div>
                   <div className="agentname">
-                    <h3>Balance <i className="fa fa-inr" /> 5931</h3>
-                    <a href="#">Request Payment <i className="fa fa-angle-right" /></a>
+                    <h3>Balance <i className="fa fa-inr" /> {balance}</h3>
+                    <a href="/agent/payouts">Request Payment <i className="fa fa-angle-right" /></a>
                   </div>
                 </div>
               </div>
