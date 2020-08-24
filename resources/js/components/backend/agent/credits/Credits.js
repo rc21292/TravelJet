@@ -94,7 +94,7 @@ function Credits(props) {
         <div className="row">
           <div className="col-sm-12">
             <div className="creditleft">
-              <a onClick={openCheckout} data-amount="h1>" className="btn btn-dark">Credits Left: {credits}</a>
+              <a data-amount="h1>" className="btn btn-dark">Credits Left: {credits}</a>
             </div>
           </div>
         </div>
