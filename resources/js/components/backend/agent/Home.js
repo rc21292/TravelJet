@@ -11,6 +11,7 @@ function Home(props) {
 	const [balance, setBalance] = useState(0);
 	 const [noticeData, setNoticeData] = useState([]);  
 	 const [bookingData, setBookingData] = useState([]);  
+   const [credits, setCredits] = useState([]);
 
 	useEffect(() => {
 		
@@ -47,6 +48,10 @@ function Home(props) {
 		  		.then(result=>{
 		  			setBookingData(result.data.data);
 	  		}); 
+
+           axios('/api/credits/getCredits/'+userId).then(result=>{
+        setCredits(result.data);
+      });
 
 	},[]); 
 
@@ -86,8 +91,8 @@ function Home(props) {
                 <div className="card-body py-3">
                   <div className="line-ellipsis">Credit Summary</div>
                   <div className="agentname">
-                    <h3>Credits: 56</h3>
-                    <a href="#">Add More Credits <i className="fa fa-angle-right" /></a>
+                    <h3>Credits: {credits}</h3>
+                    <a href="/agent/credits">Add More Credits <i className="fa fa-angle-right" /></a>
                   </div>
                 </div>
               </div>

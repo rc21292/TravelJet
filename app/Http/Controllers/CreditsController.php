@@ -26,23 +26,14 @@ use Srmklive\PayPal\Services\ExpressCheckout;
 class CreditsController extends Controller
 {
 	protected $credit;
-    protected $provider;
+
     public function __construct(Credit $credit)
     {
         $this->credit = $credit;
     }
 
-    public function index($role){
-    	if($role == 'freelancer'){
-           $credits = DB::table('user_credits')->where('user_id',Auth::User()->id)->first();
-           $packages = Credit::where('role_id',3)->get();
-           return view('back-end.freelancer.credits.credit',compact('packages','credits'));
-       }
-       if($role == 'employer'){
-           $credits = DB::table('user_credits')->where('user_id',Auth::User()->id)->first();
-           $packages = Credit::where('role_id',2)->get();
-           return view('back-end.employer.credits.credit',compact('packages','credits'));
-       }
+    public function index(){
+           return $credits = $this->credit->where('status',1)->get();
    }
 
    public function getCredits($id)
@@ -50,7 +41,7 @@ class CreditsController extends Controller
        $inital_credits = 50;
        $credits_data = UserCredit::where('user_id',$id)->first();
        if ($credits_data) {
-           $credit = $inital_credits+$credits_data->credits;
+           $credit = $credits_data->credits;
        }else{
         $credit = $inital_credits;
        }

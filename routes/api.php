@@ -59,6 +59,7 @@ Route::post('/credits/save_user_credits','CreditsController@save_user_credits');
 Route::get('users/show/{id}','UserController@show');
 Route::get('users/getprofile/{id}','UserController@getProfile');
 Route::get('credits/getCredits/{id}','CreditsController@getCredits');
+Route::get('credits','CreditsController@index');
 Route::post('users/insertImages','UserController@insertImages');
 Route::post('users/insertPortfolioImages','UserController@insertPortfolioImages');
 

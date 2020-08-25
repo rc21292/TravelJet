@@ -16,6 +16,7 @@ function Credits(props) {
   const [success, setSuccess] = useState('');
 
   const [credits, setCredits] = useState([]);
+  const [creditsData, setCreditsData] = useState([]);
   useEffect(() => {  
 
     let stateqq = localStorage["appState"];
@@ -27,6 +28,10 @@ function Credits(props) {
     script.async = true
     script.src = 'https://checkout.razorpay.com/v1/checkout.js'
     document.body.appendChild(script)       
+
+    axios('/api/credits').then(result=>{
+        setCreditsData(result.data);
+      });
 
       axios('/api/credits/getCredits/'+AppState.user.id).then(result=>{
         setCredits(result.data);
@@ -59,10 +64,7 @@ function Credits(props) {
         .then(response=>{
           setCredits(response.data.credits);
           setSuccess(' '+(response.data.added_credits)+' Added Successfully!');
-          // this.obj.setState({ messages:response.data.messages,amount:0,fade:true });
-          // alert('Rs. '+(new_amount)+' Added Successfully please check wallet.');
-          //window.location.reload(false);
-        });
+          });
       } catch (err) {
         console.log(err);
       }
@@ -103,70 +105,27 @@ function Credits(props) {
                 <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
         </div>
         <div className="row">
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Bronze</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 100
-                  </div>
-                  <div className="agentname">
-                    <h3>10 Credits</h3>
-                    <a onClick={openCheckout} data-amount="100" className="btn btn-light">Select Plan</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Silver</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 200
-                  </div>
-                  <div className="agentname">
-                    <h3>22 Credits</h3>
-                    <a onClick={openCheckout} data-amount="200" className="btn btn-light">Select Plan</a>
+        { creditsData.map((credit_data,i)=>{
+                             return(
+            <div key={i} className="col-sm-3">
+              <div className="card2 text-center">
+                <div className="card-content">
+                  <div className="card-body py-3">
+                    <div className="line-ellipsis">{credit_data.title}</div>
+                    <div className="price">
+                      <i className="fa fa-inr" /> {credit_data.cost}
+                    </div>
+                    <div className="agentname">
+                      <h3>{credit_data.credits} Credits</h3>
+                      <a onClick={openCheckout} data-amount={credit_data.cost} className="btn btn-light">Select Plan</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Gold</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 300
-                  </div>
-                  <div className="agentname">
-                    <h3>35 Credits</h3>
-                    <a onClick={openCheckout} data-amount="300" className="btn btn-light">Select Plan</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Platinum</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 500
-                  </div>
-                  <div className="agentname">
-                    <h3>70 Credits</h3>
-                    <a onClick={openCheckout} data-amount="500" className="btn btn-light">Select Plan</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            )
+          })
+        }
         </div>
       </div>
   )  
