@@ -76,7 +76,7 @@ class ReviewController extends Controller
     {
         $reviews = $this->review::where('receiver_id', $user_id)->latest()->get();
         $feedbacks = $this->review::select('feedback')->where('receiver_id', $user_id)->count(); 
-        $average_rating_count = !empty($feedbacks) ? $reviews->sum('rating')/$feedbacks : 0;
+        $average_rating_count = !empty($feedbacks) ? round(($reviews->sum('rating')/$feedbacks),1) : 0;
 
         return response()->json([
             'success' => true,

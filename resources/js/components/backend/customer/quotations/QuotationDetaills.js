@@ -252,7 +252,7 @@ console.log(paymentData);
                     <div className="row">
                       <div className="col-sm-6">
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" onClick={UseWallet} type="checkbox" defaultValue="option1" />
+                          <input className="form-check-input" onClick={UseWallet} type="checkbox" disabled={(balance <= 0) ? true : null} defaultValue="option1" />
                           <label className="form-check-label" htmlFor="inlineCheckbox1">I am using my wallet</label>
                         </div>
                       </div>
