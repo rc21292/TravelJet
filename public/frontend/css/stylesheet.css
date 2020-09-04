@@ -133,36 +133,14 @@ header{
 }
 .bookForm{
     background: #f4f4f4;
-    padding: 20px 20px;
+    padding: 15px 10px;
     margin: 40px 0 30px;
 }
 .bookForm span.type{
-    text-align: left;
-
-    font-size: 30px;
+    text-align: center;
+    display: block;
+    font-size: 24px;
     margin-bottom: 15px;
-    margin-top: 0;
-    font-family: Gentona Book;
-    font-weight: 600;
-}
-.triptypeselect {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-.triptypeselect .div-check {
-    line-height: 32px;
-}
-.triptypeselect .div-check .form-check-input {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-.triptypeselect .div-check .form-check-label {
-    font-size: 18px;
-    position: relative;
-    bottom: 2px;
-    left: 5px;
-    color: #111;
 }
 .bookForm hr {
     margin-top: 15px;
@@ -697,7 +675,7 @@ background: #428bca;
     width: 60%;
     float: right;
     color: #fff;
-    margin-top: 45px;
+    margin-top: 0;
 }
 .booking-form {
     border-radius: 6px;
@@ -797,7 +775,7 @@ background: #428bca;
     line-height: 20px;
     color: #007bff00;
     text-align: center;
-    background-color: #84b818;
+    background-color: #007bff;
     -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
     box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
     -webkit-transition: width .6s ease;
@@ -2407,6 +2385,15 @@ hr {
     font-family: 'Montserrat';
     font-weight: 100;
 }
+.totalcost span {
+    font-size: 12px;
+    position: relative;
+    right: 64px;
+    bottom: 5px;
+    color: #dcdcdc;
+    font-family: 'Montserrat';
+    font-weight: 100;
+}
 .bookingheader .bookdetail h3 {
     margin-top: 15px;
     margin-bottom: 0;
@@ -2429,6 +2416,15 @@ hr {
     font-family: 'Montserrat';
     font-weight: 500;
     font-size: 13px;
+    width: 100%;
+    display:flex;
+}
+.viewbookingright .bookeddetail ul li span .paiddiv {
+    text-align: right;
+    width: 88%;
+    color: green;
+    font-family: 'Montserrat';
+    font-weight: 600;
 }
 .viewbookingright .bookeddetail ul li span .oneway {
     color: #111;
@@ -2485,11 +2481,33 @@ hr {
     margin-right: 15px;
     margin-top: 20px;
 }
+.movebtn .btn-primary {
+    margin-right: 15px;
+    margin-top: 20px;
+}
 .totalpay {
     margin-top: 22px;
 }
 .totalpay .lablename{
     text-align: right;
+}
+.totalpay .payprice{
+    text-align: right;
+}
+.bookedinclusion {
+    color: #808080;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 13px;
+    padding: 15px;
+}
+.bookinclusion {
+    border: 1px solid #808080;
+    padding: 15px;
+    margin: 15px;
+    margin-top: 0;
+    color: #555;
+    font-size: 14px;
 }
 .quotationbooked .form-group input {
     color: #111;
@@ -2805,6 +2823,7 @@ hr {
 .agentname {
     padding-top: 25px;
     padding-bottom: 25px;
+    height: 90px;
 }
 .agentname span {
     font-size: 13px;
@@ -3076,4 +3095,496 @@ hr {
     font-size: 13px;
     padding: 7px 15px;
 }
+.placebid .placebidbook .form-group label {
+    font-weight: 100;
+    color: #9f9f9f;
+    font-size: 14px;
+}
+.placebid .placebidbook .form-group a {
+    color: #007bff;
+    font-size: 14px;
+    margin-top: 32px;
+    display: block;
+}
+.upload-field {
+    position: relative;
+}
+.upload-field ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 170px;
+    height: 35px;
+}
+.upload-icon i {
+    position: absolute;
+    left: auto;
+    right: 15px;
+}
+.upload-field .file-upload1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 170px;
+    height: 40px;
+}
+.upload-field .file-upload1 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.vehicletable tr td a {
+    color: green;
+    font-size: 12px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    vertical-align: -webkit-baseline-middle;
+}
+.vehicletable input {
+    color: #111;
+    outline: none;
+    height: 40px;
+    background: #fff;
+    font-size: 13px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 18px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #dbdbdb;
+    text-transform: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.vehicletable tr td a.btn-link {
+    background: red;
+    color: #fff;
+    border-radius: 2px;
+    border-color: red;
+}
+.vehicletable tr td a.btn-link:hover {
+    background: red;
+    color: #fff;
+    border-radius: 2px;
+    border-color: red;
+}
+.vehicletable table thead tr th {
+    border-bottom: none;
+}
+.vehicletable .table>tbody>tr>td{
+    border-top:none;
+}
+.vehicletable tr td a.approval {
+    color: red;
+    font-size: 12px;
+    line-height: 12px;
+    vertical-align: super;
+}
+.vehicletable tr td a.btn-primary {
+    float: right;
+    padding: 7px 8px;
+}
 /**********End*********/
+/********signup*********/
+.upload-field2 {
+    position: relative;
+}
+.upload-field2 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 230px;
+    height: 160px;
+}
+.upload-field2 input {
+    height: 160px;
+}
+.upload-icon2 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field2 .file-upload1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 230px;
+    height: 160px;
+}
+.upload-field2 .file-upload1 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.personalkyc h3{
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.pancard{
+    margin-top: 30px;
+}
+.upload-field4 {
+    position: relative;
+    margin-bottom: 15px;
+}
+.upload-field4 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 190px;
+    height: 35px;
+}
+.upload-icon4 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field4 .file-upload3 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 190px;
+    height: 40px;
+}
+.upload-field4 .file-upload3 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.upload-field5 {
+    position: relative;
+}
+.upload-field5 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 230px;
+    height: 35px;
+}
+.upload-icon5 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field5 .file-upload6 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 230px;
+    height: 40px;
+}
+.upload-field5 .file-upload6 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+/********end************/
+/*********myvehicle*****/
+.panel-default>.panel-heading {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 0;
+    padding: 12px 15px;
+}
+.modal-title {
+    margin: 0;
+    line-height: 1.42857143;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 16px;
+}
+.vehicletable button.close {
+    position: relative;
+    bottom: 34px;
+    width: 46px;
+    height: 47px;
+    left: 15px;
+    background-color: red;
+    z-index: 99999999;
+    color: #fff;
+    opacity: 5;
+    font-size: 17px;
+}
+.vehicletable .close:focus, .close:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    filter: alpha(opacity=50);
+    opacity: 5;
+}
+.verifiinput{
+    position: relative;
+    bottom: 18px;
+}
+.vehicletable a.close2 {
+    position: relative;
+    bottom: 0px;
+    width: 45px;
+    height: 45px;
+    left: 0px;
+    background-color: red;
+    z-index: 99999999;
+    color: #fff;
+    opacity: 5;
+    font-size: 17px;
+    padding: 10px 15px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+}
+.upload-field7 {
+    position: relative;
+}
+.upload-field7 ul {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    width: 220px;
+    height: 35px;
+}
+.upload-icon7 i {
+    position: absolute;
+    left: 53%;
+    right: auto;
+    text-align: center;
+    font-size: 45px;
+}
+.upload-field7 .file-upload8 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 220px;
+    height: 40px;
+}
+.upload-field7 .file-upload8 input[type='file'] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.searchbar {
+    margin-bottom: 20px;
+}
+.ifcab {
+    text-align: right;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    color: #808080;
+    font-size: 14px;
+}
+.addmorebtn {
+    text-align: right;
+}
+.modal-header h5 {
+    font-size: 20px;
+    color: #007bff;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.modal-body h6 {
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-top: 0;
+}
+.modal-body p {
+    font-size: 14px;
+    color: #333;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    text-align: justify;
+    line-height: 22px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.modal-footer {
+    text-align: left;
+    border-top: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+}
+.modal-footer h6 {
+    font-size: 16px;
+    color: #111;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+.modal-header .close {
+    position: relative;
+    bottom: 40px;
+    opacity: 5;
+}
+.modal-header .close span {
+    font-size: 40px;
+    color: #111;
+}
+.uploadimage input {
+    max-width: 45%;
+    padding-left: 10px;
+    height: 45px;
+}
+.submitbtn {
+    text-align: left;
+    margin-top: 15px;
+}
+/*********end********/
+#myModal2 .modal-header {
+    background: #007bff;
+    color: #fff;
+    padding-bottom: 5px;
+    padding-top: 8px;
+}
+.paynow h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #fff;
+}
+.paynow span {
+    font-size: 12px;
+}
+#myModal2 .headerbudget span {
+    right: 0;
+}
+#myModal2 .budgetprice {
+    font-size: 20px;
+    position: relative;
+    bottom: 7px;
+}
+#myModal2 .budgetprice i {
+    font-size: 17px;
+}
+.walletprice img {
+    position: relative;
+    bottom: 2px;
+    right: 2px;
+}
+.walletprice span {
+    margin-right: 5px;
+}
+.walletprice i {
+    font-size: 13px;
+    font-weight: 600;
+}
+.walletprice {
+    float: right;
+}
+#myModal2 .form-check-label {
+    margin-left: 5px;
+}
+.paybtn {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.paybtn b {
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #000;
+}
+.paybtn b i {
+    font-size: 13px;
+    font-weight: bold;
+}
+.payiconimg img {
+    margin: 0 auto;
+}
+.payiconimg p {
+    text-align: center;
+}
+#myModal2 .modal-body p {
+    text-align: center;
+}
+.totaltable {
+    position: relative;
+    bottom: 40px;
+}
+.borderright{
+    border-right: 1px solid #ddd !important;
+}
+.reviewfeedback {
+    background: #fff;
+    width: 100%;
+    display: inline-block;
+    padding: 50px;
+    padding-bottom: 90px;
+}
+.reviewfeedback .form-check-inline {
+    display: inline-block;
+    margin-right: 10px;
+}
+.reviewbtn .btn-primary {
+    margin-left: 25%;
+}
+.information-page .upload-icon2 i {
+    left: 43%;
+}

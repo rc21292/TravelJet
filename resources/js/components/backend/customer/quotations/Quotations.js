@@ -54,8 +54,7 @@ function Quotations(props) {
   };  
 
   const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-    axios.get('/api/queries?status=posted'+'&page='+pageNumber)
+    axios.get('/api/queries/getQueriesByUserId/'+user.id+'?page='+pageNumber)
 
     .then(result=>{
       setBookingsData(result.data.data);
@@ -81,7 +80,7 @@ function Quotations(props) {
                     <tbody>
                       {bookingsData.map((booking,i)=>{
                         return( <tr key={i}>
-                          <td>{booking.date}</td>
+                          <td><Moment format="DD-MMM-YYYY">{booking.date}</Moment></td>
                           <td>{booking.booking_name}</td>
                           <td className="iconview">
                             <a onClick={event => deleteQuotation(booking.id)} className="btn btn-danger"><i className="fa fa-trash" /></a>
@@ -93,6 +92,21 @@ function Quotations(props) {
                       })}
                     </tbody>
                   </table>
+                  <div className="d-flex justify-content-center" style={{marginTop:'-25px', float:'right'}}>
+                     <Pagination
+                     activePage={activePage}
+                     itemsCountPerPage={itemsCountPerPage}
+                     totalItemsCount={totalItemsCount}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>
                 </div>
                 {bookingId ? <QuotationDetaills id={bookingId}/> : null }
            </div>

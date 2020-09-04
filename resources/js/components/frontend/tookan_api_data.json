@@ -1,0 +1,99 @@
+{
+	"api_key": "57676182f9455b1f5c56687f4e52254315e3c0fa2bd87c36591907",
+	"fleet_id": "",
+	"timezone": "-330",
+	"has_pickup": 1,
+	"has_delivery": 1,
+	"layout_type": 0,
+	"geofence": 0,
+	"team_id": "",
+	"auto_assignment": 0,
+	"tags": "",
+	"pickups": [
+		{
+			"address": "Noida 201301",
+			"latitude": "",
+			"longitude": "",
+			"time": "2020-08-26 03:06:32",
+			"phone": "987878778",
+			"job_description": "sdsdsd",
+			"template_name": "New",
+			"template_data": [
+				{
+					"label": "Task_Details",
+					"data": [[
+						"King Fish[Medium] Seer Fish/Kanaad/Ayakora",
+						"1",
+						"114.0000",
+						"121"
+					],
+					[
+						"King Fish[Medium] Seer Fish/Kanaad/Ayakora",
+						"23",
+						"1141.0000",
+						"666"
+					]
+				]
+				
+				},
+				{
+					"label": "DELIVERY_CHARGES",
+					"data": "500"
+				},
+				{
+					"label": "TOTAL",
+					"data": "300",
+				},
+			],
+			"ref_images": [
+				"http://tookanapp.com/wp-content/uploads/2015/11/logo_dark.png"
+			],
+			"name": "Prashant",
+			"email": "coderphp13@gmail.com",
+			"order_id": 1535
+		}
+	],
+	"deliveries": [
+		{
+			"address": "hku hkj Kerala India-",
+			"latitude": "",
+			"longitude": "",
+			"time": "2020-08-27 05:06:32",
+			"phone": "09878457845",
+			"job_description": "sdsd",
+			"template_name": "n2r",
+			"template_data": [
+				{
+					"label": "Task_Details",
+					"data": [[
+						"King Fish[Medium] Seer Fish/Kanaad/Ayakora",
+						"1",
+						"114.0000",
+						"121"
+					],
+					[
+						"King Fish[Medium] Seer Fish/Kanaad/Ayakora",
+						"23",
+						"1141.0000",
+						"666"
+					]
+				]
+				},
+				{
+					"label": "DELIVERY_CHARGES",
+					"data": "500"
+				},
+				{
+					"label": "TOTAL",
+					"data": "300",
+				},
+			],
+			"ref_images": [
+				"http://tookanapp.com/wp-content/uploads/2015/11/logo_dark.png"
+			],
+			"name": "ganesh negi",
+			"email": "ganeshnegi004@gmail.com",
+			"order_id": 1535
+		}
+	]
+}

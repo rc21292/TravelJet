@@ -7,6 +7,9 @@ import Bookings from './bookings/Bookings'
 import Quotations from './quotations/Quotations'
 import Address from './address/Address'
 import Profile from './profile/Profile'
+import Reviews from './Reviews/Reviews'
+import Review from './Reviews/Review'
+import ProfileAgent from './quotations/ProfileAgent'
 import Notifications from './notifications/Notifications'
 import ChangePassword from './profile/ChangePassword'
 import Wallet from './wallet/Wallet'
@@ -78,6 +81,15 @@ class Index extends Component {
                                                             <Route path="/customer/personal-information">
                                                                   <Profile/>
                                                             </Route>
+                                                            <Route path="/customer/reviews">
+                                                                  <Reviews/>
+                                                            </Route>
+                                                            <Route path="/customer/review/:id">
+                                                                  <Review/>
+                                                            </Route>
+                                                            <Route path="/customer/profile/:id">
+                                                                  <ProfileAgent/>
+                                                            </Route> 
                                                             <Route path="/customer/change-password">
                                                                   <ChangePassword/>
                                                             </Route>

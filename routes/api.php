@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('queries/getDestinations','Api\QueryController@getDestinations');
 Route::get('queries/{id}','Api\QueryController@index');
 Route::get('queries/getUpcommingBookings/{id}','Api\QueryController@getUpcommingBookings');
 Route::get('queries/getBookedBookings/{id}','Api\QueryController@getBookedBookings');
@@ -28,6 +29,7 @@ Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
 Route::post('quotations/awardBooking/{id}','QuotationController@awardBooking');
 Route::get('quotations/getQuotation/{id}','QuotationController@getQuotation');
 Route::get('quotations/getQuotationByBookingId/{id}','QuotationController@getQuotationByBookingId');
+Route::get('quotations/getQuotationById/{id}','QuotationController@getQuotationById');
 Route::get('quotations/checkQuotaions/{id}','QuotationController@checkQuotaions');
 Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
@@ -41,8 +43,12 @@ Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
 Route::get('queries/getStopagesData/{id}','Api\QueryController@getStopagesData');
+Route::get('queries/getStoppages/{id}','Api\QueryController@getStoppages');
 Route::get('queries/getQueriesByUserId/{id}','Api\QueryController@getQueriesByUserId');
+Route::get('queries/getBookedQueriesByUserId/{id}','Api\QueryController@getBookedQueriesByUserId');
+Route::get('queries/getTotalBookings/{id}','Api\QueryController@getTotalBookings');
 Route::post('queries/update/{id}','Api\QueryController@update');
+Route::post('queries/updateStoppages/{id}','Api\QueryController@updateStoppages');
 Route::post('users/update/{id}','UserController@update');
 Route::post('save_address/{id}','AddressController@store');
 Route::get('getAddresses/{id}','AddressController@index');
@@ -57,6 +63,8 @@ Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');
 Route::post('/credits/save_user_credits','CreditsController@save_user_credits');
 Route::get('users/show/{id}','UserController@show');
+Route::get('users/agenProfile/{id}','UserController@agenProfile');
+Route::get('users/countSoldTrips/{id}','UserController@countSoldTrips');
 Route::get('users/getprofile/{id}','UserController@getProfile');
 Route::get('credits/getCredits/{id}','CreditsController@getCredits');
 Route::get('credits','CreditsController@index');
@@ -71,11 +79,14 @@ Route::post('settings/saveCommissionSettings','SiteManagementController@storeCom
 Route::get('settings/getSettings','SiteManagementController@getCoinSettings');
 Route::get('settings/getCommissionSettings','SiteManagementController@getCommissionSettings');
 Route::get('users/getProfilePortfolio/{id}','UserController@getProfilePortfolio');
+Route::get('users/getPortfolioById/{id}','UserController@getPortfolioById');
 Route::get('users','UserController@index');
 
 Route::get('getdashboardData/{id}','HomeController@index');
 
-
+Route::get('getAgenReviews/{id}','ReviewController@getAgenReviews');
+Route::post('saveReviews','ReviewController@store');
+Route::get('getAgentTestimonials/{id}','ReviewController@getAgentTestimonials');
 
 Route::get('notifications/{id}', 'NoticeController@index');
 

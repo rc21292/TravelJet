@@ -10,46 +10,55 @@ function Home(props) {
 	const [user, setUser] = useState(false);
   const [userId, setUserId] = useState(props.user_id);
 	const [balance, setBalance] = useState(0);
+  const [totalBookings, setTotalBookings] = useState(0);
 	 const [noticeData, setNoticeData] = useState([]);  
 	 const [bookingData, setBookingData] = useState([]);  
 
-	useEffect(() => {
+   useEffect(() => {
 
     axios.get("/api/users/show/"+userId).then(response => {
-            return response;
-        }).then(json => {
-            if (json.data) {
-                let userData = {
-                    id: json.data.id,
-                    name: json.data.name,
-                    gender: json.data.gender,
-                    email: json.data.email,
-                    phone: json.data.phone,
-                    role: json.data.role,
-                };
-                let appState = {
-                    isLoggedIn: true,
-                    user: userData
-                };
-                setUser(appState.user);
-                localStorage["appState"] = JSON.stringify(appState);
-            }
-        });
-		
-			axios.get('/api/users/getbalance/'+userId)
-				.then(response=>{
-					setBalance(response.data.balance);
-			});
-			axios.get('/api/getCustomerNotificattions/'+userId)
-		  		.then(result=>{
-		  			setNoticeData(result.data);
-	  		});
-		  	axios.get('/api/queries/getBookedBookings/'+userId)
-		  		.then(result=>{
-		  			setBookingData(result.data.data);
-	  		});   
+      return response;
+    }).then(json => {
+      if (json.data) {
+        let userData = {
+          id: json.data.id,
+          name: json.data.name,
+          gender: json.data.gender,
+          email: json.data.email,
+          phone: json.data.phone,
+          role: json.data.role,
+        };
+        let appState = {
+          isLoggedIn: true,
+          user: userData
+        };
+        setUser(appState.user);
+        localStorage["appState"] = JSON.stringify(appState);
+      }
+    });
 
-	},[]); 
+    axios.get('/api/users/getbalance/'+userId)
+    .then(response=>{
+      setBalance(response.data.balance);
+    });
+
+
+    axios.get('/api/queries/getTotalBookings/'+userId)
+    .then(response=>{
+      setTotalBookings(response.data);
+    });
+
+    axios.get('/api/getCustomerNotificattions/'+userId)
+    .then(result=>{
+      setNoticeData(result.data);
+    });
+
+    axios.get('/api/queries/getBookedBookings/'+userId)
+    .then(result=>{
+      setBookingData(result.data.data);
+    });   
+
+  },[]); 
 
 	return (            
       <div className="bashboard notification-page">
@@ -87,7 +96,7 @@ function Home(props) {
                 <div className="card-body py-3">
                   <div className="line-ellipsis">Total Booking</div>
                   <div className="agentname">
-                    <h3>56</h3>
+                    <h3>{totalBookings}</h3>
                     <span><br/></span>
                   </div>
                 </div>

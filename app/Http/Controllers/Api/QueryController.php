@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Query;
 use App\Booking;
 use App\Quotation;
+use App\QuotationDetail;
 use App\User;
 use App\Notice;
 use DB;
@@ -45,6 +46,12 @@ class QueryController extends Controller
             $result = Booking::where('user_id',$id)->paginate(5);
         }
         return $result;
+    }
+
+
+    public function getDestinations()
+    {
+        return $bookings_data = Booking::select('to_places','id')->where('status','posted')->whereNotNull('to_places')->distinct('to_places')->orderBy('to_places','Asc')->groupBy('to_places')->get();
     }
 
 
@@ -91,7 +98,7 @@ class QueryController extends Controller
         }
          if ($request->has('location') && !empty($request->location)) {
             $location = $request->location;
-            $user_transaction_s->whereIn('bookings.vehicle_type',explode(',', $request->location));
+            $user_transaction_s->whereIn('bookings.id',explode(',', $request->location));
         }
 
         if ($request->has('category') && !empty($request->category)) {
@@ -112,13 +119,42 @@ class QueryController extends Controller
     public function getQueriesByUserId(Request $request,$id)
     {
         DB::connection()->enableQueryLog();
-
          $result = Booking::
          leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
          ->select('bookings.booking_name','bookings.id','bookings.created_at as date')
          ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')
          ->groupBy('bookings.id')
-         ->paginate(6);
+         ->paginate(4);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+        return $result;
+    }
+
+
+    public function getBookedQueriesByUserId(Request $request,$id)
+    {
+        DB::connection()->enableQueryLog();
+
+         $result = Booking::
+         leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.booking_name','bookings.id','bookings.created_at as date')
+         ->where('bookings.user_id',$id)->where('bookings.status','booked')
+         ->groupBy('bookings.id')
+         ->paginate(20);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+        return $result;
+    }
+
+
+    public function getTotalBookings($id)
+    {
+        DB::connection()->enableQueryLog();
+
+         $result = Booking::
+         where('bookings.user_id',$id)->where('bookings.status','posted')->count('id');
 
          $queries = DB::getQueryLog();
          $last_query = end($queries);
@@ -324,31 +360,52 @@ class QueryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $data = $request->except(['stopeges']);
+
         $query = Query::find($id);
-        $query->user_id = '4';
-        $query->booking_type = $request->booking_type;
-        $query->start_at = $request->start_at;
-        $query->end_on = $request->end_on;
-        $query->pick_up = $request->pick_up;
-        if($request->booking_type == 'Round Trip'){
-        $query->drop_on = $request->pick_up;
-        $query->destination = $request->destination;
-        $query->sightseeing = 'No';
-        }elseif($request->booking_type == 'Round Trip with Sightseeing'){
-        $query->drop_on = $request->drop_on;
-        $query->destination = $request->destination;
-        $query->sightseeing = 'Yes';
+         DB::table('bookings')
+            ->where('id', $id)
+            ->update($data);
+
+          return response()->json([
+            'success' => true,
+            'message' => 'updated',
+        ], 200);  
+    }
+
+
+    public function getStoppages($id)
+    {
+        $quotation = Booking::select('stopeges')->where('id',$id)->first();
+        if ($quotation->stopeges) {
+
+            $cars = array("stopage"=>'');
+
+            $ttt = array();
+            $ttt = json_decode($quotation->stopeges);
+            array_unshift($ttt, $cars);
         }else{
-        $query->drop_on = $request->destination;
-        $query->destination = $request->destination;
-        $query->sightseeing = 'No';
+            $ttt = array();
         }
-        $query->persons = $request->persons;
-        $query->cab_type = $request->cab_type;
-        $query->book_in = $request->book_in;
-        $query->budget = $request->budget;
-        $query->description = $request->description;
-        $query->save();
+        return $ttt;
+    }
+
+    public function updateStoppages(Request $request,$id)
+    {
+        $stopages_data = $request->stopeges;
+
+        unset($stopages_data[0]);
+
+        $data = $request->except(['stopeges']);
+
+        DB::table('bookings')
+        ->where('id', $id)
+        ->update(['stopeges' => json_encode(array_values($stopages_data))]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'stopeges Saved successfully!'
+        ], 200);  
     }
 
     /**
@@ -359,8 +416,9 @@ class QueryController extends Controller
      */
     public function destroy($id)
     {
-        $query = Booking::find($id);
-        $query->delete();
+        $bookings = Booking::find($id)->delete();
+        $quotations = Quotation::where('booking_id',$id)->delete();
+        $quotation_details = QuotationDetail::where('booking_id',$id)->delete();
     }
 
 

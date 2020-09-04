@@ -66,7 +66,7 @@ class NoticeController extends Controller
         $user_id = $id;
         $user_data = User::where('id',$user_id)->select('role')->first();
         $user_created_at = User::where('id',$user_id)->value('created_at');
-        $notices = $this->notice::where('type', 'job_post')->orwhere('type','award')->whereIn('receiver_id',['0',$user_id])->orderBy('created_at','DESC');
+        $notices = $this->notice::where('type', 'job_post')->where('created_at','>=',$user_created_at)->orwhere('type','award')->whereIn('receiver_id',['0',$user_id])->orderBy('created_at','DESC');
         return $notices->take(5)->get();
         
     }

@@ -184,7 +184,7 @@ function BookingDetails({match}) {
                                       <h5>Type of Booking</h5>
                                     </div>
                                     <div className="form-group">
-                                      <select className="custom-select form-control" id="inputGroupSelect01">
+                                      <select className="custom-select value={bookingData.booking_type} form-control" id="inputGroupSelect01">
                                         <option>One Way Trip</option>
                                         <option value={1}>One</option>
                                         <option value={2}>Two</option>

@@ -44,8 +44,9 @@ class QuotationController extends Controller
     }
 
 
-    public function awardBooking($id)
+    public function awardBooking(Request $request, $id)
     {
+
         DB::table('quotations')
         ->where('id', $id)
         ->update(['status'=> 'awarded']);
@@ -55,6 +56,9 @@ class QuotationController extends Controller
         DB::table('bookings')
         ->where('id', $quotation->booking_id)
         ->update(['status'=> 'awarded']);
+
+       $user = User::where('id',$request->user_id)->first();
+        $user->withdraw($request->wallet);
 
         $booking =  Booking::where('id',$quotation->booking_id)->first();
 
@@ -183,11 +187,18 @@ class QuotationController extends Controller
         return $quotation;
     }
 
+
+    public function getQuotationById(Request $request, $id)
+    {
+        return $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.id',$id)->first();
+    }
+
+
     public function getQuotationByBookingId(Request $request, $id)
     {
 
         if ($request->status == 'awarded') {
-            $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
+            $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
         }else{
 
             $qutations = Quotation::where('booking_id',$id)->first();
@@ -236,7 +247,6 @@ class QuotationController extends Controller
             $ttt = array();
         }
         return $ttt;
-
     }
 
     /**

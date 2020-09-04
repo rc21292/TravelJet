@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use App\Profile;
+use App\Quotation;
 use App\Query;
 use App\AgentProfile;
 use Auth;
@@ -50,7 +51,13 @@ class UserController extends Controller
 
     function getProfilePortfolio($id)
     {
-    	$user = DB::table('profile_portfolio_images')->where('user_id',$id)->get();
+        $user = DB::table('profile_portfolios')->where('user_id',$id)->limit(4)->latest()->get();
+        return response()->json($user);
+    }
+
+    function getPortfolioById($id)
+    {
+        $user = DB::table('profile_portfolios')->where('id',$id)->first();
         return response()->json($user);
     }
 
@@ -111,56 +118,29 @@ class UserController extends Controller
 
     public function insertPortfolioImages(Request $request)
     {
-    	$path = Helper::PublicPath() . '/uploads/users/portfolios/'.$request['user_id'];
-    	if (!empty($request['image'])) {
-    		$profile_image = $request['image'];
-    		$image_size = array(
-    			'medium' => array(
-    				'width' => 400,
-    				'height' => 300,
-    			),    			
-    		);
-    		Helper::uploadTempImageWithSize($path, $profile_image, '', $image_size);
-    		$image_name = $profile_image->getClientOriginalName();
+        $path = Helper::PublicPath() . '/uploads/users/portfolios/'.$request['user_id'];
+        if (!empty($request['image'])) {
+            $profile_image = $request['image'];
+            $image_size = array(
+                'medium' => array(
+                    'width' => 700,
+                    'height' => 600,
+                ),              
+            );
+            $image_name = time().''.$profile_image->getClientOriginalName();
+            Helper::uploadTempImageWithSize($path, $profile_image, $image_name, $image_size);
 
-    		$user = DB::table('profile_portfolios')->where('user_id',$request->user_id)->first();
-
-
-
-    		if(!$user){
-    			$id = DB::table('profile_portfolios')->insertGetId(
-    				[
-    					'user_id' => $request->user_id,
-    					'link' => $request->link,
-    					"created_at" => \Carbon\Carbon::now(), 
-    					'updated_at' => \Carbon\Carbon::now()
-    				]
-    			);
-
-    			DB::table('profile_portfolio_images')->insert(
-    				[
-    					'user_id' => $request->user_id,
-    					'image' => $image_name,
-    					'profile_portfolio_id' => $id,
-    					"created_at" => \Carbon\Carbon::now(), 
-    					'updated_at' => \Carbon\Carbon::now()
-    				]
-    			);
-
-    		}
-    		if($user){
-    			DB::table('profile_portfolio_images')->insert(
-    				[
-    					'user_id' => $request->user_id,
-    					'image' => $image_name,
-    					'profile_portfolio_id' => $user->id,
-    					"created_at" => \Carbon\Carbon::now(), 
-    					'updated_at' => \Carbon\Carbon::now()
-    				]
-    			);
-
-    		}
-    	} 
+            $id = DB::table('profile_portfolios')->insertGetId(
+                [
+                    'user_id' => $request->user_id,
+                    'title' => $request->title,
+                    'image' => $image_name,
+                    'detail' => $request->detail,
+                    "created_at" => \Carbon\Carbon::now(), 
+                    'updated_at' => \Carbon\Carbon::now()
+                ]
+            );
+        } 
     }
 
     public function insertImages(Request $request, $type = '')
@@ -201,7 +181,7 @@ class UserController extends Controller
 
     public function deletePortfolioImage($id)
     {
-    	DB::table('profile_portfolio_images')->where('id', $id)->delete();
+        DB::table('profile_portfolio_images')->where('id', $id)->delete();
 
     }
 
@@ -254,12 +234,14 @@ class UserController extends Controller
     }
 
 
-    public function save_razorpay_details(Request $request){
+    public function save_razorpay_details(Request $request) 
+    {
+        $messages = ($request->for = 'Booking') ? 'Booking vai Razorpay' : 'credits Purchase vai Razorpay' ;
 
         DB::table('user_razorpay_details')->insert(
                     [
                         'user_id' => $request->user_id,
-                        'description' => 'credits Purchase vai Razorpay', 
+                        'description' => $messages, 
                         'cost' => $request->amount,
                         'payment_id' => $request->payment_id,
                         "created_at" => \Carbon\Carbon::now(), 
@@ -267,7 +249,7 @@ class UserController extends Controller
                     ]
                 );
         $user = User::find($request->user_id);
-        $user->deposit($request->amount);
+        //$user->deposit($request->amount);
 
          return response()->json([
             'success' => true,
@@ -286,6 +268,24 @@ class UserController extends Controller
           $project = User::find($id);
 
         return $project->toJson();
+    }
+
+
+    public function agenProfile($id)
+    {
+        $agent = AgentProfile::where('user_id',$id)->first();
+
+        if ($agent) {
+            return $agent->toJson();
+        }
+        return '';
+
+        
+    }
+
+    public function countSoldTrips($id)
+    {
+        return $agent = Quotation::where('user_id',$id)->where('status','completed')->count();
     }
 
     /**
