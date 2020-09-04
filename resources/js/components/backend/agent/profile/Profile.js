@@ -16,6 +16,8 @@ function Profile() {
     user_id: null,
     name:"",
     father_name:"",
+    about:"",
+    profile:"",
     email:"",
     mobile:"",
     address:"",
@@ -97,6 +99,28 @@ function Profile() {
     });
   }
 
+
+  const fileSelect = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    setProfileData({...profileData, proile : event.target.files[0]});
+
+    const fd = new FormData();
+    fd.append('image', event.target.files[0], event.target.files[0].name);
+    axios.post('/api/users/insertImages/', fd
+      ).then(res=>
+      {
+        console.log(res);
+        const query = {
+          avtar:res.data
+        }
+        axios.post('/api/users/updateAgentProfile/'+user.id,query).then(result=>
+        {
+          setProfileData({...profileData, proile : result.data});
+        });
+      });
+    }
+
   return (
 
          <div className="venderprofile">
@@ -134,7 +158,30 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-12">
                     <label htmlFor="inputname3" className="col-form-label">Address</label>
-                    <textarea onChange={handleChange} name="w3review" rows={4} cols={50} placeholder="Address" className="form-control" onChange={handleChange} name="address" value={profileData.address} />
+                    <textarea onChange={handleChange} name="address" rows={4} cols={50} placeholder="Address" className="form-control" onChange={handleChange} name="address" value={profileData.address} />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-3">
+                    <div className="uploadprofile">
+                      <label htmlFor="inputname3" className="col-form-label">Upload Profile Photo</label>
+                      <div className="upload-field2">
+                        <input type="text" className="form-control" />
+                        <ul className="list-inline upload-icon2">
+                          <li>
+                            <a href="#" title>
+                              <div className="file-upload1">
+                                <input type="file" onChange={fileSelect} /><i className="fa fa-cloud-upload" />
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-group col-md-9">
+                    <label htmlFor="inputname3" className="col-form-label">About us</label>
+                    <textarea onChange={handleChange} name="about" value={profileData.about} rows={4} cols={50} placeholder="About us" className="form-control" defaultValue={""} />
                   </div>
                 </div>
                 <div className="form-row">

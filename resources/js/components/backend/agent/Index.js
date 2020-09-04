@@ -13,6 +13,7 @@ import BrowseBookings from './browsebookings/BrowseBookings'
 import Leads from './leads/Leads'
 import Address from './address/Address'
 import Profile from './profile/Profile'
+import Portfolio from './profile/Portfolio'
 import EditProfile from './profile/EditProfile'
 import ChangePassword from './profile/ChangePassword'
 import Wallet from './wallet/Wallet'
@@ -107,6 +108,9 @@ class Index extends Component {
                                                             </Route>
                                                             <Route exact path="/agent/personal-information">
                                                                   <Profile/>
+                                                            </Route>
+                                                            <Route exact path="/agent/portfolio">
+                                                                  <Portfolio/>
                                                             </Route>
                                                             <Route exact path="/agent/personal-information/edit">
                                                                   <EditProfile/>

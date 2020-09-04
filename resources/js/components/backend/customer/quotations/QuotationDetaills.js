@@ -312,7 +312,7 @@ console.log(paymentData);
             
             <div className="wt-userlistingcontent">
               <div className="wt-contenthead">
-                <div className="wt-title"> <a onClick={() => viewProfile(quotation2.user_id)}> #{quotation2.id} {quotation2.name}
+                <div className="wt-title"> <a onClick={() => viewProfile(quotation2.user_id)}> {quotation2.name}
                 <p> </p>
                     <div className="rating">
                       <div className="reviews-profile">
@@ -376,7 +376,7 @@ console.log(paymentData);
                       </thead>
                       <tbody className="bookbody">
                         <tr>
-                          <td className="bookdetail">Booking Details{quotation1.id}</td>
+                          <td className="bookdetail">Booking Details</td>
                           <td />
                           <td />
                           <td className="edit"><a onClick={() => setIsEditBooking(bookingsData.id)} className="btnsho">Edit Booking</a>

@@ -49,7 +49,8 @@ Route::get('queries/getBookedQueriesByUserId/{id}','Api\QueryController@getBooke
 Route::get('queries/getTotalBookings/{id}','Api\QueryController@getTotalBookings');
 Route::post('queries/update/{id}','Api\QueryController@update');
 Route::post('queries/updateStoppages/{id}','Api\QueryController@updateStoppages');
-Route::post('users/update/{id}','UserController@update');
+Route::post('users/update/{id}','UserController@users/update');
+Route::post('users/updateAgentProfile/{id}','UserController@updateAgentProfile');
 Route::post('save_address/{id}','AddressController@store');
 Route::get('getAddresses/{id}','AddressController@index');
 Route::get('transaction_history/{id}', 'UserTransactionController@index');

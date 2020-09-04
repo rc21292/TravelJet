@@ -2633,7 +2633,7 @@ hr {
 /***********End*********************/
 /***********NotificationPage********/
 .notification-page h1{
-	color: #111;
+    color: #111;
     margin-bottom: 25px;
     font-size: 26px;
 }
@@ -2658,9 +2658,9 @@ hr {
 /***********End*************/
 /***********My Leads *******/
 .myleads h1{
-	color: #111;
+    color: #111;
     margin-bottom: 25px;
-    font-size: 26px;	
+    font-size: 26px;    
 }
 .myleadsstatus #exTab2 .nav-tabs {
     justify-content: left;
@@ -2694,7 +2694,7 @@ hr {
     margin-bottom: 15px;
 }
 .myleadsstatus #exTab2 .leadquotation input{
-	width: 100%;
+    width: 100%;
     padding-right: 60px;
     color: #808080;
     outline: none;
@@ -2726,16 +2726,16 @@ hr {
     font-weight: 600;
 }
 .bd{
-	min-width: 95px;
+    min-width: 95px;
 }
 .bt{
-	min-width: 110px;
+    min-width: 110px;
 }
 .sd{
-	min-width: 100px;
+    min-width: 100px;
 }
 .mb{
-	min-width: 70px;
+    min-width: 70px;
 }
 .leadstatus tbody tr td {
     font-size: 11px;
@@ -2787,9 +2787,9 @@ hr {
     border: 1px solid #ddd;
 }
 .venderprofile h1{
-	color: #111;
+    color: #111;
     margin-bottom: 25px;
-    font-size: 26px;	
+    font-size: 26px;    
 }
 .bashboard {
     padding-top: 20px;
@@ -2863,13 +2863,13 @@ hr {
     padding-right: 0;
 }
 .businessselect .col-form-label{
-	font-size: 15px;
+    font-size: 15px;
 }
 .businessselect .form-check-input {
     height: auto;
 }
 .businessselect label{
-	margin-right: 10px;
+    margin-right: 10px;
 }
 .businessselect .form-check input {
     cursor: pointer;
@@ -2879,7 +2879,7 @@ hr {
     margin-top: 20px;
 }
 .informationform textarea{
-	padding: 10px 20px;
+    padding: 10px 20px;
 }
 .informationform select{
     color: #111;
@@ -3027,6 +3027,7 @@ hr {
     transition: all .3s ease-in-out;
     background: #fff;
     border-radius: 4px;
+    padding-bottom: 15px;
 }
 .card2 .price {
     border-bottom: 1px solid #ddd;
@@ -3103,8 +3104,21 @@ hr {
 .placebid .placebidbook .form-group a {
     color: #007bff;
     font-size: 14px;
-    margin-top: 32px;
+    margin-top: 6px;
     display: block;
+}
+.advancepayment {
+    margin-top: 10px;
+}
+.paymentinstallment {
+    margin-bottom: 10px;
+}
+.addmore{
+    margin-bottom: 15px;
+}
+.paymentinstallment a{
+    color: #007bff;
+    font-size: 15px;
 }
 .upload-field {
     position: relative;
@@ -3499,75 +3513,218 @@ hr {
     margin-top: 15px;
 }
 /*********end********/
-#myModal2 .modal-header {
-    background: #007bff;
-    color: #fff;
-    padding-bottom: 5px;
-    padding-top: 8px;
+.uploadprofile .upload-field2 input {
+    height: 100px;
 }
-.paynow h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    color: #fff;
-}
-.paynow span {
-    font-size: 12px;
-}
-#myModal2 .headerbudget span {
+.uploadprofile .upload-field2 ul {
+    position: absolute;
+    top: 0px;
     right: 0;
+    left: auto;
+    z-index: 999;
+    width: 200px;
+    height: 100px;
 }
-#myModal2 .budgetprice {
-    font-size: 20px;
+.uploadprofile .upload-field2 .file-upload1 {
     position: relative;
-    bottom: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 1s;
+    color: #007bff;
+    font-size: 15px;
+    padding: 6px;
+    width: 200px;
+    height: 100px;
 }
-#myModal2 .budgetprice i {
-    font-size: 17px;
+.uploadprofile .upload-icon2 i {
+    position: absolute;
+    left: 40%;
+    right: auto;
+    text-align: center;
+    font-size: 40px;
 }
-.walletprice img {
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.pagination>li>a, .pagination>li>span {
     position: relative;
-    bottom: 2px;
-    right: 2px;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #000;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }
-.walletprice span {
-    margin-right: 5px;
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
+    z-index: 3;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
 }
-.walletprice i {
-    font-size: 13px;
+.invoices .leadstatus tbody tr td {
+    vertical-align: middle;
+}
+.invoices .leadstatus tbody tr td select {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    font-size: 14px;
+}
+.invoices .leadstatus tbody tr td select option{
+    background-color: #fff !important;
+    color: #111 !important;
     font-weight: 600;
 }
-.walletprice {
-    float: right;
-}
-#myModal2 .form-check-label {
-    margin-left: 5px;
-}
-.paybtn {
-    padding-top: 50px;
-    padding-bottom: 50px;
-}
-.paybtn b {
-    margin-left: 10px;
-    margin-right: 10px;
-    color: #000;
-}
-.paybtn b i {
-    font-size: 13px;
-    font-weight: bold;
-}
-.payiconimg img {
-    margin: 0 auto;
-}
-.payiconimg p {
-    text-align: center;
-}
-#myModal2 .modal-body p {
-    text-align: center;
-}
-.totaltable {
+
+.dropdown-submenu {
     position: relative;
-    bottom: 40px;
 }
-.borderright{
-    border-right: 1px solid #ddd !important;
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
 }
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+.customerinvoice .thead-primary tr th {
+    padding: 15px;
+}
+.customerinvoice {
+    background: #fff;
+    padding-bottom: 35px;
+    display: block;
+}
+.leadstatus tbody tr td.addnew a {
+    color: #007bff;
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+    margin-bottom: 30px;
+}
+.table>tbody>tr>td {
+    border-top: none;
+}
+.totalbody tr td{
+    text-align: right;
+}
+.iconview a.btn-danger {
+    color: #fff !important;
+    background-color: #f30a03;
+    border-color: #f30a03;
+    border-radius: 2px;
+    padding: 2px 7px;
+    font-size: 22px;
+    margin-top: 2px;
+}
+.totalbody .lablename {
+    width: 80%;
+    font-size: 14px;
+}
+.totalbody .payprice {
+    font-size: 14px;
+    width: 20%;
+}
+.leadstatus tbody tr td.service textarea {
+    height: 120px;
+    width: 220px;
+    font-size: 14px;
+    padding: 10px;
+    color: #000;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0;
+}
+.leadstatus tbody tr td.disc textarea{
+    height: 120px;
+    width: 220px;
+    font-size: 14px;
+    padding: 10px;
+    color: #000;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0;
+}
+.leadstatus tbody tr td.qty input{
+    font-size: 14px;
+    padding: 10px;
+    color: #000;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    text-align: center;
+}
+.leadstatus tbody tr td.rate input {
+    font-size: 14px;
+    padding: 10px;
+    color: #000;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    text-align: center;
+}
+.leadstatus tbody tr td.amt input {
+    font-size: 14px;
+    padding: 10px;
+    color: #000;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    text-align: center;
+}
+.btn .caret {
+    margin-left: 10px;
+}
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #007bff;
+}
+.iconview {
+    text-align: center;
+}
+/********invoicepdf********/

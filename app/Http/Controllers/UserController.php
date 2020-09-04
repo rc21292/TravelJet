@@ -141,18 +141,11 @@ class UserController extends Controller
                 ]
             );
         } 
+        return 'Success';
     }
 
     public function insertImages(Request $request, $type = '')
     {
-
-        // if (!empty($request['image'])) 
-        // {
-        //     $attachments = $request['image'];
-        //     $path = 'uploads/users/temp/';
-        //     return $this->uploadTempattachments($attachments, $path);
-        // }
-
 
         $path = Helper::PublicPath() . '/uploads/users/temp/';
         if (!empty($request['image'])) {
@@ -306,6 +299,40 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
+    public function updateAgentProfile(Request $request, $id)
+    {
+         $user = User::find($id);
+
+        $user_profile = AgentProfile::select('id')->where('user_id', $id)->first();
+        if (!empty($user_profile->id)) {
+            $profile = AgentProfile::find($user_profile->id);
+        } else {
+            $profile = $this;
+        }
+
+        $old_path = Helper::PublicPath() . '/uploads/users/temp';
+        if (!empty($request['avtar'])) {
+            $filename = $request['avtar'];
+            if (file_exists($old_path . '/' . $request['avtar'])) {
+                $new_path = Helper::PublicPath() . '/uploads/users/' . $id;
+                if (!file_exists($new_path)) {
+                    File::makeDirectory($new_path, 0755, true, true);
+                }
+                $filename = time() . '-' . $request['avtar'];
+                rename($old_path . '/' . $request['avtar'], $new_path . '/' . $filename);
+            
+            }
+            $profile->profile = filter_var($filename, FILTER_SANITIZE_STRING);
+        } else {
+            $profile->profile = null;
+        }     
+
+        $profile->save();
+        return response()->json($filename);
+    }
+
     public function update(Request $request, $id)
     {
 
