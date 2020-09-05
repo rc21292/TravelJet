@@ -114,7 +114,7 @@ function Profile() {
         const query = {
           avtar:res.data
         }
-        axios.post('/api/users/updateAgentProfile/'+user.id,query).then(result=>
+        axios.post('http://13.235.238.138/api/users/updateAgentProfile/'+user.id,query).then(result=>
         {
           setProfileData({...profileData, proile : result.data});
         });

@@ -353,7 +353,7 @@ class Helper extends Model
     public static function uploadTempImageWithSize($temp_path, $image, $file_name = "", $image_size = array())
     {
 
-    	#echo $temp_path; exit();
+        #echo $temp_path; exit();
         $json = array();
         if (!empty($image)) {
             $file_original_name = $image->getClientOriginalName();
@@ -3180,7 +3180,7 @@ class Helper extends Model
                 )
             ),
         );
-        // $list	= apply_filters('workreap_filter_payouts_lists',$list);
+        // $list    = apply_filters('workreap_filter_payouts_lists',$list);
         return $list;
     }
 
