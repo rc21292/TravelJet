@@ -105,20 +105,27 @@ function Profile() {
     const { name, value } = event.target;
     setProfileData({...profileData, proile : event.target.files[0]});
 
-    const fd = new FormData();
-    fd.append('image', event.target.files[0], event.target.files[0].name);
-    axios.post('http://13.235.238.138/api/users/insertImages/', fd
-      ).then(res=>
-      {
-        console.log(res);
+     var bodyFormData = new FormData();
+    bodyFormData.append('image', event.target.files[0]);
+    axios({
+    method: 'post',
+    url: 'http://13.235.238.138/api/users/insertImages',
+    data: bodyFormData,
+    config: { headers: {'Content-Type': 'multipart/form-data' }}
+    })
+    .then(function (response) {
         const query = {
-          avtar:res.data
+          avtar:response.data
         }
-        axios.post('http://13.235.238.138/api/users/updateAgentProfile/'+user.id,query).then(result=>
+        axios.post('/api/users/updateAgentProfile/'+user.id,query).then(result=>
         {
           setProfileData({...profileData, proile : result.data});
         });
-      });
+    })
+    .catch(function (response) {
+        console.log(response);
+    });
+
     }
 
   return (
