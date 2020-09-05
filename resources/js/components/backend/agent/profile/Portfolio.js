@@ -124,7 +124,7 @@ class Portfolio extends Component {
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
     .then(function (response) {
-        window.location.href = "/login";
+        // window.location.href = "/login";
     })
     .catch(function (response) {
         console.log(response);
