@@ -107,7 +107,7 @@ function Profile() {
 
     const fd = new FormData();
     fd.append('image', event.target.files[0], event.target.files[0].name);
-    axios.post('/api/users/insertImages/', fd
+    axios.post('http://13.235.238.138/api/users/insertImages/', fd
       ).then(res=>
       {
         console.log(res);
