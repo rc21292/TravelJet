@@ -118,7 +118,8 @@ class UserController extends Controller
 
     public function insertPortfolioImages(Request $request)
     {
-        $path = Helper::PublicPath() . '/uploads/users/portfolios/'.$request['user_id'];
+        echo $path = Helper::PublicPath() . '/uploads/users/portfolios/'.$request['user_id'];
+        echo "<pre>";print_r($request->all());"</pre>";exit;
         if (!empty($request['image'])) {
             $profile_image = $request['image'];
             $image_size = array(
