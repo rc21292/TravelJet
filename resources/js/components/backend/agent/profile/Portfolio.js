@@ -116,8 +116,12 @@ class Portfolio extends Component {
     fd.append('detail', this.state.detail);
     fd.append('title', this.state.title);
     fd.append('user_id', this.state.user.id);
-    axios.post('/api/users/insertPortfolioImages/', fd
-      ).then(res=>
+
+    axios.post('/api/users/insertPortfolioImages/', fd, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }).then(res=>
       {
         window.location.href = "/login";
       });
