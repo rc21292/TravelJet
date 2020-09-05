@@ -119,7 +119,8 @@ class Portfolio extends Component {
 
     axios.post('/api/users/insertPortfolioImages/', fd, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+              'content-type': 'multipart/form-data',
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
         }).then(res=>
       {
