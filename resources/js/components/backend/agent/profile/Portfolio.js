@@ -118,10 +118,9 @@ class Portfolio extends Component {
     fd.append('user_id', this.state.user.id);
 
     axios.post('/api/users/insertPortfolioImages/', fd, {
-            headers: {
-              'content-type': 'multipart/form-data',
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+                  headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }).then(res=>
       {
         window.location.href = "/login";
