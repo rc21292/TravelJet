@@ -116,7 +116,7 @@ class Portfolio extends Component {
       bodyFormData.set('detail', this.state.detail);
     bodyFormData.set('title', this.state.title);
     bodyFormData.set('user_id', this.state.user.id);
-    fd.append('image', this.state.image);
+    bodyFormData.append('image', this.state.image);
     axios({
     method: 'post',
     url: 'http://13.235.238.138/api/users/insertPortfolioImages',
@@ -134,9 +134,6 @@ class Portfolio extends Component {
 
 
   render() {
-    console.log(this.state.detail);
-    console.log(this.state.title);
-    console.log(this.state.image);
     const {errors} = this.state;
     return (
        <div className="transactionhistory portfollopage">
