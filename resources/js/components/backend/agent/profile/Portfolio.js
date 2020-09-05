@@ -111,20 +111,25 @@ class Portfolio extends Component {
     if(!this.validateForm()) {
       return false;
     }
-    const fd = new FormData();
-    fd.append('image', this.state.image, this.state.image.name);
-    fd.append('detail', this.state.detail);
-    fd.append('title', this.state.title);
-    fd.append('user_id', this.state.user.id);
 
-    axios.post('/api/users/insertPortfolioImages/', fd, {
-                  headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then(res=>
-      {
+    var bodyFormData = new FormData();
+      bodyFormData.set('detail', this.state.detail);
+    bodyFormData.set('title', this.state.title);
+    bodyFormData.set('user_id', this.state.user.id);
+    fd.append('image', this.state.image);
+    axios({
+    method: 'post',
+    url: '/api/users/insertPortfolioImages/',
+    data: bodyFormData,
+    config: { headers: {'Content-Type': 'multipart/form-data' }}
+    })
+    .then(function (response) {
         window.location.href = "/login";
-      });
+    })
+    .catch(function (response) {
+        console.log(response);
+    });
+   
   }
 
 
