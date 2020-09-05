@@ -116,7 +116,7 @@ class Portfolio extends Component {
       bodyFormData.set('detail', this.state.detail);
     bodyFormData.set('title', this.state.title);
     bodyFormData.set('user_id', this.state.user.id);
-    fd.append('image', this.state.image);
+    // fd.append('image', this.state.image);
     axios({
     method: 'post',
     url: '/api/users/insertPortfolioImages/',
