@@ -20,6 +20,7 @@ function Qutations({match}) {
     payment: 0,
     total_payment: 0,
     payment_first: 0,
+    payment_first_note: '',
     payment_second: 0,
     payments: null
   };
@@ -39,7 +40,7 @@ const [error, setError] = useState('');
   const [isErrors, setIsErrors] = useState(0);
    const [user, setUser] = useState(false);
    const [customer, setCustomer] = useState(false);
-    const [inputFields, setInputFields] = useState([{payment:''}]);
+    const [inputFields, setInputFields] = useState([{payment:'',date:''}]);
  
   useEffect(() => {  
     let stateqq = localStorage["appState"];
@@ -52,7 +53,7 @@ const [error, setError] = useState('');
       .then(response=>{
         console.log(response.data.total_payment);
         if (response.data) {
-          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_second:response.data.payment_second })       }else{
+          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_first_note:response.data.payment_first_note,payment_second:response.data.payment_second })       }else{
         }
       }); 
 
@@ -139,9 +140,10 @@ const saveBid = () => {
 
 const handleInputChange = (index, event) => {
   const values = [...inputFields];
-  if (event.target.name === "payment") {
+  if (event.target.name === "payment" || event.target.name === "date") {
     values[index][event.target.name] = event.target.value;
   }
+  console.log(values);
   setInputFields(values);
   setQuotations({ ...quotations, payments: values });
 };
@@ -149,7 +151,7 @@ const handleInputChange = (index, event) => {
 const handleAddFields = () => {
   const values = [...inputFields];
   if(values.length < 5){
-    setInputFields([...inputFields, { payment:''}]);
+    setInputFields([...inputFields, { payment:'', date:''}]);
   }
 };
 
@@ -162,7 +164,6 @@ const handleRemoveFields = (index, event) => {
   setInputFields(values);
   setQuotations({ ...quotations, payments: values });
 };
-
 
   return (  
           <div className="bookingvenderlist">
@@ -743,70 +744,60 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                     </div>
                                   </div>
                                 </div>
-                                <div className="row">
-                                  <div className="form-group col-sm-4">
-                                    <label htmlFor="payment">1st Payment</label>
-                                    <div className="input-group">
-                                      <span className="input-group-btn">
-                                        <i className="fa fa-inr" />
-                                      </span>
-                                      <input type="number" value={quotations.payment_first} name="payment_first" onChange={handleInputChanges} className="form-control" placeholder={6000} />
-                                    </div>
-                                  </div>
-                                  <div className="form-group col-sm-3">
-                                    <a href="#">Check Payment Details</a>
-                                  </div>
-                                </div>
-                                <div className="row">
-                                  <div className="form-group col-sm-4">
-                                    <label htmlFor="payment">2st Payment</label>
-                                    <div className="input-group">
-                                      <span className="input-group-btn">
-                                        <i className="fa fa-inr" />
-                                      </span>
-                                      <input type="number" value={quotations.payment_second} name="payment_second" onChange={handleInputChanges} className="form-control" placeholder={6000} />
-                                    </div>
-                                  </div>
-                                  <div className="form-group col-sm-3">
-                                    <a href="#">Check Payment Details</a>
-                                  </div>
-                                </div>
-                                
-                                <div className="row col-sm-12">
-                                  <div className="form-group ">
-                                    <div className="">
-                                      <button onClick={() => handleAddFields()} className="btn btn-primary" >Add Another Installments</button>
-                                      {inputFields.map((inputField, index) => (
-                                        <Fragment key={`${inputField}~${index}`}>
-                                          { 
-                                            index > 0 ?
-                                            <div className="row col-sm-12">
-
-                                              <div className="form-group col-sm-4">
-                                                  <label htmlFor="payment">Enter Amount {index}</label>
-                                                  <div className="input-group">
-                                                      <span className="input-group-btn">
-                                                          <i className="fa fa-inr" />
-                                                      </span>
-                                                      <input type="number" value={inputField.payment} name="payment" onChange={event => handleInputChange(index, event)} className="form-control" placeholder={6000} />
-                                                  </div>
-                                              </div>
-                                              <div className="form-group col-sm-3">
-                                                  <a href="#">Check Payment Details</a>
-                                              </div>
-
-                                              <div className="form-group col-sm-3">
-                                                  <a onClick={event => handleRemoveFields(index, event)} id="remove1" className=" remove-me">remove</a>
-                                              </div>
-                                            </div>
-                                            :null
-                                          }
-                                        </Fragment>
-                                        ))}
+                                <div className="advancepayment">
+                                  <label htmlFor="payment">First Payment</label>
+                                  <div className="row">
+                                    <div className="form-group col-sm-4">
+                                      <div className="input-group">
+                                        <span className="input-group-btn">
+                                          <i className="fa fa-inr" />
+                                        </span>
+                                        <input type="number" value={quotations.payment_first} name="payment_first" onChange={handleInputChanges} className="form-control" placeholder={6000} />
                                       </div>
                                     </div>
+                                    <div className="form-group col-sm-4">
+                                     <input type="text" value={quotations.payment_first_note} name="payment_first_note" onChange={handleInputChanges} className="form-control" placeholder="Note..." />
+                                    </div>
                                   </div>
-                                  
+                                </div>                            
+                                
+
+                                <div className="clearfix" />
+                                <div className="add-payment">
+                                  <div className="paymentinstallment">
+                                    <a onClick={() => handleAddFields()} className="payinstall">Add Payment Installment</a>
+                                  </div>
+                                  <div className="addmore">
+                                    {inputFields.map((inputField, index) => (
+                                    <Fragment key={`${inputField}~${index}`}>
+                                      { 
+                                        index > 0 ?
+                                        <div key={index}>
+                                          <label htmlFor="payment">Payment Amount</label>
+                                          <div className="row">
+                                            <div className="form-group col-sm-4">
+                                              <div className="input-group">
+                                                <span className="input-group-btn">
+                                                  <i className="fa fa-inr" />
+                                                </span>
+                                               <input type="number" value={inputField.payment} name="payment" onChange={event => handleInputChange(index, event)} className="form-control" placeholder={6000} />
+                                              </div>
+                                            </div>
+                                            <div className="form-group col-sm-4">
+                                              <input type="date" value={inputField.date} name="date" onChange={event => handleInputChange(index, event)} className="form-control" placeholder="date.." />
+                                            </div>
+                                            <div className="col-sm-3">
+                                              <a onClick={event => handleRemoveFields(index, event)}>Remove</a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                     :null
+                                      }
+                                    </Fragment>
+                                    ))}
+                                  </div>
+                                </div>  
+
                                 <div className="placebidbtn">                                 
                                   <a onClick={saveBid} className="btn btn-primary">{quotations.payment == 0 ? 'Place Bid' : 'Edit Bid' }</a>
                                 </div>

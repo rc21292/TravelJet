@@ -80,18 +80,37 @@ class QuotationController extends Controller
 
     public function storeQuotation(Request $request)
     {
-        $data = $request->all();
+        $data = $request->except('payments');
+
 
         $user = User::where('id',$request->user_id)->first();
         $booking = Booking::where('id',$request->booking_id)->first();
 
         $data_re = Quotation::create($data);
 
-        $quotation_data = ['user_id' => $request->user_id,
-        'booking_id' => $request->booking_id,
-        'quotation_id' => $data_re->id];
+        $payments_data = $request->payments;
 
-        $data_re = QuotationDetail::create($quotation_data);
+        unset($payments_data[0]);
+
+        if (isset($payments_data)) {
+
+            DB::table('quotations')
+            ->where('id', $data_re->id)
+            ->update(['payments' => serialize(array_values($payments_data)),'agent_id' => $request->user_id,'status' => 'bidded']);
+
+        }            
+
+        $quotation_data = [
+            'user_id' => $request->user_id,
+            'booking_id' => $request->booking_id,
+            'quotation_id' => $data_re->id
+        ];
+
+        $data = QuotationDetail::create($quotation_data);
+
+        DB::table('bookings')
+            ->where('id', $request->booking_id)
+            ->update(['status' => 'bidded']);
 
 
         $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> bidded on booking </span> <a href='/customer/quotations/'>".$booking->booking_name."</a>";
@@ -101,7 +120,35 @@ class QuotationController extends Controller
 
         return response()->json([
             'success' => true,
-            'addresses' => '',
+            'id' => $data_re->id,
+            'message' => 'Bid Placed successfully!'
+        ], 201);
+    }
+
+
+    public function storeQuotationDetails(Request $request, $id)
+    {
+        $data = $request->except('stopeges');
+        $data_re = DB::table('quotation_details')
+        ->where('user_id', $request->user_id)
+        ->where('quotation_id', $id)
+        ->update($data);
+
+        $stopages_data = $request->stopeges;
+
+        unset($stopages_data[0]);
+
+        if (isset($stopages_data)) {
+
+            DB::table('quotation_details')
+            ->where('user_id', $request->user_id)
+            ->where('quotation_id', $id)
+            ->update(['stopeges' => json_encode(array_values($stopages_data))]);
+
+        }
+
+        return response()->json([
+            'success' => true,
             'message' => 'Bid Placed successfully!'
         ], 201);
     }

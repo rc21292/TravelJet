@@ -8,7 +8,7 @@ class Quotation extends Model
 {
 	protected $fillable = array(
 
-		'user_id','booking_id','payment','total_payment','payment_first','payment_second','payments'
+		'user_id','booking_id','payment','total_payment','payment_first','payment_first_note','payment_second','payments'
 		
 	);
 
