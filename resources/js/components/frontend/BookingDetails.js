@@ -76,7 +76,7 @@ function BookingDetails({match}) {
   const initialQuotationState = {
     booking_id: match.params.id,
     user_id: null,
-    payment: 0,
+    payment: '' ,
     total_payment: 0,
     payment_first: 0,
     payment_first_note: '',

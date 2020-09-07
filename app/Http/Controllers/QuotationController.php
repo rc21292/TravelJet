@@ -96,7 +96,7 @@ class QuotationController extends Controller
 
             DB::table('quotations')
             ->where('id', $data_re->id)
-            ->update(['payments' => serialize(array_values($payments_data)),'agent_id' => $request->user_id,'status' => 'bidded']);
+            ->update(['payments' => serialize(array_values($payments_data)),'agent_id' => $request->user_id]);
 
         }            
 
