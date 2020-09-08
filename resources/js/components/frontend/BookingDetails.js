@@ -629,7 +629,6 @@ function BookingDetails({match}) {
                                         <option value="Sedan">Sedan</option>
                                         <option value="Suv">Suv</option>
                                         <option value="Tempo Traveller">Tempo Traveller</option>
-                                        <option value="Seater">Seater</option>
                                         <option value="12 Seater">12 Seater</option>
                                         <option value="16 Seater">16 Seater</option>
                                         <option value="20 Seater">20 Seater</option>

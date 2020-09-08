@@ -33,6 +33,7 @@ const [error, setError] = useState('');
   const [quotations, setQuotations] = useState(initialQuotationState);
   const [bookingData, setBookingData] = useState({});  
   const [stopeges, setStopages] = useState(false);  
+  const [editData, setEditData] = useState(false);  
   const [submitted, setSubmitted] = useState(false);
 
   const [isUpdated, setIsUpdated] = useState(false);
@@ -40,7 +41,8 @@ const [error, setError] = useState('');
   const [isErrors, setIsErrors] = useState(0);
    const [user, setUser] = useState(false);
    const [customer, setCustomer] = useState(false);
-    const [inputFields, setInputFields] = useState([{payment:'',date:''}]);
+    const [inputFields, setInputFields] = useState([{stopege:''}]);
+    const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
  
   useEffect(() => {  
     let stateqq = localStorage["appState"];
@@ -51,38 +53,41 @@ const [error, setError] = useState('');
 
       axios.get('/api/quotations/getQuotationByBookingUserId/'+match.params.id+'/'+AppState.user.id)
       .then(response=>{
-        console.log(response.data.total_payment);
         if (response.data) {
-          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_first_note:response.data.payment_first_note,payment_second:response.data.payment_second })       }else{
+          setQuotations(response.data)       
+        }else{
         }
       }); 
 
       axios.get('/api/quotations/getQuotationPayment/'+match.params.id+'/'+AppState.user.id)
       .then(response=>{
         if (response.data) {
-          setInputFields(response.data);
+          setPaymentFields(response.data);
         }else{
-        setInputFields([{ payment: ''}]);
+        setPaymentFields([{ payment: ''}]);
         }
       }); 
 
+      axios.get('/api/queries/getQuotationStoppages/'+match.params.id+'/'+AppState.user.id).then(result=>{
+        setInputFields(result.data);
+      });
 
-      const GetData = async () => {  
-      const result = await axios('/api/queries/show/'+match.params.id);  
-      setBookingData(result.data); 
+      const GetData = async () => {
+        const result = await axios('/api/queries/show/'+match.params.id);  
+        setBookingData(result.data); 
 
-         axios.get('/api/users/show/'+result.data.user_id)
-          .then(response=>{
-            console.log(response.data.total_payment);
-            if (response.data) {
-              setCustomer(response.data);
-            }else{
-            }
-          });  
+        axios.get('/api/users/show/'+result.data.user_id)
+        .then(response=>{
+          console.log(response.data.total_payment);
+          if (response.data) {
+            setCustomer(response.data);
+          }else{
+          }
+        });  
 
-       const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
-      setStopages(result1.data.stopages);  
-    };  
+        const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
+        setStopages(result1.data.stopages);  
+      };  
   
     GetData();  
 
@@ -90,34 +95,26 @@ const [error, setError] = useState('');
   }, []);  
 
 
-const myFunction = () =>  {
-    var input, filter, ul, li, a, i, txtValue;
-    input = document.getElementById("myInput");
- /*   filter = input.value.toUpperCase();
-    ul = document.getElementById("myUL");
-    li = ul.getElementsByTagName("li");
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }*/
-}
-
-const handleInputChanges = event => {
+  const handleInputChanges = event => {
     const { name, value } = event.target;
-     if (name === "payment") {
+    if (name === "payment") {
       const total_paymentt = parseInt(value) + ((value * 15)/100);
-      console.log(total_paymentt);
-    // setQuotations({ ...quotations, payments: total_paymentt });
-    setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
-  }else{
+      setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
+    }else{
 
-    setQuotations({ ...quotations, [name]: value });
-  }
+      setQuotations({ ...quotations, [name]: value });
+    }
+  };
+
+
+  const handlePaymentChanges = event => {
+    const { name, value } = event.target;
+    if (name === "payment") {
+      const total_paymentt = parseInt(value) + ((value * 15)/100);
+      setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
+    }else{
+      setQuotations({ ...quotations, [name]: value });
+    }
   };
 
 
@@ -148,10 +145,32 @@ const handleInputChange = (index, event) => {
   setQuotations({ ...quotations, payments: values });
 };
 
+const handlePaymentChange = (index, event) => {
+  const values = [...paymentFields];
+  if (event.target.name === "payment" || event.target.name === "date") {
+    values[index][event.target.name] = event.target.value;
+  }
+  setInputFields(values);
+  setQuotations({ ...quotations, payments: values });
+};
+
+
+const handleInputsChanges = event => {
+    const { name, value } = event.target;
+    setQuotationDetails({ ...quotationDetails, [name]: value });
+  };
+
 const handleAddFields = () => {
   const values = [...inputFields];
   if(values.length < 5){
     setInputFields([...inputFields, { payment:'', date:''}]);
+  }
+};
+
+const handleAddPaymentFields = () => {
+  const values = [...paymentFields];
+  if(values.length < 5){
+    setPaymentFields([...paymentFields, { payment:'', date:''}]);
   }
 };
 
@@ -162,6 +181,14 @@ const handleRemoveFields = (index, event) => {
   console.log(values);
   values.splice(index, 1);
   setInputFields(values);
+  setQuotations({ ...quotations, payments: values });
+};
+
+const handleRemovePaymentFields = (index, event) => {
+  event.preventDefault();
+  const values = [...paymentFields];
+  values.splice(index, 1);
+  setPaymentFields(values);
   setQuotations({ ...quotations, payments: values });
 };
 
@@ -252,25 +279,23 @@ const handleRemoveFields = (index, event) => {
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Type of Booking</h5>
-                                      <div className="quedit"><a href="" className="btnsho5">Edit</a>
+                                      <div className="quedit"><a onClick={() => setEditData({type_of_booking:true})} className="btnsho5">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <select className="custom-select form-control" id="inputGroupSelect01" disabled>
-                                        <option>One Way Trip</option>
-                                        <option value={1}>One</option>        
-                                        <option value={2}>Two</option>
-                                        <option value={3}>Three</option>
+                                      <select className="custom-select form-control" disabled value={quotations.type_of_booking}>
+                                        <option>Select Booking Type</option>
+                                        <option value="One Way Trip">One Way Trip</option>
+                                        <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
                                       </select>
                                     </div>
-                                    <div className="quotbkedit" style={{display: 'none'}}>
+                                    <div className="quotbkedit" style={(!editData.type_of_booking) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <select className="custom-select form-control" id="inputGroupSelect01">
-                                          <option>One Way Trip</option>
-                                          <option value={1}>One</option>
-                                          <option value={2}>Two</option>
-                                          <option value={3}>Three</option>
-                                        </select>
+                                         <select className="custom-select form-control" name="type_of_booking" onChange={handleInputsChanges} value={quotations.type_of_booking}  id="inputGroupSelect01">
+                                        <option>Select Booking Type</option>
+                                        <option value="One Way Trip">One Way Trip</option>
+                                        <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
+                                      </select>
                                       </div>
                                     </div>
                                   </div>
@@ -281,7 +306,7 @@ const handleRemoveFields = (index, event) => {
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder="Delhi to Manali Cab Booking" className="form-control" disabled />
+                                      <input type="text" name="title" placeholder="Title of Booking" value={quotations.title_of_booking} className="form-control" disabled />
                                     </div>
                                     <div className="quotintedit" style={{display: 'none'}}>
                                       <div className="form-group">
@@ -299,7 +324,7 @@ const handleRemoveFields = (index, event) => {
                                     </div>
                                     <div className="book-locationPanel">
                                       <div className="selectAddress">
-                                        <select className="select-state" disabled>
+                                        <select className="select-state" value={quotations.pickup_state} disabled>
                                           <option value="Andhra Pradesh">Delhi NCR</option>
                                           <option value="Andhra Pradesh">Andhra Pradesh</option>
                                           <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -338,7 +363,7 @@ const handleRemoveFields = (index, event) => {
                                           <option value="Uttarakhand">Uttarakhand</option>
                                           <option value="West Bengal">West Bengal</option>
                                         </select>
-                                        <input type="text" name="searchArea" defaultValue placeholder="Pandav Nagar" className="startpoint form-control" disabled />
+                                        <input type="text" name="searchArea" value={quotations.pickup_location} placeholder="Pandav Nagar" className="startpoint form-control" disabled />
                                       </div>
                                     </div>
                                     <div className="editpickup" style={{display: 'none'}}>
@@ -396,7 +421,7 @@ const handleRemoveFields = (index, event) => {
                                     </div>
                                     <div className="book-destinationPanel">
                                       <div className="selectAddress">
-                                        <select className="select-state" disabled>
+                                        <select className="select-state" value={quotations.destination_state} disabled>
                                           <option value="Andhra Pradesh">Manali</option>
                                           <option value="Andhra Pradesh">Andhra Pradesh</option>
                                           <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -435,7 +460,7 @@ const handleRemoveFields = (index, event) => {
                                           <option value="Uttarakhand">Uttarakhand</option>
                                           <option value="West Bengal">West Bengal</option>
                                         </select>
-                                        <input type="text" name="searchArea" defaultValue placeholder="Manali Bus Stand" className="startpoint form-control" disabled />
+                                        <input type="text" name="searchArea" value={quotations.drop_location} placeholder="Manali Bus Stand" className="startpoint form-control" disabled />
                                       </div>
                                     </div>
                                     <div className="editdrp" style={{display: 'none'}}>
@@ -494,22 +519,38 @@ const handleRemoveFields = (index, event) => {
                                       </div>
                                     </div>
                                     <div className="addstoppage">
-                                      <input type="text" id="myInput" onKeyUp={myFunction()} placeholder="Search Stoppage..." title="Type in a name" />
-                                      <div id="myUL">
-                                        <div className="col-sm-3">
-                                          <div className="stopbox">
-                                            Chandigarh
-                                            <a href="#"><i className="fa fa-times" /></a>
+                                      <div className="row">
+                                        <div className="col-sm-12">
+                                          <div className="form-group">
+                                            <div className="add-stop">
+                                              {inputFields.map((inputField, index) => (
+                                                <Fragment key={`${inputField}~${index}`}>
+                                                  { 
+                                                  index > 0 ?
+                                                  <div className="col-sm-6">
+                                                    <div className="radio custom-radio" style={{position: 'relative'}}>
+                                                      <label htmlFor="stopage">Stopage {index}</label>
+                                                      <input disabled
+                                                      onChange={event => handleInputChange(index, event)}
+                                                      type="text"
+                                                      className="route-stop form-control"
+                                                      name="stopage"
+                                                      value={inputField.stopage}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                  :null
+                                                  }
+                                                </Fragment>
+                                                ))}
+                                              </div>
                                           </div>
                                         </div>
-                                        <div className="col-sm-3"><div className="stopbox">Ambala <a href="#"><i className="fa fa-times" /></a></div></div>
-                                        <div className="col-sm-3"><div className="stopbox">Chandigarh <a href="#"><i className="fa fa-times" /></a></div></div>
-                                        <div className="col-sm-3"><div className="stopbox">Ambala <a href="#"><i className="fa fa-times" /></a></div></div>
                                       </div>
                                     </div>
                                     <div className="stoppageedit" style={{display: 'none'}}>
                                       <div className="addstoppage">
-                                        <input type="text" id="myInput2" onKeyUp={myFunction()} placeholder="Search Stoppage..." />
+                                        <input type="text" id="myInput2" placeholder="Search Stoppage..." />
                                         <div id="myUL">
                                           <div className="col-sm-3">
                                             <div className="stopbox">
@@ -533,7 +574,7 @@ const handleRemoveFields = (index, event) => {
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <textarea name="w3review" rows={4} cols={50} className="form-control" placeholder="State Tax, Toll Tax Driver allowance Taxes" disabled defaultValue={""} />
+                                      <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotations.inclusions} placeholder="State Tax, Toll Tax Driver allowance Taxes" disabled defaultValue={""} />
                                     </div>
                                     <div className="inclusionsedit" style={{display: 'none'}}>
                                       <div className="formtitle">
@@ -559,7 +600,7 @@ const handleRemoveFields = (index, event) => {
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <textarea name="w3review" rows={4} cols={50} className="form-control" placeholder="Parking
+                                      <textarea name="w3review" value={quotations.exclusions} rows={4} cols={50} className="form-control" placeholder="Parking
 Night time allowance (11:00 PM to 06:00 AM)
 Additional place/destination visit Any type of Permits and Entrance fees" disabled defaultValue={""} />
                                     </div>
@@ -598,11 +639,19 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                     </div>
                                     <div className="cabdetailedit" style={{display: 'none'}}>
                                       <div className="form-group">
-                                        <select className="custom-select form-control" id="inputGroupSelect01">
-                                          <option>Select Cab Type..</option>
-                                          <option value={1}>One</option>
-                                          <option value={2}>Two</option>
-                                          <option value={3}>Three</option>
+                                        <select className="custom-select form-control" value={quotations.cab_type} name="cab_type" onChange={handleInputsChanges} id="inputGroupSelect01">
+                                          <option value="">Select Cab Type..</option>
+                                          <option value="Hatchback">Hatchback</option>
+                                          <option value="Sedan">Sedan</option>
+                                          <option value="Suv">Suv</option>
+                                          <option value="Tempo Traveller">Tempo Traveller</option>
+                                          <option value="Seater">Seater</option>
+                                          <option value="12 Seater">12 Seater</option>
+                                          <option value="16 Seater">16 Seater</option>
+                                          <option value="20 Seater">20 Seater</option>
+                                          <option value="24 Seater">24 Seater</option>
+                                          <option value="Mini Bus">Mini Bus</option>
+                                          <option value="Volvo">Volvo</option>
                                         </select>
                                       </div>
                                     </div>
@@ -614,7 +663,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder="Dezire" className="form-control" disabled />
+                                      <input type="text" name="title" placeholder="Dezire" value={quotations.cab_model} className="form-control" disabled />
                                     </div>
                                     <div className="cabmodaledit" style={{display: 'none'}}>
                                       <div className="form-group">
@@ -629,7 +678,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder={570} className="form-control" disabled />
+                                      <input type="text" name="title" placeholder={570} value={quotations.total_kilometer} className="form-control" disabled />
                                     </div>
                                     <div className="kilometeredit" style={{display: 'none'}}>
                                       <div className="form-group">
@@ -646,7 +695,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder={4} className="form-control" disabled />
+                                      <input type="text" name="title" placeholder={4} value={quotations.sitting_capacity} className="form-control" disabled />
                                     </div>
                                     <div className="sittingedit" style={{display: 'none'}}>
                                       <div className="form-group">
@@ -661,7 +710,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <select className="custom-select form-control" id="inputGroupSelect01" disabled>
+                                      <select className="custom-select form-control" value={quotations.luggage_space} id="inputGroupSelect01" disabled>
                                         <option>2</option>
                                         <option value={1}>1</option>
                                         <option value={2}>2</option>
@@ -694,7 +743,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <textarea name="w3review" rows={4} cols={50} className="form-control" disabled defaultValue={""} />
+                                      <textarea name="w3review" rows={4} cols={50} className="form-control" disabled value={quotations.notes} />
                                     </div>
                                     <div className="noteedit" style={{display: 'none'}}>
                                       <div className="form-group">
@@ -765,11 +814,11 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                 <div className="clearfix" />
                                 <div className="add-payment">
                                   <div className="paymentinstallment">
-                                    <a onClick={() => handleAddFields()} className="payinstall">Add Payment Installment</a>
+                                    <a onClick={() => handleAddPaymentFields()} className="payinstall">Add Payment Installment</a>
                                   </div>
                                   <div className="addmore">
-                                    {inputFields.map((inputField, index) => (
-                                    <Fragment key={`${inputField}~${index}`}>
+                                    {paymentFields.map((paymentField, index) => (
+                                    <Fragment key={`${paymentField}~${index}`}>
                                       { 
                                         index > 0 ?
                                         <div key={index}>
@@ -780,14 +829,14 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                                 <span className="input-group-btn">
                                                   <i className="fa fa-inr" />
                                                 </span>
-                                               <input type="number" value={inputField.payment} name="payment" onChange={event => handleInputChange(index, event)} className="form-control" placeholder={6000} />
+                                               <input type="number" value={paymentField.payment} name="payment" onChange={event => handlePaymentChange(index, event)} className="form-control" placeholder={6000} />
                                               </div>
                                             </div>
                                             <div className="form-group col-sm-4">
-                                              <input type="date" value={inputField.date} name="date" onChange={event => handleInputChange(index, event)} className="form-control" placeholder="date.." />
+                                              <input type="date" value={paymentField.date} name="date" onChange={event => handlePaymentChange(index, event)} className="form-control" placeholder="date.." />
                                             </div>
                                             <div className="col-sm-3">
-                                              <a onClick={event => handleRemoveFields(index, event)}>Remove</a>
+                                              <a onClick={event => handleRemovePaymentFields(index, event)}>Remove</a>
                                             </div>
                                           </div>
                                         </div>

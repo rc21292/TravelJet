@@ -43,6 +43,7 @@ Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
+Route::get('queries/getQuotationStoppages/{id}/{user_id}','Api\QueryController@getQuotationStoppages');
 Route::get('queries/getStopagesData/{id}','Api\QueryController@getStopagesData');
 Route::get('queries/getStoppages/{id}','Api\QueryController@getStoppages');
 Route::get('queries/getQueriesByUserId/{id}','Api\QueryController@getQueriesByUserId');

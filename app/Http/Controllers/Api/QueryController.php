@@ -27,21 +27,21 @@ class QueryController extends Controller
                      ->select('bookings.*','quotations.payment')
                      ->where('quotations.status','pending')
                      ->where('quotations.user_id',$id)
-                     ->paginate(5);
+                     ->paginate(15);
         }else if($request->type == 'booking'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
                      ->where('quotations.status','awarded')->where('bookings.status','awarded')
                      ->where('quotations.user_id',$id)
-                     ->paginate(5);
+                     ->paginate(15);
         }else if($request->type == 'booked'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('quotations.user_id',$id)
-                     ->paginate(5);
+                     ->paginate(15);
         }else{
             $result = Booking::where('user_id',$id)->paginate(5);
         }
@@ -338,6 +338,28 @@ class QueryController extends Controller
         ], 200);  
 
     }
+
+
+
+     public function getQuotationStoppages($id,$user_id)
+     {
+
+        $quotation = QuotationDetail::select('stopeges')->where('booking_id',$id)->where('user_id',$user_id)->first();
+
+        if ($quotation->stopeges) {
+
+            $cars = array("stopage"=>'');
+
+            $ttt = array();
+            $ttt = json_decode($quotation->stopeges);
+            array_unshift($ttt, $cars);
+        }else{
+            $ttt = array();
+        }
+        return $ttt;
+
+    }
+
 
     /**
      * Show the form for editing the specified resource.
