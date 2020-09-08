@@ -293,6 +293,8 @@ class QuotationController extends Controller
 
         if ($request->status == 'awarded') {
             $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
+
+            $quotation->payments = unserialize($quotation->payments);
         }else{
 
             $qutations = Quotation::where('booking_id',$id)->first();
@@ -308,13 +310,13 @@ class QuotationController extends Controller
          ->get();
             }
 
-
-        }
-
         $quotation = $quotation->map(function($i) {
             $i->payments = unserialize($i->payments);
             return $i;
         });
+
+
+        }        
 
         return $quotation;
     }

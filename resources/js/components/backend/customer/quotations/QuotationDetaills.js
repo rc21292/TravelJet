@@ -117,7 +117,7 @@ function QuotationDetaills({id}) {
   };  
 
 
-  const openCheckout = (event) => {
+  const openCheckout = (event,quotation_id) => {
 
    let amount = event.currentTarget.dataset.amount;
     let new_amount = amount;
@@ -143,7 +143,7 @@ function QuotationDetaills({id}) {
         axios.post('/api/users/save_razorpay_details',query)
         .then(response=>{
 
-          axios.post('/api/quotations/awardBooking/'+ id,query)  
+          axios.post('/api/quotations/awardBooking/'+ quotation_id,query)  
           .then((result) => { 
             if (result.data.success) {
               window.location.reload(false);
@@ -265,7 +265,7 @@ console.log(paymentData);
                     <div className="row">
                       <div className="col-sm-12">
                         <div className="paybtn text-center">
-                          <span> Pay partial amount of this trip:</span> <b><i className="fa fa-inr" /> {paymentData.payment_first}</b> <a onClick={openCheckout} data-amount={paymentData.payment_first} className="btn btn-primary">Pay Now</a>
+                          <span> Pay partial amount of this trip:</span> <b><i className="fa fa-inr" /> {paymentData.payment_first}</b> <a onClick={(event) => openCheckout(event,paymentData.id)} data-amount={paymentData.payment_first} className="btn btn-primary">Pay Now</a>
                         </div>
                         <div className="col-sm-12">
                           <p><b>Note:</b> Please pay the 100% Amount before your booking date.</p>

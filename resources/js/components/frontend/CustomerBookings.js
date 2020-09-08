@@ -141,11 +141,18 @@ function CustomerBookings({match}) {
                                             <td> <i className="fa fa-inr" /> {quotationData.payment_first}</td>
                                             <td> <b>Paid</b> <a href="#"><i className="fa fa-eye" /></a></td>
                                           </tr>
-                                          <tr>
-                                            <td>2) Second Part</td>
-                                            <td><i className="fa fa-inr" /> {quotationData.payment_second}</td>
-                                            <td><span>Unpaid</span> <a href="#" className="btn btn-primary">Pay Now</a> </td>
-                                          </tr>
+                                           {
+                                            quotationData.payments ?
+                                            quotationData.payments.map((payments_data,i)=>{
+                                              return( <tr key={i}>
+                                              <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} Part</td>
+                                              <td> <i className="fa fa-inr" />{payments_data.payment}</td>
+                                              <td><span>Unpaid</span> <a href="#" className="btn btn-primary">Pay Now</a></td>
+                                              </tr>
+                                                )
+                                              })
+                                              : null
+                                            }
                                         </tbody>
                                       </table>
                                     </div>
