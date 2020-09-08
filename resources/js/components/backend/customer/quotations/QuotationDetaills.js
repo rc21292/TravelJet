@@ -545,6 +545,7 @@ console.log(paymentData);
                                       <td><span>Immediately</span></td>
                                     </tr>
                                     {
+                                      quotation1.payments ?
                                       quotation1.payments.map((payments_data,i)=>{
                                         return( <tr key={i}>
                                         <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} Part</td>
@@ -553,6 +554,7 @@ console.log(paymentData);
                                         </tr>
                                           )
                                         })
+                                        : null
                                       }
                                   </tbody>
                                 </table>
