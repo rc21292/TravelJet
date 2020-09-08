@@ -241,6 +241,12 @@ class QuotationController extends Controller
     }
 
 
+    public function getQuotationDetailById(Request $request, $id)
+    {
+        return QuotationDetail::select('quotation_details.*','users.name')->join('users','users.id','quotation_details.user_id')->where('quotation_details.quotation_id',$id)->first();
+    }
+
+
     public function getQuotationByBookingId(Request $request, $id)
     {
 
@@ -270,7 +276,7 @@ class QuotationController extends Controller
     public function getQuotationByBookingUserId(Request $request, $id , $user_id)
     {
          DB::connection()->enableQueryLog();
-        $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->leftjoin('quotation_details','quotations.id','quotation_details.quotation_id')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status', '!=', 'awarded')->where('quotations.status', '!=', 'booked')->first();
+        $quotation = Quotation::select('quotations.*','users.name')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status', '!=', 'awarded')->where('quotations.status', '!=', 'booked')->first();
 
          $queries = DB::getQueryLog();
          $last_query = end($queries);
@@ -278,6 +284,18 @@ class QuotationController extends Controller
 
        return $quotation;
    }
+
+   /*public function getQuotationByBookingUserId(Request $request, $id , $user_id)
+    {
+         DB::connection()->enableQueryLog();
+        $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->leftjoin('quotation_details','quotations.id','quotation_details.quotation_id')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status', '!=', 'awarded')->where('quotations.status', '!=', 'booked')->first();
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+         // echo "<pre>";print_r($last_query);"</pre>";exit;
+
+       return $quotation;
+   }*/
 
 
     public function getQuotationPayment($id,$user_id)

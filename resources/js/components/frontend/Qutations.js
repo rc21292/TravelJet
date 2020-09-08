@@ -31,6 +31,7 @@ const [error, setError] = useState('');
 
 
   const [quotations, setQuotations] = useState(initialQuotationState);
+  const [quotationDetails, setQuotationDetails] = useState({});
   const [bookingData, setBookingData] = useState({});  
   const [stopeges, setStopages] = useState(false);  
   const [editData, setEditData] = useState(false);  
@@ -54,7 +55,13 @@ const [error, setError] = useState('');
       axios.get('/api/quotations/getQuotationByBookingUserId/'+match.params.id+'/'+AppState.user.id)
       .then(response=>{
         if (response.data) {
-          setQuotations(response.data)       
+          setQuotations({ ...quotations, user_id: AppState.user.id,payment:response.data.payment,total_payment: response.data.total_payment,payment_first:response.data.payment_first,payment_first_note:response.data.payment_first_note,payment_second:response.data.payment_second });
+          axios.get('/api/quotations/getQuotationDetailById/'+response.data.id)
+          .then(response=>{
+            if (response.data) {
+              setQuotationDetails(response.data)  
+            } 
+          });     
         }else{
         }
       }); 
@@ -94,6 +101,14 @@ const [error, setError] = useState('');
     }   
   }, []);  
 
+
+  const editField = (name) => {
+    if(editData[name]){
+      setEditData({[name] : false})
+    }else{
+      setEditData({[name] : true})
+    }
+  }
 
   const handleInputChanges = event => {
     const { name, value } = event.target;
@@ -137,12 +152,11 @@ const saveBid = () => {
 
 const handleInputChange = (index, event) => {
   const values = [...inputFields];
-  if (event.target.name === "payment" || event.target.name === "date") {
+  if (event.target.name === "stopege") {
     values[index][event.target.name] = event.target.value;
   }
-  console.log(values);
   setInputFields(values);
-  setQuotations({ ...quotations, payments: values });
+  setQuotationDetails({ ...quotations, stopege: values });
 };
 
 const handlePaymentChange = (index, event) => {
@@ -163,7 +177,7 @@ const handleInputsChanges = event => {
 const handleAddFields = () => {
   const values = [...inputFields];
   if(values.length < 5){
-    setInputFields([...inputFields, { payment:'', date:''}]);
+    setInputFields([...inputFields, { stopege:''}]);
   }
 };
 
@@ -175,13 +189,12 @@ const handleAddPaymentFields = () => {
 };
 
 const handleRemoveFields = (index, event) => {
-  alert(index);
   event.preventDefault();
   const values = [...inputFields];
   console.log(values);
   values.splice(index, 1);
   setInputFields(values);
-  setQuotations({ ...quotations, payments: values });
+  setQuotations({ ...quotations, stopeges: values });
 };
 
 const handleRemovePaymentFields = (index, event) => {
@@ -279,11 +292,11 @@ const handleRemovePaymentFields = (index, event) => {
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Type of Booking</h5>
-                                      <div className="quedit"><a onClick={() => setEditData({type_of_booking:true})} className="btnsho5">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('type_of_booking')} className="btnsho5">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <select className="custom-select form-control" disabled value={quotations.type_of_booking}>
+                                      <select className="custom-select form-control" disabled value={quotationDetails.type_of_booking}>
                                         <option>Select Booking Type</option>
                                         <option value="One Way Trip">One Way Trip</option>
                                         <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
@@ -291,26 +304,26 @@ const handleRemovePaymentFields = (index, event) => {
                                     </div>
                                     <div className="quotbkedit" style={(!editData.type_of_booking) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                         <select className="custom-select form-control" name="type_of_booking" onChange={handleInputsChanges} value={quotations.type_of_booking}  id="inputGroupSelect01">
-                                        <option>Select Booking Type</option>
-                                        <option value="One Way Trip">One Way Trip</option>
-                                        <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
-                                      </select>
+                                        <select className="custom-select form-control" name="type_of_booking" onChange={handleInputsChanges}  id="inputGroupSelect01">
+                                          <option>Select Booking Type</option>
+                                          <option value="One Way Trip">One Way Trip</option>
+                                          <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
+                                        </select>
                                       </div>
                                     </div>
                                   </div>
                                   <div className="col-sm-8">
                                     <div className="formtitle">
                                       <h5>Subject/Title of Booking</h5>
-                                      <div className="quedit"><a href="" className="btnsho6">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('title_of_booking')} className="btnsho6">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder="Title of Booking" value={quotations.title_of_booking} className="form-control" disabled />
+                                      <input type="text" name="title" placeholder="Title of Booking" value={quotationDetails.title_of_booking} className="form-control" disabled />
                                     </div>
-                                    <div className="quotintedit" style={{display: 'none'}}>
+                                    <div className="quotintedit" style={(!editData.title_of_booking) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <input type="text" name="title" placeholder="Subject/Title of Booking" className="form-control" />
+                                        <input type="text" name="title_of_booking" value={quotationDetails.title_of_booking} onChange={handleInputsChanges} placeholder="Subject/Title of Booking" className="form-control" />
                                       </div>
                                     </div>
                                   </div>
@@ -319,12 +332,12 @@ const handleRemovePaymentFields = (index, event) => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Pickup Location</h5>
-                                      <div className="quedit"><a href="" className="btnsho7">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('pickup')} className="btnsho7">Edit</a>
                                       </div>
                                     </div>
                                     <div className="book-locationPanel">
                                       <div className="selectAddress">
-                                        <select className="select-state" value={quotations.pickup_state} disabled>
+                                        <select className="select-state" value={quotationDetails.pickup_state} disabled>
                                           <option value="Andhra Pradesh">Delhi NCR</option>
                                           <option value="Andhra Pradesh">Andhra Pradesh</option>
                                           <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -363,13 +376,13 @@ const handleRemovePaymentFields = (index, event) => {
                                           <option value="Uttarakhand">Uttarakhand</option>
                                           <option value="West Bengal">West Bengal</option>
                                         </select>
-                                        <input type="text" name="searchArea" value={quotations.pickup_location} placeholder="Pandav Nagar" className="startpoint form-control" disabled />
+                                        <input type="text" name="searchArea" value={quotationDetails.pickup_location} placeholder="Pandav Nagar" className="startpoint form-control" disabled />
                                       </div>
                                     </div>
-                                    <div className="editpickup" style={{display: 'none'}}>
+                                    <div className="editpickup" style={(!editData.pickup) ? {display:'none'} : {display:'block'} }>
                                       <div className="book-locationPanel">
                                         <div className="selectAddress">
-                                          <select className="select-state">
+                                          <select className="select-state" value={quotationDetails.pickup_state} name="pickup_state" onChange={handleInputsChanges}>
                                             <option value="Andhra Pradesh">Delhi NCR</option>
                                             <option value="Andhra Pradesh">Andhra Pradesh</option>
                                             <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -408,7 +421,7 @@ const handleRemovePaymentFields = (index, event) => {
                                             <option value="Uttarakhand">Uttarakhand</option>
                                             <option value="West Bengal">West Bengal</option>
                                           </select>
-                                          <input type="text" name="searchArea" defaultValue placeholder="Client Starting point.." className="startpoint form-control" />
+                                          <input type="text" name="searchArea" value={quotationDetails.pickup_location} name="pickup_location" onChange={handleInputsChanges} placeholder="Client Starting point.." className="startpoint form-control" />
                                         </div>
                                       </div>
                                     </div>
@@ -416,12 +429,12 @@ const handleRemovePaymentFields = (index, event) => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Drop Location</h5>
-                                      <div className="quedit"><a href="" className="btnsho8">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('drop')} className="btnsho8">Edit</a>
                                       </div>
                                     </div>
                                     <div className="book-destinationPanel">
                                       <div className="selectAddress">
-                                        <select className="select-state" value={quotations.destination_state} disabled>
+                                        <select className="select-state" value={quotationDetails.destination_state} disabled>
                                           <option value="Andhra Pradesh">Manali</option>
                                           <option value="Andhra Pradesh">Andhra Pradesh</option>
                                           <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -460,13 +473,13 @@ const handleRemovePaymentFields = (index, event) => {
                                           <option value="Uttarakhand">Uttarakhand</option>
                                           <option value="West Bengal">West Bengal</option>
                                         </select>
-                                        <input type="text" name="searchArea" value={quotations.drop_location} placeholder="Manali Bus Stand" className="startpoint form-control" disabled />
+                                        <input type="text" name="searchArea" value={quotationDetails.drop_location} placeholder="Manali Bus Stand" className="startpoint form-control" disabled />
                                       </div>
                                     </div>
-                                    <div className="editdrp" style={{display: 'none'}}>
+                                    <div className="editdrp" style={(!editData.drop) ? {display:'none'} : {display:'block'} }>
                                       <div className="book-destinationPanel">
                                         <div className="selectAddress">
-                                          <select className="select-state">
+                                          <select className="select-state" value={quotationDetails.destination_state} name="destination_state" onChange={handleInputsChanges}>
                                             <option value="Andhra Pradesh">Manali</option>
                                             <option value="Andhra Pradesh">Andhra Pradesh</option>
                                             <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -505,7 +518,7 @@ const handleRemovePaymentFields = (index, event) => {
                                             <option value="Uttarakhand">Uttarakhand</option>
                                             <option value="West Bengal">West Bengal</option>
                                           </select>
-                                          <input type="text" name="searchArea" defaultValue placeholder="Client Droping point.." className="startpoint form-control" />
+                                          <input type="text" value={quotationDetails.drop_location} name="drop_location" onChange={handleInputsChanges} placeholder="Client Droping point.." className="startpoint form-control" />
                                         </div>
                                       </div>
                                     </div>
@@ -515,7 +528,7 @@ const handleRemovePaymentFields = (index, event) => {
                                   <div className="col-sm-12">
                                     <div className="formtitle">
                                       <h5>Add Stoppage</h5>
-                                      <div className="quedit"><a href="" className="btnsho9">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('stopeges')} className="btnsho9">Edit</a>
                                       </div>
                                     </div>
                                     <div className="addstoppage">
@@ -531,7 +544,6 @@ const handleRemovePaymentFields = (index, event) => {
                                                     <div className="radio custom-radio" style={{position: 'relative'}}>
                                                       <label htmlFor="stopage">Stopage {index}</label>
                                                       <input disabled
-                                                      onChange={event => handleInputChange(index, event)}
                                                       type="text"
                                                       className="route-stop form-control"
                                                       name="stopage"
@@ -548,19 +560,40 @@ const handleRemovePaymentFields = (index, event) => {
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="stoppageedit" style={{display: 'none'}}>
+                                    <div className="stoppageedit" style={(!editData.stopeges) ? {display:'none'} : {display:'block'} }>
                                       <div className="addstoppage">
-                                        <input type="text" id="myInput2" placeholder="Search Stoppage..." />
-                                        <div id="myUL">
-                                          <div className="col-sm-3">
-                                            <div className="stopbox">
-                                              Chandigarh
-                                              <a href="#"><i className="fa fa-times" /></a>
+                                         <div className="row">
+                                          <div className="col-sm-12">
+                                            <div className="form-group">
+
+                                              <div className="add-stop">
+                                                <div className="addstop-title" onClick={() => handleAddFields()}>
+                                                  <i className="fa fa-plus-circle" /> <span>Add Stop</span>
+                                                </div>
+                                                {inputFields.map((inputField, index) => (
+                                                  <Fragment key={`${inputField}~${index}`}>
+                                                    { 
+                                                    index > 0 ?
+                                                    <div className="col-sm-6">
+                                                      <div className="radio custom-radio" style={{position: 'relative'}}>
+                                                        <label htmlFor="stopage">Stopage {index}</label>
+                                                        <input
+                                                        onChange={event => handleInputChange(index, event)}
+                                                        type="text"
+                                                        className="route-stop form-control"
+                                                        name="stopage"
+                                                        value={inputField.stopage}
+                                                        />
+                                                        <button onClick={event => handleRemoveFields(index, event)} id="remove1" className="btn btn-danger remove-me" style={{position: 'absolute',top: '23px', right:'1px', lineHeight:'24px'}}><i className="fa fa-minus-circle" /></button>
+                                                      </div>
+                                                    </div>
+                                                    :null
+                                                    }
+                                                  </Fragment>
+                                                  ))}
+                                                </div>
                                             </div>
                                           </div>
-                                          <div className="col-sm-3"><div className="stopbox">Ambala <a href="#"><i className="fa fa-times" /></a></div></div>
-                                          <div className="col-sm-3"><div className="stopbox">Chandigarh <a href="#"><i className="fa fa-times" /></a></div></div>
-                                          <div className="col-sm-3"><div className="stopbox">Ambala <a href="#"><i className="fa fa-times" /></a></div></div>
                                         </div>
                                       </div>
                                     </div>
@@ -570,13 +603,13 @@ const handleRemovePaymentFields = (index, event) => {
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Inclusions</h5>
-                                      <div className="quedit"><a href="" className="btnsho10">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('inclusions')} className="btnsho10">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotations.inclusions} placeholder="State Tax, Toll Tax Driver allowance Taxes" disabled defaultValue={""} />
+                                      <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotationDetails.inclusions} placeholder="State Tax, Toll Tax Driver allowance Taxes" disabled defaultValue={""} />
                                     </div>
-                                    <div className="inclusionsedit" style={{display: 'none'}}>
+                                    <div className="inclusionsedit" style={(!editData.inclusions) ? {display:'none'} : {display:'block'} }>
                                       <div className="formtitle">
                                         <h5>Inclusions</h5>
                                         <div className="quedit">
@@ -589,22 +622,20 @@ const handleRemovePaymentFields = (index, event) => {
                                         </div>
                                       </div>
                                       <div className="form-group">
-                                        <textarea name="w3review" rows={4} cols={50} className="form-control" defaultValue={""} />
+                                        <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotationDetails.inclusions} name="inclusions" onChange={handleInputsChanges} />
                                       </div>
                                     </div>
                                   </div>
                                   <div className="col-sm-6">
                                     <div className="formtitle">
                                       <h5>Exclusions</h5>
-                                      <div className="quedit"><a href="" className="btnsho11">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('exclusions')} className="btnsho11">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <textarea name="w3review" value={quotations.exclusions} rows={4} cols={50} className="form-control" placeholder="Parking
-Night time allowance (11:00 PM to 06:00 AM)
-Additional place/destination visit Any type of Permits and Entrance fees" disabled defaultValue={""} />
+                                      <textarea name="w3review" value={quotationDetails.exclusions} rows={4} cols={50} className="form-control" placeholder="" disabled defaultValue={""} />
                                     </div>
-                                    <div className="exclusionsedit" style={{display: 'none'}}>
+                                    <div className="exclusionsedit" style={(!editData.exclusions) ? {display:'none'} : {display:'block'} }>
                                       <div className="formtitle">
                                         <h5>Exclusions</h5>
                                         <div className="quedit">
@@ -617,7 +648,7 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                         </div>
                                       </div>
                                       <div className="form-group">
-                                        <textarea name="w3review" rows={4} cols={50} className="form-control" defaultValue={""} />
+                                        <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotationDetails.exclusions} name="exclusions" onChange={handleInputsChanges} />
                                       </div>
                                     </div>
                                   </div>
@@ -626,26 +657,32 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Cab Details</h5>
-                                      <div className="quedit"><a href="" className="btnsho12">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('cab_type')} className="btnsho12">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <select className="custom-select form-control" id="inputGroupSelect01" disabled>
-                                        <option>Hatchback</option>
-                                        <option value={1}>One</option>
-                                        <option value={2}>Two</option>
-                                        <option value={3}>Three</option>
-                                      </select>
-                                    </div>
-                                    <div className="cabdetailedit" style={{display: 'none'}}>
-                                      <div className="form-group">
-                                        <select className="custom-select form-control" value={quotations.cab_type} name="cab_type" onChange={handleInputsChanges} id="inputGroupSelect01">
+                                       <select className="custom-select form-control" value={quotationDetails.cab_type} name="cab_type" onChange={handleInputsChanges} id="inputGroupSelect01">
                                           <option value="">Select Cab Type..</option>
                                           <option value="Hatchback">Hatchback</option>
                                           <option value="Sedan">Sedan</option>
                                           <option value="Suv">Suv</option>
                                           <option value="Tempo Traveller">Tempo Traveller</option>
-                                          <option value="Seater">Seater</option>
+                                          <option value="12 Seater">12 Seater</option>
+                                          <option value="16 Seater">16 Seater</option>
+                                          <option value="20 Seater">20 Seater</option>
+                                          <option value="24 Seater">24 Seater</option>
+                                          <option value="Mini Bus">Mini Bus</option>
+                                          <option value="Volvo">Volvo</option>
+                                        </select>
+                                    </div>
+                                    <div className="cabdetailedit" style={(!editData.cab_type) ? {display:'none'} : {display:'block'} }>
+                                      <div className="form-group">
+                                        <select className="custom-select form-control" value={quotationDetails.cab_type} name="cab_type" onChange={handleInputsChanges} id="inputGroupSelect01">
+                                          <option value="">Select Cab Type..</option>
+                                          <option value="Hatchback">Hatchback</option>
+                                          <option value="Sedan">Sedan</option>
+                                          <option value="Suv">Suv</option>
+                                          <option value="Tempo Traveller">Tempo Traveller</option>
                                           <option value="12 Seater">12 Seater</option>
                                           <option value="16 Seater">16 Seater</option>
                                           <option value="20 Seater">20 Seater</option>
@@ -659,30 +696,30 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Cab Modal</h5>
-                                      <div className="quedit"><a href="" className="btnsho13">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('cab_model')} className="btnsho13">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder="Dezire" value={quotations.cab_model} className="form-control" disabled />
+                                      <input type="text" name="title" placeholder="Dezire" value={quotationDetails.cab_model} className="form-control" disabled />
                                     </div>
-                                    <div className="cabmodaledit" style={{display: 'none'}}>
+                                    <div className="cabmodaledit" style={(!editData.cab_model) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <input type="text" name="title" placeholder="Ex:Dezire" className="form-control" />
+                                        <input type="text" placeholder="Ex:Dezire" value={quotationDetails.cab_model} name="cab_model" onChange={handleInputsChanges} className="form-control" />
                                       </div>
                                     </div>
                                   </div>
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Total Kilometers</h5>
-                                      <div className="quedit"><a href="" className="btnsho14">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('total_kilometer')} className="btnsho14">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder={570} value={quotations.total_kilometer} className="form-control" disabled />
+                                      <input type="text" name="title" placeholder={570} value={quotationDetails.total_kilometer} className="form-control" disabled />
                                     </div>
-                                    <div className="kilometeredit" style={{display: 'none'}}>
+                                    <div className="kilometeredit" style={(!editData.total_kilometer) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <input type="text" name="title" placeholder="Ex:570" className="form-control" />
+                                        <input type="text" value={quotationDetails.total_kilometer} name="total_kilometer" onChange={handleInputsChanges} placeholder="Ex:570" className="form-control" />
                                       </div>
                                     </div>
                                   </div>
@@ -691,26 +728,26 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Sitting Capacity</h5>
-                                      <div className="quedit"><a href="" className="btnsho15">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('sitting_capacity')} className="btnsho15">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <input type="text" name="title" placeholder={4} value={quotations.sitting_capacity} className="form-control" disabled />
+                                      <input type="text" name="title" placeholder={4} value={quotationDetails.sitting_capacity} className="form-control" disabled />
                                     </div>
-                                    <div className="sittingedit" style={{display: 'none'}}>
+                                    <div className="sittingedit" style={(!editData.sitting_capacity) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <input type="text" name="title" placeholder="Ex:7" className="form-control" disabled />
+                                        <input type="text" value={quotationDetails.sitting_capacity} name="sitting_capacity" onChange={handleInputsChanges} placeholder="Ex:7" className="form-control" disabled />
                                       </div>
                                     </div>
                                   </div>
                                   <div className="col-sm-4">
                                     <div className="formtitle">
                                       <h5>Luggage Space</h5>
-                                      <div className="quedit"><a href="" className="btnsho16">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('luggage_space')} className="btnsho16">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <select className="custom-select form-control" value={quotations.luggage_space} id="inputGroupSelect01" disabled>
+                                      <select className="custom-select form-control" value={quotationDetails.luggage_space} id="inputGroupSelect01" disabled>
                                         <option>2</option>
                                         <option value={1}>1</option>
                                         <option value={2}>2</option>
@@ -720,9 +757,9 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                         <option value={6}>6</option>
                                       </select>
                                     </div>
-                                    <div className="luggageedit" style={{display: 'none'}}>
+                                    <div className="luggageedit" style={(!editData.luggage_space) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <select className="custom-select form-control" id="inputGroupSelect01">
+                                        <select className="custom-select form-control" value={quotationDetails.luggage_space} name="luggage_space" onChange={handleInputsChanges} id="inputGroupSelect01">
                                           <option>Select Number of Bag..</option>
                                           <option value={1}>1</option>
                                           <option value={2}>2</option>
@@ -739,15 +776,15 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                   <div className="col-sm-12">
                                     <div className="formtitle">
                                       <h5>Note:(Optional)</h5>
-                                      <div className="quedit"><a href="" className="btnsho17">Edit</a>
+                                      <div className="quedit"><a onClick={() => editField('notes')} className="btnsho17">Edit</a>
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                      <textarea name="w3review" rows={4} cols={50} className="form-control" disabled value={quotations.notes} />
+                                      <textarea name="w3review" rows={4} cols={50} className="form-control" disabled value={quotationDetails.notes} />
                                     </div>
-                                    <div className="noteedit" style={{display: 'none'}}>
+                                    <div className="noteedit" style={(!editData.notes) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <textarea name="w3review" rows={4} cols={50} className="form-control" defaultValue={""} />
+                                        <textarea rows={4} cols={50} className="form-control" value={quotationDetails.notes} name="notes" onChange={handleInputsChanges} />
                                       </div>
                                     </div>
                                   </div>
@@ -801,11 +838,11 @@ Additional place/destination visit Any type of Permits and Entrance fees" disabl
                                         <span className="input-group-btn">
                                           <i className="fa fa-inr" />
                                         </span>
-                                        <input type="number" value={quotations.payment_first} name="payment_first" onChange={handleInputChanges} className="form-control" placeholder={6000} />
+                                        <input type="number" value={quotations.payment_first} name="payment_first" onChange={handlePaymentChanges} className="form-control" placeholder={6000} />
                                       </div>
                                     </div>
                                     <div className="form-group col-sm-4">
-                                     <input type="text" value={quotations.payment_first_note} name="payment_first_note" onChange={handleInputChanges} className="form-control" placeholder="Note..." />
+                                     <input type="text" value={quotations.payment_first_note} name="payment_first_note" onChange={handlePaymentChanges} className="form-control" placeholder="Note..." />
                                     </div>
                                   </div>
                                 </div>                            
