@@ -147,6 +147,12 @@ class QuotationController extends Controller
 
         }
 
+        if ($request->total_kilometer > 0) {
+             DB::table('bookings')
+            ->where('id', $request->booking_id)
+            ->update(['distance' => $request->total_kilometer]);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Bid Placed successfully!'
@@ -174,6 +180,13 @@ class QuotationController extends Controller
             ->update(['stopeges' => json_encode(array_values($stopages_data))]);
 
         }
+
+        if ($request->total_kilometer > 0) {
+             DB::table('bookings')
+            ->where('id', $request->booking_id)
+            ->update(['distance' => $request->total_kilometer]);
+        }
+        
 
         return response()->json([
             'success' => true,

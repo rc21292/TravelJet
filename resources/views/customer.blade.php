@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-	@include('layouts.front-head')
+	@include('layouts.front-customer-head')
 	@section('fronthead')
 
 	@endsection
