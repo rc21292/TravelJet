@@ -301,7 +301,7 @@ const handleRemovePaymentFields = (index, event) => {
           data: data1,
         })
         .then(response => {
-         // window.location.href = "/agent/leads";
+         window.location.href = "/agent/leads";
         })
       })
       .catch(e => {
@@ -351,7 +351,7 @@ const handleRemovePaymentFields = (index, event) => {
           data: data1,
         })
         .then(response => {
-         // window.location.href = "/agent/leads";
+         window.location.href = "/agent/leads";
         })
       })
       .catch(e => {
