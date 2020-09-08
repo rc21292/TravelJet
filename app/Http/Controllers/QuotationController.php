@@ -153,6 +153,34 @@ class QuotationController extends Controller
         ], 201);
     }
 
+
+    public function updateQuotationDetails(Request $request, $id)
+    {
+        $data = $request->except('stopeges');
+        $data_re = DB::table('quotation_details')
+        ->where('user_id', $request->user_id)
+        ->where('quotation_id', $id)
+        ->update($data);
+
+        $stopages_data = $request->stopeges;
+
+        unset($stopages_data[0]);
+
+        if (isset($stopages_data)) {
+
+            DB::table('quotation_details')
+            ->where('user_id', $request->user_id)
+            ->where('quotation_id', $id)
+            ->update(['stopeges' => json_encode(array_values($stopages_data))]);
+
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Bid Placed successfully!'
+        ], 201);
+    }
+
    public function storeBid(Request $request)
     {                           
         $payments_data = $request->payments;

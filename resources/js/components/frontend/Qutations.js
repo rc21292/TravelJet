@@ -4,9 +4,70 @@ import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
 import Moment from 'react-moment';
-import { useState, useEffect, Fragment } from 'react'  
+import { useState, useEffect, Fragment,useRef } from 'react'  
 
 import FlashMessage from 'react-flash-message'
+
+let autoComplete;
+let autoComplete1;
+
+const loadScript = (url, callback) => {
+  let script = document.createElement("script");
+  script.type = "text/javascript";
+
+  if (script.readyState) {
+    script.onreadystatechange = function () {
+      if (script.readyState === "loaded" || script.readyState === "complete") {
+        script.onreadystatechange = null;
+        callback();
+      }
+    };
+  } else {
+    script.onload = () => callback();
+  }
+
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+};
+
+function handleScriptLoad(
+  updateQuery1,
+  updateQuery,
+  autoCompleteRef1,
+  autoCompleteRef
+  ) {
+
+  autoComplete1 = new window.google.maps.places.Autocomplete(
+    autoCompleteRef1.current,
+    { types: ["(regions)"], componentRestrictions: { country: "in" } }
+    );
+  autoComplete1.setFields(["address_components", "formatted_address"]);
+  autoComplete1.addListener("place_changed", () =>
+    handlePlaceSelect1(updateQuery1)
+    );
+
+  autoComplete = new window.google.maps.places.Autocomplete(
+    autoCompleteRef.current,
+    { types: ["(regions)"], componentRestrictions: { country: "in" } }
+    );
+  autoComplete.setFields(["address_components", "formatted_address"]);
+  autoComplete.addListener("place_changed", () =>
+    handlePlaceSelect(updateQuery)
+    );
+}
+
+async function handlePlaceSelect1(updateQuery1) {
+  const addressObject = autoComplete1.getPlace();
+  const query = addressObject.formatted_address;
+  updateQuery1(query);
+}
+
+async function handlePlaceSelect(updateQuery) {
+  const addressObject = autoComplete.getPlace();
+  const query = addressObject.formatted_address;
+  updateQuery(query);
+}
+
 
 function Qutations({match}) { 
 
@@ -26,9 +87,8 @@ function Qutations({match}) {
   };
 
 
-const [error, setError] = useState('');
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
 
   const [quotations, setQuotations] = useState(initialQuotationState);
   const [quotationDetails, setQuotationDetails] = useState({});
@@ -40,11 +100,17 @@ const [error, setError] = useState('');
   const [isUpdated, setIsUpdated] = useState(false);
   const [errors, setErrors] = useState({});
   const [isErrors, setIsErrors] = useState(0);
-   const [user, setUser] = useState(false);
-   const [customer, setCustomer] = useState(false);
-    const [inputFields, setInputFields] = useState([{stopege:''}]);
-    const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
- 
+  const [user, setUser] = useState(false);
+  const [customer, setCustomer] = useState(false);
+  const [inputFields, setInputFields] = useState([{stopege:''}]);
+  const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
+
+  const [query1, setQuery1] = useState("");
+  const [query, setQuery] = useState("");
+
+  const autoCompleteRef1 = useRef(null);
+  const autoCompleteRef = useRef(null);
+
   useEffect(() => {  
     let stateqq = localStorage["appState"];
     if (stateqq) {
@@ -59,7 +125,9 @@ const [error, setError] = useState('');
           axios.get('/api/quotations/getQuotationDetailById/'+response.data.id)
           .then(response=>{
             if (response.data) {
-              setQuotationDetails(response.data)  
+              setQuotationDetails(response.data)  ;
+              setQuery(response.data.pickup_location)  ;
+              setQuery1(response.data.drop_location)  ;
             } 
           });     
         }else{
@@ -94,10 +162,14 @@ const [error, setError] = useState('');
 
         const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
         setStopages(result1.data.stopages);  
-      };  
-  
-    GetData();  
+      };    
 
+     loadScript(
+      `https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places`,
+      () => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
+      );   
+
+    GetData();  
     }   
   }, []);  
 
@@ -116,7 +188,6 @@ const [error, setError] = useState('');
       const total_paymentt = parseInt(value) + ((value * 15)/100);
       setQuotations({ ...quotations, payment:value, total_payment: total_paymentt });
     }else{
-
       setQuotations({ ...quotations, [name]: value });
     }
   };
@@ -132,39 +203,21 @@ const [error, setError] = useState('');
     }
   };
 
-
-const saveBid = () => {
-    var data = quotations;
-    axios({
-      method: 'post',
-      url: '/api/quotations/storeBid',
-      data: data,
-    })
-    .then(response => {
-      setSubmitted(true);
-      setSuccess(response.data.message);
-      //window.location = '/customer/bookings';     
-    })
-    .catch(e => {
-      console.log(e);
-    });
+  const handleStopageChange = (index, event) => {
+     const values = [...inputFields];
+    if (event.target.name === "stopage") {
+      values[index].stopage = event.target.value;
+    }
+    setInputFields(values);
+    setQuotationDetails({ ...quotationDetails, stopeges: values });
   };
-
-const handleInputChange = (index, event) => {
-  const values = [...inputFields];
-  if (event.target.name === "stopege") {
-    values[index][event.target.name] = event.target.value;
-  }
-  setInputFields(values);
-  setQuotationDetails({ ...quotations, stopege: values });
-};
 
 const handlePaymentChange = (index, event) => {
   const values = [...paymentFields];
   if (event.target.name === "payment" || event.target.name === "date") {
     values[index][event.target.name] = event.target.value;
   }
-  setInputFields(values);
+  setPaymentFields(values);
   setQuotations({ ...quotations, payments: values });
 };
 
@@ -189,12 +242,10 @@ const handleAddPaymentFields = () => {
 };
 
 const handleRemoveFields = (index, event) => {
-  event.preventDefault();
   const values = [...inputFields];
-  console.log(values);
   values.splice(index, 1);
   setInputFields(values);
-  setQuotations({ ...quotations, stopeges: values });
+  setQuotationDetails({ ...quotationDetails, stopeges: values });
 };
 
 const handleRemovePaymentFields = (index, event) => {
@@ -204,6 +255,115 @@ const handleRemovePaymentFields = (index, event) => {
   setPaymentFields(values);
   setQuotations({ ...quotations, payments: values });
 };
+
+  const saveBid = () => {
+
+    if (quotationDetails.type_of_booking == "Round Trip with Sightseeing") {
+
+      let BookingDetailsData = {
+        user_id: user.id,
+        agent_id:user.id,
+        booking_id:match.params.id,
+        type_of_booking:quotationDetails.type_of_booking,
+        title_of_booking:quotationDetails.title_of_booking,
+        pickup_state:quotationDetails.pickup_state,
+        stopeges:quotationDetails.stopeges,
+        pickup_location:query,
+        destination_state:quotationDetails.pickup_state,
+        drop_location:query,
+        inclusions:quotationDetails.inclusions,
+        exclusions:quotationDetails.exclusions,
+        cab_type:quotationDetails.cab_type,
+        cab_model:quotationDetails.cab_model,
+        total_kilometer:quotationDetails.total_kilometer,
+        sitting_capacity:quotationDetails.sitting_capacity,
+        luggage_space:quotationDetails.luggage_space,
+        notes:quotationDetails.notes,
+      };
+      if (quotations.payment == '' || quotations.payment < 1) {
+        setError('please enter amount!');
+        return false;
+      }else{
+        setError('');
+      }
+
+      var data = quotations;
+      axios({
+        method: 'post',
+        url: '/api/quotations/storeBid',
+        data: data,
+      })
+      .then(response => {
+        var data1 = BookingDetailsData;
+        axios({
+          method: 'post',
+          url: '/api/quotations/updateQuotationDetails/'+quotationDetails.quotation_id,
+          data: data1,
+        })
+        .then(response => {
+         // window.location.href = "/agent/leads";
+        })
+      })
+      .catch(e => {
+        console.log(e);
+      });
+
+    } else{
+
+      let BookingDetailsData = {
+        user_id: user.id,
+        agent_id:user.id,
+        booking_id:match.params.id,
+        type_of_booking:quotationDetails.type_of_booking,
+        title_of_booking:quotationDetails.title_of_booking,
+        pickup_state:quotationDetails.pickup_state,
+        stopeges:quotationDetails.stopeges,
+        pickup_location:query,
+        destination_state:quotationDetails.destination_state,
+        drop_location:query1,
+        inclusions:quotationDetails.inclusions,
+        exclusions:quotationDetails.exclusions,
+        cab_type:quotationDetails.cab_type,
+        cab_model:quotationDetails.cab_model,
+        total_kilometer:quotationDetails.total_kilometer,
+        sitting_capacity:quotationDetails.sitting_capacity,
+        luggage_space:quotationDetails.luggage_space,
+        notes:quotationDetails.notes,
+      };
+      if (quotations.payment == '' || quotations.payment < 1) {
+        setError('please enter amount!');
+        return false;
+      }else{
+        setError('');
+      }
+
+      var data = quotations;
+      axios({
+        method: 'post',
+        url: '/api/quotations/storeBid',
+        data: data,
+      })
+      .then(response => {
+        var data1 = BookingDetailsData;
+        axios({
+          method: 'post',
+          url: '/api/quotations/updateQuotationDetails/'+quotationDetails.quotation_id,
+          data: data1,
+        })
+        .then(response => {
+         // window.location.href = "/agent/leads";
+        })
+      })
+      .catch(e => {
+        console.log(e);
+      });
+
+    }  
+  };
+
+
+  console.log(quotationDetails)
+  console.log(quotations)
 
   return (  
           <div className="bookingvenderlist">
@@ -421,12 +581,20 @@ const handleRemovePaymentFields = (index, event) => {
                                             <option value="Uttarakhand">Uttarakhand</option>
                                             <option value="West Bengal">West Bengal</option>
                                           </select>
-                                          <input type="text" name="searchArea" value={quotationDetails.pickup_location} name="pickup_location" onChange={handleInputsChanges} placeholder="Client Starting point.." className="startpoint form-control" />
+                                          <input type="text" 
+                                          onChange={event => setQuery(event.target.value)}
+                                          value={query}
+                                          id="pickup_location"
+                                          ref={autoCompleteRef} 
+                                          name="pickup_location" 
+                                          placeholder="Starting point.." 
+                                          className="startpoint form-control" 
+                                        />
                                         </div>
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="col-sm-6">
+                                  <div className="col-sm-6" style={(quotationDetails.type_of_booking == "Round Trip with Sightseeing") ? {display:"none"} : {display:"block"} }>
                                     <div className="formtitle">
                                       <h5>Drop Location</h5>
                                       <div className="quedit"><a onClick={() => editField('drop')} className="btnsho8">Edit</a>
@@ -518,7 +686,15 @@ const handleRemovePaymentFields = (index, event) => {
                                             <option value="Uttarakhand">Uttarakhand</option>
                                             <option value="West Bengal">West Bengal</option>
                                           </select>
-                                          <input type="text" value={quotationDetails.drop_location} name="drop_location" onChange={handleInputsChanges} placeholder="Client Droping point.." className="startpoint form-control" />
+                                          <input
+                                          ref={autoCompleteRef1}
+                                          onChange={event => setQuery1(event.target.value)}
+                                          value={query1}
+                                          className="form-control startpoint"
+                                          name="drop_location"
+                                          onTouchEnd={(event) => handleChange(event.target.value)}
+                                          placeholder="Droping point.."
+                                        />
                                         </div>
                                       </div>
                                     </div>
@@ -578,7 +754,7 @@ const handleRemovePaymentFields = (index, event) => {
                                                       <div className="radio custom-radio" style={{position: 'relative'}}>
                                                         <label htmlFor="stopage">Stopage {index}</label>
                                                         <input
-                                                        onChange={event => handleInputChange(index, event)}
+                                                        onChange={event => handleStopageChange(index, event)}
                                                         type="text"
                                                         className="route-stop form-control"
                                                         name="stopage"

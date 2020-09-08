@@ -115,17 +115,17 @@ function BookingDetails({match}) {
   const [bookingData, setBookingData] = useState({});  
   const [stopeges, setStopages] = useState(false);  
 
-  const [query1, setQuery1] = useState("");
-  const [query, setQuery] = useState("");
-
   const [errors, setErrors] = useState({});
   const [isErrors, setIsErrors] = useState(0);
   const [user, setUser] = useState(false);
   const [customer, setCustomer] = useState(false);
 
+  const [query1, setQuery1] = useState("");
+  const [query, setQuery] = useState("");
 
   const autoCompleteRef1 = useRef(null);
   const autoCompleteRef = useRef(null);
+
   const [inputFields, setInputFields] = useState([{stopege:''}]);
   const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
 
@@ -262,7 +262,7 @@ function BookingDetails({match}) {
         total_kilometer:quotationDetails.total_kilometer,
         sitting_capacity:quotationDetails.sitting_capacity,
         luggage_space:quotationDetails.luggage_space,
-        notes:"",
+        notes:quotationDetails.notes,
       };
       if (quotations.payment == '' || quotations.payment < 1) {
         setError('please enter amount!');
@@ -312,7 +312,7 @@ function BookingDetails({match}) {
         total_kilometer:quotationDetails.total_kilometer,
         sitting_capacity:quotationDetails.sitting_capacity,
         luggage_space:quotationDetails.luggage_space,
-        notes:"",
+        notes:quotationDetails.notes,
       };
       if (quotations.payment == '' || quotations.payment < 1) {
         setError('please enter amount!');
