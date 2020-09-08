@@ -297,6 +297,12 @@ class QuotationController extends Controller
 
 
         }
+
+        $quotation = $quotation->map(function($i) {
+            $i->payments = unserialize($i->payments);
+            return $i;
+        });
+
         return $quotation;
     }
 

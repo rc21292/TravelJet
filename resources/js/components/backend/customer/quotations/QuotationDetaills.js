@@ -544,11 +544,16 @@ console.log(paymentData);
                                       <td> <i className="fa fa-inr" />{quotation1.payment_first}</td>
                                       <td><span>Immediately</span></td>
                                     </tr>
-                                    <tr>
-                                      <td>2) Second Part</td>
-                                      <td><i className="fa fa-inr" /> {quotation1.payment_second}</td>
-                                      <td><span>{quotation1.payment_second_date}</span></td>
-                                    </tr>
+                                    {
+                                      quotation1.payments.map((payments_data,i)=>{
+                                        return( <tr key={i}>
+                                        <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} Part</td>
+                                        <td> <i className="fa fa-inr" />{payments_data.payment}</td>
+                                        <td><span><Moment format="DD-MMM-YYYY">{payments_data.date}</Moment></span></td>
+                                        </tr>
+                                          )
+                                        })
+                                      }
                                   </tbody>
                                 </table>
                               </td>

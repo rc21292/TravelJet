@@ -139,7 +139,7 @@ function Qutations({match}) {
         if (response.data) {
           setPaymentFields(response.data);
         }else{
-        setPaymentFields([{ payment: ''}]);
+          setPaymentFields([{ payment: ''}]);
         }
       }); 
 
