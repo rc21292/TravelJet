@@ -304,7 +304,7 @@ const handleRemovePaymentFields = (index, event) => {
                                     </div>
                                     <div className="quotbkedit" style={(!editData.type_of_booking) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <select className="custom-select form-control" name="type_of_booking" onChange={handleInputsChanges}  id="inputGroupSelect01">
+                                        <select className="custom-select form-control" name="type_of_booking" value={quotationDetails.type_of_booking} onChange={handleInputsChanges}  id="inputGroupSelect01">
                                           <option>Select Booking Type</option>
                                           <option value="One Way Trip">One Way Trip</option>
                                           <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
