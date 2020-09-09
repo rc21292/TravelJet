@@ -38,12 +38,12 @@ function Cancelled({match}) {
   }, []); 
 
 
-  const reBooking = (id) => {  
-    // axios.delete('/api/queries/cancel/'+ id)  
-    //   .then((result) => {  
-    //    setBookingData(result.data);  
-    //   });  
-    alert('rebook');
+  const reBooking = () => {  
+    let data = {quotation_id : bookingData.id};
+    axios.post('/api/queries/reBooking/'+ match.params.id,data)  
+      .then((result) => {  
+       window.location.href = "/customer/bookings";
+      });  
   };  
 
   return (  
@@ -92,7 +92,7 @@ function Cancelled({match}) {
                                       <div className="budgetprice">
                                         <b>Budget:</b> <i className="fa fa-inr" /> {bookingData.vehicle_budget}
                                       </div>
-                                      <span>Booking ID:000000{bookingData.id}</span>
+                                      <span>Booking ID:000000{match.params.id}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -121,7 +121,7 @@ function Cancelled({match}) {
                               </div>
                             </div>{/*End*/}
                              <div className="placebidbtn movebtn">
-                              <a onClick={() => reBooking(bookingData.id)} className="btn btn-primary">Rebooking</a>
+                              <a onClick={reBooking} className="btn btn-primary">Rebooking</a>
                             </div>
                           </div>{/*End*/}
                         </div>

@@ -40,6 +40,7 @@ Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationCon
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
 Route::post('queries/cancel/{id}','Api\QueryController@cancel');
+Route::post('queries/reBooking/{id}','Api\QueryController@reBooking');
 Route::post('queries/moveToBooked/{id}','Api\QueryController@moveToBooked');
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
 Route::get('users/getCancelReasons','UserController@getCancelReasons');

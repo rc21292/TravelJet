@@ -79,7 +79,7 @@ class QueryController extends Controller
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*')
                      ->where('quotations.status','cancelled')->where('bookings.status','cancelled')
-                     ->where('bookings.user_id',$id)
+                     ->where('bookings.user_id',$id)->latest('bookings.created_at')
                      ->paginate(15);
     }
 
@@ -90,7 +90,7 @@ class QueryController extends Controller
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
-                     ->where('bookings.user_id',$id)
+                     ->where('bookings.user_id',$id)->latest('bookings.created_at')
                      ->paginate(5);
     }
 
@@ -289,7 +289,18 @@ class QueryController extends Controller
             $result = Booking::
             join('quotations', 'bookings.id' ,'quotations.booking_id')
             ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
-            ->select('bookings.*','quotations.payment_status','quotations.user_id','quotation_details.inclusions','quotation_details.exclusions')
+            ->select('bookings.*','quotations.payment_status','quotations.user_id','quotation_details.inclusions','quotation_details.exclusions','quotations.id')
+            ->where('bookings.id',$id)->where('quotations.status','cancelled')
+            ->first();
+            $queries = DB::getQueryLog();
+            $last_query = end($queries);
+            // echo "<pre>";print_r($last_query);"</pre>";exit;
+        }else if ($request->type=='cancelled') {
+        DB::connection()->enableQueryLog();
+            $result = Booking::
+            join('quotations', 'bookings.id' ,'quotations.booking_id')
+            ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
+            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions')
             ->where('bookings.id',$id)->where('quotations.status','cancelled')
             ->first();
             $queries = DB::getQueryLog();
@@ -501,6 +512,18 @@ class QueryController extends Controller
         DB::table('quotations')
         ->where('id', $request->quotation_id)
         ->update(['status' => 'cancelled']);
+        return 'saved';
+    }
+
+
+    public function reBooking(Request $request, $id)
+    {
+        $query = Booking::find($id);
+        $query->status = 'awarded';
+        $query->save();
+        DB::table('quotations')
+        ->where('id', $request->quotation_id)
+        ->update(['status' => 'awarded']);
         return 'saved';
     }
 

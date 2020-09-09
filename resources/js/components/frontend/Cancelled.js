@@ -16,7 +16,7 @@ function Cancelled({match}) {
   
    useEffect(() => {  
     const GetData = async () => { 
-      axios.get('/api/queries/show/'+match.params.id+'?type=cancel').then((result) => { 
+      axios.get('/api/queries/show/'+match.params.id+'?type=cancelled').then((result) => { 
       setBookingData(result.data); 
 
        axios.get('/api/users/show/'+result.data.user_id)
