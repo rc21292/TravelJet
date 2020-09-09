@@ -17,6 +17,7 @@ function Leads(props) {
   const [quotationsData, setQuotationsData] = useState([]);  
   const [bookingsData, setBookingsData] = useState([]);  
   const [bookedsData, setBookedsData] = useState([]);  
+  const [cancelledData, setCancelledData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
@@ -30,6 +31,10 @@ function Leads(props) {
   const [activePage2, setActivePage2] = useState(1);  
   const [itemsCountPerPage2, setItemsCountPerPage2] = useState(1);  
   const [totalItemsCount2, setTotalItemsCount2] = useState(1); 
+
+   const [activePage3, setActivePage3] = useState(1);  
+  const [itemsCountPerPage3, setItemsCountPerPage3] = useState(1);  
+  const [totalItemsCount3, setTotalItemsCount3] = useState(1); 
 
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);  
 
@@ -53,9 +58,15 @@ function Leads(props) {
       });
       axios.get('/api/queries/'+AppState.user.id+'?type=booked').then(result=>{
         setBookedsData(result.data.data); 
-        setItemsCountPerPage1(result.data.per_page);  
-        setTotalItemsCount1(result.data.total);  
-        setActivePage1(result.data.current_page);
+        setItemsCountPerPage2(result.data.per_page);  
+        setTotalItemsCount2(result.data.total);  
+        setActivePage2(result.data.current_page);
+      });
+       axios.get('/api/queries/'+AppState.user.id+'?type=cancel').then(result=>{
+        setCancelledData(result.data.data); 
+        setItemsCountPerPage3(result.data.per_page);  
+        setTotalItemsCount3(result.data.total);  
+        setActivePage3(result.data.current_page);
       });
     }   
 
@@ -75,7 +86,6 @@ function Leads(props) {
   }
 
    const handlePageChange1 = (pageNumber) => {
-    console.log(location.pathname)
     axios.get('/api/queries/'+user.id+'?type=booking'+'&page='+pageNumber)
 
     .then(result=>{
@@ -87,7 +97,6 @@ function Leads(props) {
   }
 
    const handlePageChange2 = (pageNumber) => {
-    console.log(location.pathname)
     axios.get('/api/queries/'+user.id+'?type=booked'+'&page='+pageNumber)
 
     .then(result=>{
@@ -95,6 +104,17 @@ function Leads(props) {
       setItemsCountPerPage2(result.data.per_page);  
       setTotalItemsCount2(result.data.total);  
       setActivePage2(result.data.current_page);
+    });
+  }
+
+  const handlePageChange3 = (pageNumber) => {
+    axios.get('/api/queries/'+user.id+'?type=cancel'+'&page='+pageNumber)
+
+    .then(result=>{
+      setBookedsData(result.data.data);
+      setItemsCountPerPage3(result.data.per_page);  
+      setTotalItemsCount3(result.data.total);  
+      setActivePage3(result.data.current_page);
     });
   }
 
@@ -112,6 +132,8 @@ function Leads(props) {
             <li><a href="#2" data-toggle="tab">Upcoming Booking</a>
             </li>
             <li><a href="#3" data-toggle="tab">Booked</a>
+            </li>
+            <li><a href="#4" data-toggle="tab">Cancelled</a>
             </li>
           </ul>
           <div className="tab-content ">
@@ -304,6 +326,73 @@ function Leads(props) {
                      totalItemsCount={totalItemsCount2}
                      pageRangeDisplayed={pageRangeDisplayed}
                      onChange={handlePageChange2}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="tab-pane" id={4}>
+              <div className="leadquotation">
+                <div className="row">
+                  <div className="col-sm-8">
+                    <div className="input-group searchbar">
+                      <input type="name" name="project bid" className="form-control" placeholder="Search Lead Name" />
+                      <span className="input-group-btn">
+                        <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="clearfix" />
+                  <div className="col-sm-12">
+                    <table className="table table-bordered leadstatus">
+                      <thead className="thead-secondary">
+                        <tr>
+                          <th scope="col" className="bd">Booking ID</th>
+                          <th scope="col">Booking Title</th>
+                          <th scope="col">Name</th>
+                          <th scope="col" className="bt">Booking Type</th>
+                          <th scope="col" className="sd">Start Date</th>
+                          <th scope="col">Source</th>
+                          <th scope="col">Destination</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {
+                          cancelledData.map((booked,i)=>{
+                            return(   
+                            <tr key={i}>
+                              <td>000000{booked.id}</td>
+                              <td>{booked.booking_name}</td>
+                              <td>{booked.name}</td>
+                              <td>{booked.booking_type}</td>
+                              <td><Moment format="DD-MMM-YYYY">{booked.created_at}</Moment></td>
+                              <td>{booked.from_places}</td>
+                              <td>{booked.to_places}</td>
+                              <td><a href={'/cancelled/'+booked.id} className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
+                            </tr>
+                            )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="clearfix" />
+                  <div className="col-sm-12">
+                    <div className="d-flex justify-content-center" style={{marginLeft: '20%'}}>
+                     <Pagination
+                     activePage={activePage3}
+                     itemsCountPerPage={itemsCountPerPage3}
+                     totalItemsCount={totalItemsCount3}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange3}
                      itemClass="page-item"
                      linkClass="page-link"
                      prevPageText="Prev"

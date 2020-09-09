@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Topbar from './layouts/Topbar'
 import Header from './layouts/Header'
 import Bookings from './bookings/Bookings'
+import CancelledBookings from './bookings/CancelledBookings'
 import Quotations from './quotations/Quotations'
 import Address from './address/Address'
 import Profile from './profile/Profile'
@@ -71,6 +72,9 @@ class Index extends Component {
                                                             </Route>
                                                             <Route path="/customer/bookings">
                                                                   <Bookings/>
+                                                            </Route>
+                                                             <Route path="/customer/cancelled-bookings">
+                                                                  <CancelledBookings/>
                                                             </Route>
                                                             <Route path="/customer/quotations">
                                                                   <Quotations/>

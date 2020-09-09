@@ -14,10 +14,13 @@ function CustomerBookings({match}) {
   const [user, setUser] = useState(false);
   const [bookingData, setBookingData] = useState({});  
   const [quotationData, setQuotationData] = useState({});  
+  const [cancelReasons, setCancelReasons] = useState([]);  
+  const [saveData, setSaveData] = useState('');  
   const [stopeges, setStopages] = useState(false);  
   const [payment_sc, setPayment_sc] = useState(0);  
   const [payment_gst, setPayment_gst] = useState(0);  
   const [customer, setCustomer] = useState({});  
+  const [error, setError] = useState();  
   
    useEffect(() => {  
      let stateqq = localStorage["appState"];
@@ -49,6 +52,15 @@ function CustomerBookings({match}) {
         });
 
 
+        axios.get('/api/users/getCancelReasons')
+        .then(response=>{
+          if (response.data) {
+            setCancelReasons(response.data);
+          }else{
+          }
+        });
+
+
        const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
       setStopages(result1.data.stopages);  
     };  
@@ -56,12 +68,26 @@ function CustomerBookings({match}) {
     GetData();  
   }, []); 
 
-  const cancelBooking = (id) => {  
-    axios.delete('/api/queries/cancel/'+ id)  
+  const cancelBooking = (event) => {  
+
+    if (saveData == '') {
+      setError('please select Cancellation Reason!');
+      return false;
+    }else{
+       setError('');
+       let data = {'reason' :saveData,'quotation_id' : quotationData.id};
+       axios.post('/api/queries/cancel/'+ match.params.id,data)  
       .then((result) => {  
-       setBookingData(result.data);  
-      });  
+        window.location.href = "/customer/cancelled-bookings";
+      }); 
+    }
+  
+     
   };  
+
+  const handleChange = (event) => {
+    setSaveData(event.target.value);
+  }
 
 
    const openCheckout = (quotation_id,amount) => {
@@ -130,6 +156,38 @@ function CustomerBookings({match}) {
             <div className="wt-haslayout">
               <div className="container">
                 <div className="row">
+                  <div className="modal fade" id="myModal3" role="dialog">
+                    <div className="modal-dialog">
+                      <div className="modal-content">
+                        <div className="modal-body">
+                          <div className="row">
+                            <div className="col-sm-12">
+                              <div className="cancel text-center informationform">
+                                <span> Way are you cancelled this booking?</span> 
+                                <div className="form-group">
+                                  <select onChange={handleChange} className="form-control">
+                                    <option value=''>Please Select Reason</option>
+                                    {cancelReasons.map((reasons,i)=>{
+                                      return( <option key={i} value={reasons.title}>{reasons.title}</option>
+                                            )
+                                      }
+                                    )}
+                                    </select>
+                                   <div style={{color:'red'}}> {error && error} </div>
+                                </div>
+                              </div>
+                              <div className="col-sm-12">
+                                <div className="sure text-center">
+                                  <p>Are You Sure</p>
+                                  <a onClick={cancelBooking} className="btn btn-primary">Yes</a><a data-dismiss="modal" aria-label="Close" className="btn btn-dark">No</a> 
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div id="wt-twocolumns" className="wt-twocolumns wt-haslayout">
                     <div className="vendersearchtrip">
                       <div className="col-sm-3 float-left">
@@ -259,7 +317,7 @@ function CustomerBookings({match}) {
                             <div className="placebidbtn movebtn">
                             { (bookingData.status == 'cancelled') ?
                               <a className="btn btn-primary">This Booking Canceled</a> :
-                              <a onClick={event => cancelBooking(bookingData.id)} className="btn btn-primary">Cancel This Booking</a> 
+                              <a className="btn btn-primary"  data-toggle="modal" data-target="#myModal3">Cancel This Booking</a> 
                             }
                             </div>
                           </div>

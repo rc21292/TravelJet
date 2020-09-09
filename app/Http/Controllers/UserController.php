@@ -55,6 +55,12 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    function getCancelReasons()
+    {
+        $user = DB::table('cancel_reasons')->latest()->get();
+        return response()->json($user);
+    }
+
     function getPortfolioById($id)
     {
         $user = DB::table('profile_portfolios')->where('id',$id)->first();

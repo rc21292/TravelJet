@@ -3686,3 +3686,44 @@ hr {
 .information-page .upload-icon2 i {
     left: 43%;
 }
+
+
+
+.cancel {
+    padding-top: 40px;
+}
+.cancel span {
+    font-size: 16px;
+    color: #000;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: block;
+}
+.cancel select {
+    max-width: 53%;
+}
+.sure {
+    padding-bottom: 20px;
+}
+.sure p {
+    text-align: center;
+    font-size: 16px;
+    color: #000;
+    font-weight: 600;
+    font-family: 'Montserrat';
+}
+.sure .btn-dark {
+    background: #555;
+    border-radius: 2px;
+    color: #fff;
+    padding: 7px 17px;
+    font-size: 15px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+.sure .btn-dark:hover {
+    background: #555;
+    color: #fff;
+    padding: 7px 17px;
+}
