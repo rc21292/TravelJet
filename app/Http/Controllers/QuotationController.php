@@ -44,9 +44,57 @@ class QuotationController extends Controller
     }
 
 
+    public function updatePaymentStatus(Request $request, $id)
+    {
+        $quotation =  Quotation::where('id',$id)->first();
+
+        if ($quotation->payments_status) {
+
+            $rr =(array)json_decode($quotation->payments_status);
+            $rr[$request->amount] = 'paid';
+
+            DB::table('quotations')
+            ->where('id', $id)
+            ->update(['payments_status'=> json_encode($rr)]);
+
+        }else{
+
+           $new = array();
+           foreach (unserialize($quotation->payments) as $key => $value) {
+
+               if ($value['payment'] == $request->amount) {
+                $new[$value['payment']] ='paid';
+            }else{
+                $new[$value['payment']] ='unpaid';
+            }
+        }
+
+        DB::table('quotations')
+        ->where('id', $id)
+        ->update(['payments_status'=> json_encode($new)]);
+    }
+
+
+        // echo $id;
+        // echo "<pre>";print_r($request->all());"</pre>";exit;
+
+    $booking =  Booking::where('id',$quotation->booking_id)->first();
+
+    $user = User::where('id', $booking->user_id)->first();
+
+        /*$message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> awarded booking </span> <a href='/bookings/".$quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
+        */
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment Status updated!'
+        ], 200);
+    }
+
     public function awardBooking(Request $request, $id)
     {
-
         DB::table('quotations')
         ->where('id', $id)
         ->update(['status'=> 'awarded']);
@@ -292,9 +340,31 @@ class QuotationController extends Controller
     {
 
         if ($request->status == 'awarded') {
-            $quotation = Quotation::select('quotations.*','quotation_details.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
+            $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
+
 
             $quotation->payments = unserialize($quotation->payments);
+            $kkk = array();
+
+            foreach ($quotation->payments as $key => $value) {
+
+                if ($quotation->payments_status) {
+                    $rr =(array)json_decode($quotation->payments_status);
+                    $kkk[$key]['status'] =$rr[$value['payment']];
+                    $kkk[$key]['payment'] =$value['payment'];
+                    $kkk[$key]['date'] =$value['date'];
+                }else{
+                    $kkk[$key]['status'] ='unpaid';
+                    $kkk[$key]['payment'] =$value['payment'];
+                    $kkk[$key]['date'] =$value['date'];
+                }
+
+            }
+            $quotation->payments = $kkk;
+            // echo "<pre>";print_r($quotation);"</pre>";exit;
+
+
+
         }else{
 
             $qutations = Quotation::where('booking_id',$id)->first();

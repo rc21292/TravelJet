@@ -1,13 +1,17 @@
 import React from 'react'  
 import axios from 'axios';  
+
+
+import { useState, useEffect,useCallback } from 'react'  
+
 import { useHistory, useLocation } from 'react-router-dom'
 import Moment from 'react-moment';
 
-import { useState, useEffect } from 'react'  
 function CustomerBookings({match}) { 
 
   const history = useHistory()
 
+  const [user, setUser] = useState(false);
   const [bookingData, setBookingData] = useState({});  
   const [quotationData, setQuotationData] = useState({});  
   const [stopeges, setStopages] = useState(false);  
@@ -16,9 +20,19 @@ function CustomerBookings({match}) {
   const [customer, setCustomer] = useState({});  
   
    useEffect(() => {  
+     let stateqq = localStorage["appState"];
+     if (stateqq) {
+      let AppState = JSON.parse(stateqq);
+      setUser(AppState.user);
+    }
     const GetData = async () => {  
       const result = await axios('/api/queries/show/'+match.params.id);  
       setBookingData(result.data); 
+
+      const script = document.createElement("script")
+      script.async = true
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+      document.body.appendChild(script)    
 
       const result2 = await axios('/api/quotations/getQuotationByBookingId/'+match.params.id+'?status=awarded');  
       setQuotationData(result2.data);  
@@ -48,6 +62,64 @@ function CustomerBookings({match}) {
        setBookingData(result.data);  
       });  
   };  
+
+
+   const openCheckout = (quotation_id,amount) => {
+    let new_amount = amount;
+    let user_id = user.id;
+    let wallet_amount = 0;
+    let options = {
+      "key": "rzp_test_FvMwf7j3FOOnh8",
+      "amount": amount*100,
+      "name": "TravelJet",
+      "description": "Pay to Add Balance",
+      "image": "http://127.0.0.1:8000/frontend/image/logo.png",
+      "handler": function (response){
+        try {
+         const paymentId = response.razorpay_payment_id;
+         const query = {
+          payment_id:paymentId,
+          wallet:wallet_amount,
+          for:'Booking',
+          user_id:user.id,
+          amount:(new_amount),
+        }
+
+        axios.post('/api/users/save_razorpay_details',query)
+        .then(response=>{
+
+          axios.post('/api/quotations/updatePaymentStatus/'+ quotation_id,query)  
+          .then((result) => { 
+            if (result.data.success) {
+              //window.location.reload(false);
+            } 
+          });
+
+        });        
+
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    "prefill": {
+      "name": user.name,
+      "email": user.email,
+      "contact": user.phone,
+    },
+    "modal": {
+        "ondismiss": function () {
+            return false;
+            // window.location.href ='/';
+        },
+    },
+    "theme": {
+      "color": "#F37254"
+    }
+  };
+    
+    let rzp = new Razorpay(options);
+    rzp.open();
+  }
  
 
   return (  
@@ -145,9 +217,9 @@ function CustomerBookings({match}) {
                                             quotationData.payments ?
                                             quotationData.payments.map((payments_data,i)=>{
                                               return( <tr key={i}>
-                                              <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} Part</td>
+                                              <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} {i==3 && 'Fifth'} Part</td>
                                               <td> <i className="fa fa-inr" />{payments_data.payment}</td>
-                                              <td><span>Unpaid</span> <a href="#" className="btn btn-primary">Pay Now</a></td>
+                                              <td><span>{payments_data.status}</span>{payments_data.status == 'unpaid' && <a onClick={(event) => openCheckout(quotationData.id,payments_data.payment)} className="btn btn-primary">Pay Now</a>}</td>
                                               </tr>
                                                 )
                                               })
