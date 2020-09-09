@@ -117,7 +117,7 @@ function CustomerBookings({match}) {
           axios.post('/api/quotations/updatePaymentStatus/'+ quotation_id,query)  
           .then((result) => { 
             if (result.data.success) {
-              //window.location.reload(false);
+              window.location.reload(false);
             } 
           });
 
