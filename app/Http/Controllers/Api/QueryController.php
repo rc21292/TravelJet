@@ -89,7 +89,8 @@ class QueryController extends Controller
     {
          return $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*')
+                     ->join('users', 'users.id' ,'quotations.user_id')
+                     ->select('bookings.*','users.name')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('bookings.user_id',$id)->latest('bookings.created_at')
                      ->paginate(5);
