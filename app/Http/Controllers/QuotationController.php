@@ -419,7 +419,7 @@ class QuotationController extends Controller
     public function getQuotationPayment($id,$user_id)
     {
         // $quotation = Quotation::where('user_id',$user_id)->where('booking_id',$id)->where('status','awarded')->first();
-         $quotation = Quotation::where('user_id',$user_id)->where('booking_id',$id)->where('status','awarded')->orWhere('status','pending')->first();
+         $quotation = Quotation::where('user_id',$user_id)->where('booking_id',$id)->where('status','pending')->first();
         // echo "<pre>";print_r($quotation);"</pre>";exit;
         if (!empty($quotation->payments)) {
 
