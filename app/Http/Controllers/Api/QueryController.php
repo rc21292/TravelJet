@@ -18,6 +18,7 @@ class QueryController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+                     // ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
      */
     public function index(Request $request, $id)
     {
@@ -31,7 +32,7 @@ class QueryController extends Controller
         }else if($request->type == 'booking'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
+                     ->select('bookings.*')
                      ->where('quotations.status','awarded')->where('bookings.status','awarded')
                      ->where('quotations.user_id',$id)
                      ->paginate(15);
