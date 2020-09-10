@@ -102,7 +102,7 @@ class QueryController extends Controller
         $user_transaction_s = Booking::
             leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
             ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"))
-            ->where('bookings.status',$request->status)->orWere('bookings.status','bidded');
+            ->where('bookings.status',$request->status)->orWhere('bookings.status','bidded');
 
              if ($request->has('cab') && !empty($request->cab)) {
             $cab = $request->cab;
