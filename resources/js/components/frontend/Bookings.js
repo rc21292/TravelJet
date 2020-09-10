@@ -145,8 +145,6 @@ function Bookings({match}) {
 
         axios.get('/api/queries/getQuotationStoppages/'+match.params.id+'/'+AppState.user.id).then(result=>{
           setInputFields(result.data);
-          // setQuotationDetails({ ...quotationDetails, [name]: value });
-          // setQuotationDetails({ ...quotationDetails, 'stopeges' : result.data})
         });
 
         axios.get('/api/users/show/'+result.data.user_id)
@@ -199,7 +197,7 @@ function Bookings({match}) {
        let data = {'reason' :saveData,'quotation_id' : quotationData.id};
        axios.post('/api/queries/cancel/'+ match.params.id,data)  
       .then((result) => {  
-        window.location.href = "/customer/cancelled-bookings";
+        window.location.href = "/agent/leads";
       }); 
     }
   

@@ -267,7 +267,7 @@ class QueryController extends Controller
             $result = Booking::
             join('quotations', 'bookings.id' ,'quotations.booking_id')
             ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
-            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions')
+            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions','quotations.id')
             ->where('bookings.id',$id)->where('quotations.status','booked')
             ->first();
         }else if ($request->type=='booking') {
