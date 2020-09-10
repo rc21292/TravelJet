@@ -392,7 +392,9 @@ class QuotationController extends Controller
     public function getQuotationByBookingUserId(Request $request, $id , $user_id)
     {
          DB::connection()->enableQueryLog();
-        $quotation = Quotation::select('quotations.*','users.name')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status','awarded')->where('quotations.status', '!=', 'booked')->first();
+        // $quotation = Quotation::select('quotations.*','users.name')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status','awarded')->where('quotations.status', '!=', 'booked')->first();
+
+         $quotation = Quotation::select('quotations.*','users.name')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status','pending')->first();
 
          $queries = DB::getQueryLog();
          $last_query = end($queries);
