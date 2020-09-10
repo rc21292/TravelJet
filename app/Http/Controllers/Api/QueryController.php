@@ -159,6 +159,7 @@ class QueryController extends Controller
          ->select('bookings.booking_name','bookings.id','bookings.created_at as date')
          ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')
          ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
          ->paginate(4);
 
          $queries = DB::getQueryLog();
