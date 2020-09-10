@@ -314,7 +314,11 @@ const BookingTrip = (props) => {
 		let percent = parseFloat(100 / steps) * curStep;
 		percent = percent.toFixed();
 		setWidthProgressBar(percent);
-
+		if (props.user_id != '' && count==7) {
+			setShow(count-1);
+			let curStep = parseInt(count)+2;
+			setWidthProgressBar(80);
+		}
 	};  
 
 	const validateStep2 = event => {
@@ -400,6 +404,11 @@ const BookingTrip = (props) => {
 		let percent = parseFloat(100 / steps) * curStep;
 		percent = percent.toFixed();
 		setWidthProgressBar(percent);
+		if (props.user_id != '') {
+			setShow(8);
+			let curStep = 9;
+			setWidthProgressBar(100);
+		}
 	}
 
 
