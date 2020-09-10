@@ -53,7 +53,7 @@ function Sidebar() {
 </li>
 {/* Nav Item - Tables */}
 <li className="nav-item">
-<a className="nav-link" href="/customer/inbox">
+<a className="nav-link" href="/chatify">
 <span>Inbox</span></a>
 </li>
 <li className="nav-item">
