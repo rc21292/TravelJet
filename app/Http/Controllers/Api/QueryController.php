@@ -373,7 +373,6 @@ class QueryController extends Controller
 
      public function getQuotationStoppages($id,$user_id)
      {
-
         $quotation = QuotationDetail::select('stopeges')->where('booking_id',$id)->where('user_id',$user_id)->first();
 
         if (!empty($quotation->stopeges)) {
@@ -474,24 +473,25 @@ class QueryController extends Controller
     }
 
 
-    public function moveToBooked($id)
+    public function moveToBooked(Request $request,$id)
     {
-       $booking = Booking::find($id);
-       $booking->status = 'booked';
-       $booking->save();
+        $booking = Booking::find($id);
+        $booking->status = 'booked';
+        $booking->save();
 
         DB::table('quotations')
-            ->where('booking_id', $id)
-            ->update(['status' => 'booked']);
+        ->where('id', $request->quotation_id)
+        ->update(['status' => 'booked']);
 
-       $quotation = Quotation::where('booking_id',$id)->first();
+        $quotation = Quotation::where('id', $request->quotation_id)->first();
         $user = User::where('id',$quotation->user_id)->first();
 
         $message = "<a href='/profile/".$user->user_id."'> ".$user->name." </a> <span> confirmed booking </span> <a href='/booked/". $id."'>".$booking->booking_name."</a>";
 
         Notice::create(['user_id' => $user->user_id, 'receiver_id' => $booking->user_id, 'data' => $message , 'type' => 'booked', 'created_at' => \Carbon\Carbon::now()]);
 
-   }
+        return 'saved';
+    }
 
 
     public function cancel(Request $request, $id)

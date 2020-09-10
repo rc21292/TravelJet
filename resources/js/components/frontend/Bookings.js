@@ -76,10 +76,16 @@ function Bookings({match}) {
 
   const [bookingData, setBookingData] = useState({});  
 
+  const [saveData, setSaveData] = useState('');  
+
   const [quotationDetails, setQuotationDetails] = useState({});
 
   const [customer, setCustomer] = useState({});  
   const [stopeges, setStopages] = useState(false);  
+
+  const [error, setError] = useState();  
+
+  const [cancelReasons, setCancelReasons] = useState([]);  
 
   const [inputFields, setInputFields] = useState([{stopege:''}]);
   const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
@@ -117,7 +123,13 @@ function Bookings({match}) {
         setBookingData(result.data); 
 
 
-       
+       axios.get('/api/users/getCancelReasons')
+        .then(response=>{
+          if (response.data) {
+            setCancelReasons(response.data);
+          }else{
+          }
+        });
 
 
 
@@ -170,6 +182,29 @@ function Bookings({match}) {
       setEditData({[name] : true})
     }
   }
+
+
+  const handleChange = (event) => {
+    setSaveData(event.target.value);
+  }
+
+
+   const cancelBooking = (event) => {  
+
+    if (saveData == '') {
+      setError('please select Cancellation Reason!');
+      return false;
+    }else{
+       setError('');
+       let data = {'reason' :saveData,'quotation_id' : quotationData.id};
+       axios.post('/api/queries/cancel/'+ match.params.id,data)  
+      .then((result) => {  
+        window.location.href = "/customer/cancelled-bookings";
+      }); 
+    }
+  
+     
+  }; 
 
 
   const handleInputChanges = event => {
@@ -293,17 +328,9 @@ function Bookings({match}) {
 
 
   const bookBooking = (id) => {  
-    axios.post('/api/queries/moveToBooked/'+ id)  
+    axios.post('/api/queries/moveToBooked/'+ id,{quotation_id:quotationDetails.quotation_id})  
     .then((result) => {  
-      // window.location.href = "/agent/leads";
-    });  
-  };  
-
-
-  const cancelBooking = (id) => {  
-    axios.delete('/api/queries/cancel/'+ id)  
-    .then((result) => {  
-      setBookingData(result.data);  
+      window.location.href = "/agent/leads";
     });  
   };  
 
@@ -311,6 +338,38 @@ function Bookings({match}) {
 
      <div>
      <div className="bookingvenderlist">
+      <div className="modal fade" id="myModal3" role="dialog">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="row">
+                <div className="col-sm-12">
+                  <div className="cancel text-center informationform">
+                    <span> Way are you cancelled this booking?</span> 
+                    <div className="form-group">
+                      <select onChange={handleChange} className="form-control">
+                        <option value=''>Please Select Reason</option>
+                        {cancelReasons.map((reasons,i)=>{
+                          return( <option key={i} value={reasons.title}>{reasons.title}</option>
+                                )
+                          }
+                        )}
+                        </select>
+                       <div style={{color:'red'}}> {error && error} </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-12">
+                    <div className="sure text-center">
+                      <p>Are You Sure</p>
+                      <a onClick={cancelBooking} className="btn btn-primary">Yes</a><a data-dismiss="modal" aria-label="Close" className="btn btn-dark">No</a> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
         <main id="wt-main" className="wt-main wt-haslayout wt-innerbgcolor">
           <div className="wt-main-section wt-haslayout">
             {/* User Listing Start*/}
@@ -1051,8 +1110,8 @@ function Bookings({match}) {
                             </div>
                             <div className="placebidbtn movebtn">
                               <Link onClick={saveBid} className="btn btn-primary">Save</Link>
-                              <a onClick={event => bookBooking(bookingData.id)} className="btn btn-primary">Move to Booked</a>
-                              <a onClick={event => cancelBooking(bookingData.id)} className="btn btn-primary">Cancel This Booking</a>
+                              <a onClick={event => bookBooking(match.params.id)} className="btn btn-primary">Move to Booked</a>
+                              <a className="btn btn-primary"  data-toggle="modal" data-target="#myModal3">Cancel This Booking</a>
                             </div>
                           </div>{/*End*/}
                         </div>
