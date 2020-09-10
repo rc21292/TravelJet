@@ -912,7 +912,7 @@ const handleRemovePaymentFields = (index, event) => {
                                     </div>
                                     <div className="sittingedit" style={(!editData.sitting_capacity) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
-                                        <input type="text" value={quotationDetails.sitting_capacity} name="sitting_capacity" onChange={handleInputsChanges} placeholder="Ex:7" className="form-control" disabled />
+                                        <input type="text" value={quotationDetails.sitting_capacity} name="sitting_capacity" onChange={handleInputsChanges} placeholder="Ex:7" className="form-control" />
                                       </div>
                                     </div>
                                   </div>
