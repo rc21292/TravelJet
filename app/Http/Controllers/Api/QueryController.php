@@ -28,6 +28,7 @@ class QueryController extends Controller
                      ->select('bookings.*','quotations.payment')
                      ->where('quotations.status','pending')
                      ->where('quotations.user_id',$id)
+                     ->latest('bookings.created_at')
                      ->paginate(15);
         }else if($request->type == 'booking'){
             $result = Booking::
@@ -35,6 +36,7 @@ class QueryController extends Controller
                      ->select('bookings.*')
                      ->where('quotations.status','awarded')->where('bookings.status','awarded')
                      ->where('quotations.user_id',$id)
+                     ->latest('bookings.created_at')
                      ->paginate(15);
         }else if($request->type == 'booked'){
             $result = Booking::
@@ -42,6 +44,7 @@ class QueryController extends Controller
                      ->select('bookings.*')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('quotations.user_id',$id)
+                     ->latest('bookings.created_at')
                      ->paginate(15);
         }else if($request->type == 'cancel'){
             $result = Booking::
@@ -49,9 +52,10 @@ class QueryController extends Controller
                      ->select('bookings.*')
                      ->where('quotations.status','cancelled')->where('bookings.status','cancelled')
                      ->where('quotations.user_id',$id)
+                     ->latest('bookings.created_at')
                      ->paginate(15);
         }else{
-            $result = Booking::where('user_id',$id)->paginate(5);
+            $result = Booking::where('user_id',$id)->latest('bookings.created_at')->paginate(5);
         }
         return $result;
     }
@@ -93,6 +97,18 @@ class QueryController extends Controller
                      ->select('bookings.*','users.name')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('bookings.user_id',$id)->latest('bookings.created_at')
+                     ->paginate(5);
+    }
+
+
+     public function getAgentBookedBookings($id)
+    {
+         return $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->join('users', 'users.id' ,'bookings.user_id')
+                     ->select('bookings.*','users.name')
+                     ->where('quotations.status','booked')->where('bookings.status','booked')
+                     ->where('quotations.user_id',$id)->latest('bookings.created_at')
                      ->paginate(5);
     }
 

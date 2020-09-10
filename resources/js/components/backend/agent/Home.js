@@ -44,7 +44,7 @@ function Home(props) {
 		  		.then(result=>{
 		  			setNoticeData(result.data);
 	  		});
-		  	axios.get('/api/queries/'+userId)
+		  	axios.get('/api/queries/getAgentBookedBookings/'+userId)
 		  		.then(result=>{
 		  			setBookingData(result.data.data);
 	  		}); 
