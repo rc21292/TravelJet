@@ -218,9 +218,9 @@ class QuotationController extends Controller
 
         $stopages_data = $request->stopeges;
 
-        unset($stopages_data[0]);
 
         if (isset($stopages_data)) {
+        unset($stopages_data[0]);
 
             DB::table('quotation_details')
             ->where('user_id', $request->user_id)
@@ -392,7 +392,7 @@ class QuotationController extends Controller
     public function getQuotationByBookingUserId(Request $request, $id , $user_id)
     {
          DB::connection()->enableQueryLog();
-        $quotation = Quotation::select('quotations.*','users.name')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status', '!=', 'awarded')->where('quotations.status', '!=', 'booked')->first();
+        $quotation = Quotation::select('quotations.*','users.name')->join('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.user_id',$user_id)->where('quotations.status','awarded')->where('quotations.status', '!=', 'booked')->first();
 
          $queries = DB::getQueryLog();
          $last_query = end($queries);
@@ -416,8 +416,9 @@ class QuotationController extends Controller
 
     public function getQuotationPayment($id,$user_id)
     {
-        $quotation = Quotation::select('payments')->where('user_id',$user_id)->where('booking_id',$id)->first();
-        if ($quotation->payments) {
+        $quotation = Quotation::where('user_id',$user_id)->where('booking_id',$id)->where('status','awarded')->first();
+        // echo "<pre>";print_r($quotation);"</pre>";exit;
+        if (!empty($quotation->payments)) {
 
             $cars = array("payment"=>'');
 

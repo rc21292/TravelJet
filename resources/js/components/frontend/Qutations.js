@@ -442,7 +442,7 @@ const handleRemovePaymentFields = (index, event) => {
                                   </div>
                                   <div className="col-sm-5">
                                     <div className="headerbudget">
-                                      <span>Booking ID:0000000</span>
+                                      <span>Booking ID:000000{match.params.id}</span>
                                     </div>
                                   </div>
                                 </div>

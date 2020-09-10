@@ -270,20 +270,14 @@ class QueryController extends Controller
             ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions')
             ->where('bookings.id',$id)->where('quotations.status','booked')
             ->first();
-            $queries = DB::getQueryLog();
-            $last_query = end($queries);
-            // echo "<pre>";print_r($last_query);"</pre>";exit;
         }else if ($request->type=='booking') {
         DB::connection()->enableQueryLog();
             $result = Booking::
             join('quotations', 'bookings.id' ,'quotations.booking_id')
             ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
-            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions')
+            ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions','quotations.id')
             ->where('bookings.id',$id)->where('quotations.status','awarded')
             ->first();
-            $queries = DB::getQueryLog();
-            $last_query = end($queries);
-            // echo "<pre>";print_r($last_query);"</pre>";exit;
         }else if ($request->type=='cancel') {
         DB::connection()->enableQueryLog();
             $result = Booking::
@@ -292,9 +286,6 @@ class QueryController extends Controller
             ->select('bookings.*','quotations.payment_status','quotations.user_id','quotation_details.inclusions','quotation_details.exclusions','quotations.id')
             ->where('bookings.id',$id)->where('quotations.status','cancelled')
             ->first();
-            $queries = DB::getQueryLog();
-            $last_query = end($queries);
-            // echo "<pre>";print_r($last_query);"</pre>";exit;
         }else if ($request->type=='cancelled') {
         DB::connection()->enableQueryLog();
             $result = Booking::
@@ -385,7 +376,7 @@ class QueryController extends Controller
 
         $quotation = QuotationDetail::select('stopeges')->where('booking_id',$id)->where('user_id',$user_id)->first();
 
-        if ($quotation->stopeges) {
+        if (!empty($quotation->stopeges)) {
 
             $cars = array("stopage"=>'');
 
