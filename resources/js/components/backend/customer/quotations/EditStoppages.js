@@ -32,7 +32,6 @@ const EditStoppages = (props) => {
   const [success, setSuccess] = useState({});
   const [isErrors, setIsErrors] = useState(0);
 
-
   const saveBooking = (event) => {
 
     event.preventDefault();
