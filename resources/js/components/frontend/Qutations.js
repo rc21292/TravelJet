@@ -837,7 +837,7 @@ const handleRemovePaymentFields = (index, event) => {
                                       </div>
                                     </div>
                                     <div className="form-group">
-                                       <select className="custom-select form-control" value={quotationDetails.cab_type} name="cab_type" onChange={handleInputsChanges} id="inputGroupSelect01">
+                                       <select className="custom-select form-control" value={quotationDetails.cab_type} name="cab_type" onChange={handleInputsChanges} id="inputGroupSelect01" disabled>
                                           <option value="">Select Cab Type..</option>
                                           <option value="Hatchback">Hatchback</option>
                                           <option value="Sedan">Sedan</option>

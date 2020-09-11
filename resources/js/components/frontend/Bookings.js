@@ -187,8 +187,7 @@ function Bookings({match}) {
   }
 
 
-   const cancelBooking = (event) => {  
-
+  const cancelBooking = (event) => {
     if (saveData == '') {
       setError('please select Cancellation Reason!');
       return false;
@@ -200,8 +199,6 @@ function Bookings({match}) {
         window.location.href = "/agent/leads";
       }); 
     }
-  
-     
   }; 
 
 

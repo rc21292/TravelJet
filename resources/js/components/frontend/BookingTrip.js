@@ -189,7 +189,7 @@ const BookingTrip = (props) => {
 			destinationstate: bookings.destinationstate,
 			pickup: bookings.from_places,
 			origin: bookings.origin,
-			depart: bookings.d2epart,
+			depart: bookings.depart,
 			from_places: query,
 			password: bookings.password,
 			for_sightseeing: 0,

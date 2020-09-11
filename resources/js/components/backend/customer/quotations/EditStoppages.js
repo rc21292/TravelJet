@@ -17,7 +17,6 @@ const EditStoppages = (props) => {
       });
       axios.get('/api/queries/getStoppages/'+props.id).then(result=>{
         setInputFields(result.data);
-        console.log(result.data);
       });
     }
 
@@ -25,8 +24,7 @@ const EditStoppages = (props) => {
 
   const [bookings, setBookings] = useState({});
   const [submitted, setSubmitted] = useState(false);
-   const [inputFields, setInputFields] = useState([]);
-
+  const [inputFields, setInputFields] = useState([{stopege:''}]);
   const [user, setUser] = useState(false);
 
   const [isUpdated, setIsUpdated] = useState(false);
@@ -67,13 +65,13 @@ const EditStoppages = (props) => {
     setBookings({ ...bookings, stopeges: values });
   };
 
-  const handleAddFields = () => {
+   const handleAddFields = () => {
     const values = [...inputFields];
     if(values.length < 5){
-      values.push({ stopage: '' });
-      setInputFields(values);
+      setInputFields([...inputFields, { stopege:''}]);
     }
   };
+
 
   const handleRemoveFields = (index, event) => {
     event.preventDefault();
