@@ -26,7 +26,7 @@ class QueryController extends Controller
              $result = Quotation::
                      join('bookings', 'bookings.id' ,'quotations.booking_id')
                      ->join('users', 'bookings.user_id' ,'users.id')
-                     ->select('bookings.*','quotations.payment','users.name')
+                     ->select('bookings.*','quotations.total_payment','users.name')
                      ->where('quotations.status','pending')
                      ->where('quotations.user_id',$id)
                      ->latest('bookings.created_at')
