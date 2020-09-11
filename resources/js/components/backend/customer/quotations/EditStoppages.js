@@ -39,7 +39,7 @@ const EditStoppages = (props) => {
       var data = {
         id:bookings.id,
         user_id: bookings.user_id,
-        stopeges: bookings.stopeges
+        stopeges: inputFields
       };
 
     axios({

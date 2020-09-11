@@ -221,8 +221,6 @@ function QuotationDetaills({id}) {
     });
   }
 
-
-console.log(paymentData);
 		return (       
 
         <div className="">
