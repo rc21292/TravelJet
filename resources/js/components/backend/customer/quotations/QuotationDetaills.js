@@ -146,7 +146,8 @@ function QuotationDetaills({id}) {
           axios.post('/api/quotations/awardBooking/'+ quotation_id,query)  
           .then((result) => { 
             if (result.data.success) {
-              window.location.reload(false);
+              window.location.href = "/customer/bookings";
+              // window.location.reload(false);
             } 
           });
 
