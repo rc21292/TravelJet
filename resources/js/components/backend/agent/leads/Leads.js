@@ -172,7 +172,7 @@ function Leads(props) {
                           <td>{quotation.name}</td>
                           <td>{quotation.booking_type}</td>
                           <td><Moment format="DD-MMM-YYYY">{quotation.created_at}</Moment></td>
-                          <td><i className="fa fa-inr" /> {quotation.payment}</td>
+                          <td><i className="fa fa-inr" /> {quotation.total_payment}</td>
                           <td>{quotation.from_places}</td>
                           <td>{quotation.to_places}</td>
                           <td><a href={'/quotations/'+quotation.id} className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
