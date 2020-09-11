@@ -331,7 +331,7 @@ console.log(paymentData);
               <ul className="wt-userlisting-breadcrumb awardbookig">
                 <li><span><a onClick={(event) => awardBooking(quotation2.id)} data-toggle="modal" data-target="#myModal2" className="btn btn-primary">Award Booking</a></span>
                 </li>
-                <li><span> <a onClick={openChatBox} className="btn btn-default chatbtn">Chat Now</a></span>
+                <li><span> <a href={"/chatify/"+quotation2.user_id} className="btn btn-default chatbtn">Chat Now</a></span>
                 </li>
                 <li><span> <a href="#" className="btn btn-info">Contact Vendor</a></span>
                 </li>
