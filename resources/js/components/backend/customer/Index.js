@@ -58,7 +58,7 @@ class Index extends Component {
         return (
             <div>
                   <Topbar/>
-                  <Header/> 
+                  <Header user_id={user_id} /> 
                   <div className="container">
                         <div id="wrapper">
                               <Sidebar/>

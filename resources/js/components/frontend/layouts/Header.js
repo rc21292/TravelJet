@@ -56,12 +56,16 @@ function Header(props) {
             </div>
             <div className="col-sm-9">
                 <ul className="menu list-inline">
+                    {(userId && (user.role === 'agent')) && 
+                       <li><Link to="/browse-bookings">Browse Booking</Link>
+                    </li>
+                    }
                     <li><Link to="/DriveWithUs">Drive With Us</Link>
                     </li>
                     <li><Link to="/HowitWorks">How it Works</Link>
                     </li>
                     <li><Link to="/CompanyInfo">Company Info</Link>
-                    </li>
+                    </li>                    
                     {(userId === false) && 
                       <li><a href="/login">Login</a></li>
                     }

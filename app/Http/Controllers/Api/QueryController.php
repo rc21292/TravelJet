@@ -25,7 +25,8 @@ class QueryController extends Controller
         if ($request->type == 'quotation') {
              $result = Quotation::
                      join('bookings', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*','quotations.payment')
+                     ->join('users', 'bookings.user_id' ,'users.id')
+                     ->select('bookings.*','quotations.payment','users.name')
                      ->where('quotations.status','pending')
                      ->where('quotations.user_id',$id)
                      ->latest('bookings.created_at')
@@ -33,7 +34,8 @@ class QueryController extends Controller
         }else if($request->type == 'booking'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*')
+                     ->join('users', 'bookings.user_id' ,'users.id')
+                     ->select('bookings.*','users.name')
                      ->where('quotations.status','awarded')->where('bookings.status','awarded')
                      ->where('quotations.user_id',$id)
                      ->latest('bookings.created_at')
@@ -41,7 +43,8 @@ class QueryController extends Controller
         }else if($request->type == 'booked'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*')
+                      ->join('users', 'bookings.user_id' ,'users.id')
+                     ->select('bookings.*','users.name')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
                      ->where('quotations.user_id',$id)
                      ->latest('bookings.created_at')
@@ -49,7 +52,8 @@ class QueryController extends Controller
         }else if($request->type == 'cancel'){
             $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*')
+                      ->join('users', 'bookings.user_id' ,'users.id')
+                     ->select('bookings.*','users.name')
                      ->where('quotations.status','cancelled')->where('bookings.status','cancelled')
                      ->where('quotations.user_id',$id)
                      ->latest('bookings.created_at')
@@ -73,7 +77,8 @@ class QueryController extends Controller
          return $result = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->select('bookings.*')
-                     ->where('quotations.status','awarded')->where('bookings.status','awarded')
+                     ->whereIn('quotations.status',array('awarded','booked'))
+                     ->whereIn('bookings.status',array('awarded','booked'))
                      ->where('bookings.user_id',$id)->latest('bookings.created_at')
                      ->paginate(15);
     }

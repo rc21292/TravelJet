@@ -9,21 +9,21 @@ import Add from '../../../frontend/queries/Add';
 import ViewProfile from '../profile/ViewProfile';
 
 
-function Header() {
+function Header(props) {
 
 
   const [user, setUser] = useState(false);
-  const [userId, setUserId] = useState(false);
+  const [userId, setUserId] = useState(props.user_id);
 
   useEffect(() => {
     let stateqq = localStorage["appState"];
     let AppState = JSON.parse(stateqq);
     if (AppState.isLoggedIn == true) {
       setUser(AppState.user);
-      setUserId(AppState.user.id);
+      //setUserId(AppState.user.id);
     }else{
       setUser(null);
-      setUserId(false);
+      //setUserId(false);
     }   
 
   },[]);
@@ -50,10 +50,10 @@ function Header() {
                       </li>
                       <li><a href="/CompanyInfo">Company Info</a>
                       </li>
-                      {(userId === false) && 
+                      {(userId === '') && 
                         <li><a href="/login">Login</a></li>
                       }
-                      {(userId === false) && 
+                      {(userId === '') && 
                         <li ><a href="/register">Register</a></li>
                       }
                       {(userId) &&
