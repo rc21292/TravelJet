@@ -7,7 +7,6 @@
 	<script src="{{asset('frontend/js/jquery-2.1.1.min.js')}}"></script>
 	<script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('frontend/css/animate.css')}}">
-		<link rel="stylesheet" type="text/css" href="{{asset('frontend/css/stylesheet.css')}}">
 {{-- scripts --}}
 <script src="{{ asset('js/chatify/font.awesome.min.js') }}"></script>
 <script src="{{ asset('js/chatify/autosize.js') }}"></script>
@@ -19,6 +18,7 @@
 <link href="{{ asset('css/chatify/style.css') }}" rel="stylesheet" />
 <link href="{{ asset('css/chatify/'.$dark_mode.'.mode.css') }}" rel="stylesheet" />
 <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="{{asset('frontend/css/stylesheet.css')}}">
 
 {{-- Messenger Color Style--}}
 @include('Chatify::layouts.messengerColor') 
