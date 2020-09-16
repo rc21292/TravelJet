@@ -3,7 +3,11 @@
 <meta name="route" content="{{ $route }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="url" content="{{ url('').'/'.config('chatify.path') }}" data-user="{{ Auth::user()->id }}">
-
+<link href="{{asset('frontend/css/bootstrap.min.css')}}" rel="stylesheet">
+	<script src="{{asset('frontend/js/jquery-2.1.1.min.js')}}"></script>
+	<script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
+	<link rel="stylesheet" type="text/css" href="{{asset('frontend/css/animate.css')}}">
+		<link rel="stylesheet" type="text/css" href="{{asset('frontend/css/stylesheet.css')}}">
 {{-- scripts --}}
 <script src="{{ asset('js/chatify/font.awesome.min.js') }}"></script>
 <script src="{{ asset('js/chatify/autosize.js') }}"></script>
@@ -17,4 +21,4 @@
 <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
 {{-- Messenger Color Style--}}
-@include('Chatify::layouts.messengerColor')
+@include('Chatify::layouts.messengerColor') 
