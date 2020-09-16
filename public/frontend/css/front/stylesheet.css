@@ -3727,3 +3727,69 @@ hr {
     color: #fff;
     padding: 7px 17px;
 }
+/*PDF*/
+
+
+  .invoice{
+    background-color: #555;
+  }
+  .invoicepdf {
+    max-width: 70%;
+    background-color: #fff;
+    padding: 45px;
+    margin: 40px auto 40px;
+    display: flow-root;
+}
+.invoicelogo {
+    margin-top: 15px;
+}
+.taxinvoice {
+    float: right;
+}
+.taxinvoice h2 {
+    margin-top: 10px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 0;
+}
+.taxinvoice span {
+    color: #48bd3f;
+    font-size: 20px;
+}
+.billto {
+    margin-top: 50px;
+}
+.name {
+    font-size: 20px;
+    color: #000;
+    font-weight: 600;
+}
+.companyaddress {
+    float: right;
+}
+.invoicenumber {
+    margin-top: 40px;
+}
+.documentdetai {
+    float: right;
+}
+.invoicetable {
+    margin-top: 25px;
+    margin-bottom: 50px;
+}
+.invoicetable .table .thead {
+    background: #555;
+    color: #fff;
+    border: none;
+}
+.invoicetable .table>tbody>tr>td span {
+    font-weight: 600;
+}
+.invoicetotal {
+    background: #f9f9f9;
+    margin-top: 100px;
+}
+.invoicenote {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}

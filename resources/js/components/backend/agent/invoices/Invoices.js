@@ -5,41 +5,33 @@ import { useHistory, useLocation } from 'react-router-dom'
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
 
+
+import Moment from 'react-moment';
+
 function Credits(props) { 
 
   const history = useHistory()
   const location = useLocation()
 
-   const [user, setUser] = useState(false);
+  const [user, setUser] = useState(false);
 
-  const [payoutsData, setPayoutsData] = useState([]);  
+  const [invoicesData, setInvoicesData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
   const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
-
   useEffect(() => {  
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
+      axios('/api/invoices/'+AppState.user.id).then(result=>{
+        setInvoicesData(result.data.data);  
+        setItemsCountPerPage(result.data.per_page);  
+        setTotalItemsCount(result.data.total);  
+        setActivePage(result.data.current_page);
       });
     }   
 
@@ -47,52 +39,27 @@ function Credits(props) {
 
 
   const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
+    axios.get('/api/invoices/'+user.id+'?page='+pageNumber)
+    .then(result=>{
+      setInvoicesData(result.data);  
+      setItemsCountPerPage(result.per_page);  
+      setTotalItemsCount(result.total);  
+      setActivePage(result.current_page);
+    });
+  }
 
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
-  };
-
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
-
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
+  const downloadPdf = (id) => {
 
   }
+
   const findByFilter = () => {
 
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
+    axios(`/api/invoices/${user.id}?serch=${serchData}`)
     .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
+      setInvoicesData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
     })
     .catch(e => {
       console.log(e);
@@ -100,78 +67,86 @@ const onChangeYear = e => {
   };
 
   return (  
-    <div className="travelcredit">
+    <div className="transactionhistory portfollopage">
         {/* Page Heading */}
-        <h1>Travel Jet - Credits</h1>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="creditleft">
-              <a href="#" className="btn btn-dark">Credits Left: 100</a>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Bronze</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 100
-                  </div>
-                  <div className="agentname">
-                    <h3>10 Credits</h3>
-                    <a href="#" className="btn btn-light">Select Plan</a>
-                  </div>
+        <h1>Invoices</h1>
+        <div className="invoices informationform">
+          <div className="leadquotation">
+            <div className="row">
+              <div className="col-sm-8">
+                <div className="input-group searchbar">
+                  <input type="name" name="project bid" className="form-control" placeholder="Search Invoice" />
+                  <span className="input-group-btn">
+                    <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                  </span>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Silver</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 200
-                  </div>
-                  <div className="agentname">
-                    <h3>22 Credits</h3>
-                    <a href="#" className="btn btn-light">Select Plan</a>
-                  </div>
-                </div>
+              <div className="clearfix" />
+              <div className="col-sm-12">
+                <table className="table table-bordered leadstatus">
+                  <thead className="thead-secondary">
+                    <tr>
+                      <th scope="col" className="bd">Invoice No.</th>
+                      <th scope="col">Booking Title</th>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col" className="sd">Date</th>
+                      <th scope="col" className="mb">Tax</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                     {
+                      invoicesData ?
+                      invoicesData.map((invoice,i)=>{
+                        return( <tr key={i}>
+                      <td>000000{invoice.id}</td>
+                      <td>{invoice.booking_name}</td>
+                      <td>{invoice.customer_name}</td>
+                      <td><Moment format="DD-MMM-YY">{invoice.created_at}</Moment></td>
+                      <td><i className="fa fa-inr" /> {invoice.tax}</td>
+                      <td><i className="fa fa-inr" /> {invoice.total}</td>
+                      <td>
+                        <div className="dropdown">
+                          <a id="dLabel" role="button" data-toggle="dropdown" className="btn btn-primary" data-target="#" href="/page.html">
+                            Send <span className="caret" />
+                          </a>
+                          <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                            <li><a href={"/agent/invoice/"+invoice.id}>View/Edit</a></li>
+                            <li><a onClick={(e) => deleteInvoice(invoice.id)} >Delete</a></li>
+                            <li><a href={"/invoice-pdf/"+invoice.id}>View / Download Pdf</a></li>
+                            {/* comment
+                            <li><a onClick={(e) => downloadPdf(invoice.id)}>Download</a></li>
+                            */}
+                            <li><a href="#">View PDF</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                      )
+                    })
+                    : null
+                  }
+                  </tbody>
+                </table>
               </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Gold</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 300
+              <div className="clearfix" />
+              <div className="col-sm-12">
+               <div className="d-flex justify-content-center" style={{marginLeft: '20%'}}>
+                     <Pagination
+                     activePage={activePage}
+                     itemsCountPerPage={itemsCountPerPage}
+                     totalItemsCount={totalItemsCount}
+                     pageRangeDisplayed={pageRangeDisplayed}
+                     onChange={handlePageChange}
+                     itemClass="page-item"
+                     linkClass="page-link"
+                     prevPageText="Prev"
+                     nextPageText="Next"
+                     lastPageText="Last"
+                     firstPageText="First"
+                     />
                   </div>
-                  <div className="agentname">
-                    <h3>35 Credits</h3>
-                    <a href="#" className="btn btn-light">Select Plan</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="card2 text-center">
-              <div className="card-content">
-                <div className="card-body py-3">
-                  <div className="line-ellipsis">Platinum</div>
-                  <div className="price">
-                    <i className="fa fa-inr" /> 500
-                  </div>
-                  <div className="agentname">
-                    <h3>70 Credits</h3>
-                    <a href="#" className="btn btn-light">Select Plan</a>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

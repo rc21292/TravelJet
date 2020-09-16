@@ -49,6 +49,12 @@ Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
+Route::get('invoices/show/{id}','InvoiceController@show');
+Route::get('invoices/invoiceDetails/{id}','InvoiceController@invoiceDetails');
+Route::post('invoices/store','InvoiceController@store');
+Route::post('invoices/storeInvoice','InvoiceController@storeInvoice');
+Route::post('invoices/update/{id}','InvoiceController@update');
+Route::post('invoices/updateInvoice/{id}','InvoiceController@updateInvoice');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
 Route::get('queries/getQuotationStoppages/{id}/{user_id}','Api\QueryController@getQuotationStoppages');
 Route::get('queries/getStopagesData/{id}','Api\QueryController@getStopagesData');
@@ -68,6 +74,7 @@ Route::post('sendotp', 'LoginController@otp');
 Route::post('verifyotp', 'LoginController@verify');
 
 Route::get('payouts/{id}', 'PayoutController@index');
+Route::get('invoices/{id}', 'InvoiceController@index');
 
 Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');

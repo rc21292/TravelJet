@@ -6,6 +6,8 @@ import Header from './layouts/Header'
 import Bookings from './bookings/Bookings'
 import Drivers from './vehicles/Drivers'
 import Vehicles from './vehicles/Vehicles'
+import CreateInvoice from './invoices/CreateInvoice'
+import Invoice from './invoices/Invoice'
 import Quotations from './quotations/Quotations'
 import TransactionHistory from './transactions/TransactionHistory'
 import Notifications from './notifications/Notifications'
@@ -88,6 +90,12 @@ class Index extends Component {
                                                             <Route path="/agent/quotations">
                                                                   <Quotations/>
                                                             </Route>
+                                                            <Route path="/agent/create-invoice/:id">
+                                                                  <CreateInvoice/>
+                                                            </Route> 
+                                                            <Route path="/agent/invoice/:id">
+                                                                  <Invoice/>
+                                                            </Route> 
                                                             <Route path="/agent/wallet">
                                                                   <Wallet/>
                                                             </Route>

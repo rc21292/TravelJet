@@ -23,9 +23,16 @@ function Leads(props) {
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
 
 
+  const [searchByTitle, setSearchByTitle] = useState(''); 
+  const [searchByTitle1, setSearchByTitle1] = useState(''); 
+  const [searchByTitle2, setSearchByTitle2] = useState(''); 
+  const [searchByTitle3, setSearchByTitle3] = useState(''); 
+
   const [activePage1, setActivePage1] = useState(1);  
   const [itemsCountPerPage1, setItemsCountPerPage1] = useState(1);  
-  const [totalItemsCount1, setTotalItemsCount1] = useState(1);  
+  const [totalItemsCount1, setTotalItemsCount1] = useState(1); 
+
+  const [activeTab, setActiveTab] = useState(1);  
 
 
   const [activePage2, setActivePage2] = useState(1);  
@@ -39,6 +46,15 @@ function Leads(props) {
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);  
 
   useEffect(() => {  
+
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const active_tab = params.get('tab');
+    if (active_tab > 0) {
+      setActiveTab(active_tab);
+    }else{
+      setActiveTab(1);
+    }
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
@@ -72,9 +88,79 @@ function Leads(props) {
 
   }, []);  
 
+  const onSearchByTitle = e => {
+    const search = e.target.value;
+    setSearchByTitle(search);
+  };
+  const onSearchByTitle1 = e => {
+    const search = e.target.value;
+    setSearchByTitle1(search);
+  };
+  const onSearchByTitle2 = e => {
+    const search = e.target.value;
+    setSearchByTitle2(search);
+  };
+  const onSearchByTitle3 = e => {
+    const search = e.target.value;
+    setSearchByTitle3(search);
+  };
+
+  const findBySearchTitle = () => {
+
+    axios(`/api/queries/${user.id}?type=quotation&search=${searchByTitle}`)
+    .then(result => {
+      setQuotationsData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const findBySearchTitle1 = () => {
+
+    axios(`/api/queries/${user.id}?type=booking&search=${searchByTitle1}`)
+    .then(result => {
+      setBookingsData(result.data.data);  
+      setItemsCountPerPage1(result.data.per_page);  
+      setTotalItemsCount1(result.data.total);  
+      setActivePage1(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const findBySearchTitle2 = () => {
+
+    axios(`/api/queries/${user.id}?type=booked&search=${searchByTitle2}`)
+    .then(result => {
+      setBookedsData(result.data.data);  
+      setItemsCountPerPage2(result.data.per_page);  
+      setTotalItemsCount2(result.data.total);  
+      setActivePage2(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const findBySearchTitle3 = () => {
+
+    axios(`/api/queries/${user.id}?type=cancel&search=${searchByTitle3}`)
+    .then(result => {
+      setCancelledData(result.data.data);  
+      setItemsCountPerPage3(result.data.per_page);  
+      setTotalItemsCount3(result.data.total);  
+      setActivePage3(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
 
   const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
     axios.get('/api/queries/'+user.id+'?type=quotation'+'&page='+pageNumber)
 
     .then(result=>{
@@ -118,6 +204,8 @@ function Leads(props) {
     });
   }
 
+  console.log(activeTab)
+
   return (
 
      <div className="myleads">
@@ -126,25 +214,25 @@ function Leads(props) {
       <div className="myleadsstatus">
         <div id="exTab2"> 
           <ul className="nav nav-tabs">
-            <li className="active">
+            <li className={activeTab == 1 ? 'active' : ''}>
               <a href="#1" data-toggle="tab">quotations</a>
             </li>
-            <li><a href="#2" data-toggle="tab">Upcoming Booking</a>
+            <li className={activeTab == 2 ? 'active' : ''}><a href="#2" data-toggle="tab">Upcoming Booking</a>
             </li>
-            <li><a href="#3" data-toggle="tab">Booked</a>
+            <li className={activeTab == 3 ? 'active' : ''}><a href="#3" data-toggle="tab">Booked</a>
             </li>
-            <li><a href="#4" data-toggle="tab">Cancelled</a>
+            <li className={activeTab == 4 ? 'active' : ''}><a href="#4" data-toggle="tab">Cancelled</a>
             </li>
           </ul>
           <div className="tab-content ">
-            <div className="tab-pane active" id={1}>
+            <div className={activeTab == 1 ? 'tab-pane active' : 'tab-pane'} id={1}>
               <div className="leadquotation">
                 <div className="row">
                   <div className="col-sm-8">
                     <div className="input-group searchbar">
-                      <input type="name" name="project bid" className="form-control" placeholder="Search Lead Name" />
+                      <input type="text" name="search" value={searchByTitle} onChange={onSearchByTitle} className="form-control" placeholder="Search Booking by Title name...." />
                       <span className="input-group-btn">
-                        <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                        <a onClick={findBySearchTitle } className="btn btn-primary"><i className="fa fa-search" /></a>
                       </span>
                     </div>
                   </div>
@@ -204,14 +292,14 @@ function Leads(props) {
                 </div>
               </div>
             </div>
-            <div className="tab-pane" id={2}>
+            <div className={activeTab == 2 ? 'tab-pane active' : 'tab-pane'} id={2}>
               <div className="leadquotation">
                 <div className="row">
                   <div className="col-sm-8">
                     <div className="input-group searchbar">
-                      <input type="name" name="project bid" className="form-control" placeholder="Search Lead Name" />
+                      <input type="text" name="search1" value={searchByTitle1} onChange={onSearchByTitle1} className="form-control" placeholder="Search Booking by Title name...." />
                       <span className="input-group-btn">
-                        <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                        <a onClick={findBySearchTitle1 } className="btn btn-primary"><i className="fa fa-search" /></a>
                       </span>
                     </div>
                   </div>
@@ -271,14 +359,14 @@ function Leads(props) {
                 </div>
               </div>
             </div>
-            <div className="tab-pane" id={3}>
+            <div className={activeTab == 3 ? 'tab-pane active' : 'tab-pane'} id={3}>
               <div className="leadquotation">
                 <div className="row">
                   <div className="col-sm-8">
                     <div className="input-group searchbar">
-                      <input type="name" name="project bid" className="form-control" placeholder="Search Lead Name" />
+                      <input type="text" name="title2" value={searchByTitle2} onChange={onSearchByTitle2} className="form-control" placeholder="Search Booking by Title name...." />
                       <span className="input-group-btn">
-                        <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                        <a onClick={findBySearchTitle2 } className="btn btn-primary"><i className="fa fa-search" /></a>
                       </span>
                     </div>
                   </div>
@@ -338,14 +426,14 @@ function Leads(props) {
                 </div>
               </div>
             </div>
-            <div className="tab-pane" id={4}>
+            <div className={activeTab == 4 ? 'tab-pane active' : 'tab-pane'} id={4}>
               <div className="leadquotation">
                 <div className="row">
                   <div className="col-sm-8">
                     <div className="input-group searchbar">
-                      <input type="name" name="project bid" className="form-control" placeholder="Search Lead Name" />
+                      <input type="text" name="search3" value={searchByTitle3} onChange={onSearchByTitle3} className="form-control" placeholder="Search Booking by Title name...." />
                       <span className="input-group-btn">
-                        <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                        <a onClick={findBySearchTitle3 } className="btn btn-primary"><i className="fa fa-search" /></a>
                       </span>
                     </div>
                   </div>

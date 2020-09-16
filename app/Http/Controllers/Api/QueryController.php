@@ -23,40 +23,56 @@ class QueryController extends Controller
     public function index(Request $request, $id)
     {
         if ($request->type == 'quotation') {
-             $result = Quotation::
+            $result_data = Quotation::
                      join('bookings', 'bookings.id' ,'quotations.booking_id')
                      ->join('users', 'bookings.user_id' ,'users.id')
                      ->select('bookings.*','quotations.total_payment','users.name')
                      ->where('quotations.status','pending')
-                     ->where('quotations.user_id',$id)
-                     ->latest('bookings.created_at')
+                     ->where('quotations.user_id',$id);
+                     if ($request->has('search') && !empty($request->search)) {
+                        $search = $request->search;
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                    }
+                    $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
         }else if($request->type == 'booking'){
-            $result = Booking::
+            $result_data = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                      ->join('users', 'bookings.user_id' ,'users.id')
                      ->select('bookings.*','users.name')
                      ->where('quotations.status','awarded')->where('bookings.status','awarded')
-                     ->where('quotations.user_id',$id)
-                     ->latest('bookings.created_at')
+                     ->where('quotations.user_id',$id);
+                      if ($request->has('search') && !empty($request->search)) {
+                        $search = $request->search;
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                    }
+                    $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
         }else if($request->type == 'booked'){
-            $result = Booking::
+            $result_data = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                       ->join('users', 'bookings.user_id' ,'users.id')
                      ->select('bookings.*','users.name')
                      ->where('quotations.status','booked')->where('bookings.status','booked')
-                     ->where('quotations.user_id',$id)
-                     ->latest('bookings.created_at')
+                     ->where('quotations.user_id',$id);
+                      if ($request->has('search') && !empty($request->search)) {
+                        $search = $request->search;
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                    }
+                    $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
         }else if($request->type == 'cancel'){
-            $result = Booking::
+            $result_data = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
                       ->join('users', 'bookings.user_id' ,'users.id')
                      ->select('bookings.*','users.name')
                      ->where('quotations.status','cancelled')->where('bookings.status','cancelled')
-                     ->where('quotations.user_id',$id)
-                     ->latest('bookings.created_at')
+                     ->where('quotations.user_id',$id);
+                      if ($request->has('search') && !empty($request->search)) {
+                        $search = $request->search;
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                    }
+                    $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
         }else{
             $result = Booking::where('user_id',$id)->latest('bookings.created_at')->paginate(5);
@@ -79,7 +95,7 @@ class QueryController extends Controller
                      ->select('bookings.*')
                      ->whereIn('quotations.status',array('awarded','booked'))
                      ->whereIn('bookings.status',array('awarded','booked'))
-                     ->where('bookings.user_id',$id)->latest('bookings.created_at')
+                     ->where('bookings.user_id',$id)->latest('bookings.updated_at')
                      ->paginate(15);
     }
 

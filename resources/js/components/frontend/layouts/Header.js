@@ -10,6 +10,7 @@ import Qutations from '../Qutations';
 import Booked from '../Booked';
 import Cancelled from '../Cancelled';
 import CancelledBooking from '../CancelledBooking';
+import InvoicePdf from '../InvoicePdf';
 import Bookings from '../Bookings';
 import BookingDetails from '../BookingDetails';
 import ViewProfile from '../ViewProfile';
@@ -99,6 +100,7 @@ function Header(props) {
       <Route exact path='/booked/:id' component={Booked} />
       <Route exact path='/cancelled/:id' component={Cancelled} />
       <Route exact path='/cancelled-booking/:id' component={CancelledBooking} />
+      <Route exact path="/invoice-pdf/:id" component={InvoicePdf} /> 
       <Route exact path='/Bookings/:id' component={Bookings} />
       <Route exact path='/queries' component={Queries} />
 

@@ -74,10 +74,6 @@ class QuotationController extends Controller
         ->update(['payments_status'=> json_encode($new)]);
     }
 
-
-        // echo $id;
-        // echo "<pre>";print_r($request->all());"</pre>";exit;
-
     $booking =  Booking::where('id',$quotation->booking_id)->first();
 
     $user = User::where('id', $booking->user_id)->first();
