@@ -128,7 +128,7 @@ function Home(props) {
                   <tr>
                    <td colSpan="5">
                      <div className="placebidbtn">
-                       <a href="agent/leads" className="btn btn-primary">View More</a>
+                       <a href="agent/leads?tab=3" className="btn btn-primary">View More</a>
                      </div>
                    </td>
                   </tr>

@@ -28,7 +28,7 @@ class Invoice extends Model
      *
      * @return array
      */
-    protected $fillable = ['invoice_number', 'booking_id', 'customer_id',  'customer_name',  'sub_total',  'tax',  'total',  'billing_address',  'invoice_date',  'due_date',  'status'];
+    protected $fillable = ['invoice_number', 'booking_id', 'customer_id', 'user_id',  'customer_name',  'sub_total',  'tax',  'total',  'billing_address',  'invoice_date',  'due_date',  'status'];
 
     protected $dates = ['created_at','updated_at'];
 

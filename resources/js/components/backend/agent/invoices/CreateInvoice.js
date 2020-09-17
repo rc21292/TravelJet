@@ -16,6 +16,7 @@ function CreateInvoice(props) {
    let initialState ={
     customer_id: '',
     customer_name: '',
+    user_id: '',
     booking_id: 0,
     sub_total: 0,
     tax: 0,
@@ -56,7 +57,7 @@ function CreateInvoice(props) {
         .then(response=>{
           if (response.data) {
             setCustomer(response.data);
-            setInvoiceData({...invoiceData,'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id)});
+            setInvoiceData({...invoiceData,'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id});
           }
         });
       }); 
@@ -154,7 +155,7 @@ function CreateInvoice(props) {
           data: data1,
         })
         .then(response => {
-         // window.location.href = "/agent/invoices";
+         window.location.href = "/agent/invoices";
         })
       })
       .catch(e => {
@@ -162,7 +163,37 @@ function CreateInvoice(props) {
       });
     }
 
-    console.log(invoiceData);
+
+    const saveSendInvoice = () => {
+    setError('');
+      if (invoiceData.total == '' || invoiceData.total < 1) {
+        setError('Amount Field Required!');
+        return false;
+      }else{
+        setError('');
+      }
+
+      var data = invoiceData;
+      axios({
+        method: 'post',
+        url: '/api/invoices/store',
+        data: data,
+      })
+      .then(response => {
+        var data1 = invoiceDetail;
+        axios({
+          method: 'post',
+          url: '/api/invoices/updateAndMail/'+response.data,
+          data: data1,
+        })
+        .then(response => {
+         window.location.href = "/agent/invoices";
+        })
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    }
 
   return (  
       <div className="transactionhistory portfollopage">
@@ -264,7 +295,8 @@ function CreateInvoice(props) {
                     <h5 className={"alert alert-danger"}>Error: {error}</h5></FlashMessage> : ''}
             </div>
             <div className="placebidbtn movebtn">
-              <a onClick={saveInvoice} className="btn btn-primary">Save</a><a href="#" className="btn btn-primary">Save &amp; Send</a>
+              <a onClick={saveInvoice} className="btn btn-primary">Save</a>
+              <a onClick={saveSendInvoice} className="btn btn-primary">Save &amp; Send</a>
             </div>
           </div></form>
       </div>

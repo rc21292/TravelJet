@@ -15,6 +15,7 @@ function Booked({match}) {
   const [stopeges, setStopages] = useState(false);  
 
   const [saveData, setSaveData] = useState('');  
+  const [invoice, setInvoice] = useState(false);  
 
   const [error, setError] = useState();  
 
@@ -24,6 +25,14 @@ function Booked({match}) {
     const GetData = async () => { 
       axios.get('/api/queries/show/'+match.params.id+'?type=booked').then((result) => { 
       setBookingData(result.data); 
+
+      axios.get('/api/invoices/checkInvoice/'+match.params.id)
+        .then(response=>{
+          if (response.data) {
+            setInvoice(response.data);
+          }else{
+          }
+        });
 
        axios.get('/api/users/show/'+result.data.user_id)
         .then(response=>{
@@ -189,7 +198,12 @@ function Booked({match}) {
                               </div>
                             </div>{/*End*/}
                             <div className="placebidbtn movebtn">
-                              <a href="#" className="btn btn-primary">Send Voucher</a><a href={"/agent/create-invoice/"+match.params.id} className="btn btn-primary">Create Invoice</a>
+                              <a href="#" className="btn btn-primary">Send Voucher</a>
+                              { invoice ?
+                              <a href={"/agent/invoices"} className="btn btn-primary">Invoice Created</a>
+                              :
+                              <a href={"/agent/create-invoice/"+match.params.id} className="btn btn-primary">Create Invoice</a>
+                              }
                                { (bookingData.status == 'cancelled') ?
                               <a className="btn btn-primary">This Booking Canceled</a> :
                               <a className="btn btn-primary"  data-toggle="modal" data-target="#myModal3">Cancel This Booking</a>

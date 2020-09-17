@@ -51,6 +51,10 @@ function Sidebar() {
 <a className="nav-link" href="/customer/wallet">
 <span>My Wallet</span></a>
 </li>
+<li className="nav-item">
+    <a className="nav-link" href="/customer/invoices">
+      <span>Invoices</span></a>
+  </li>
 {/* Nav Item - Tables */}
 <li className="nav-item">
 <a className="nav-link" href="/chatify">

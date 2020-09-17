@@ -35,7 +35,7 @@ class invoiceMail extends Mailable
     {
         $data=['name'=>$this->invoice->customer_name];
          return $this->view('emails.invoice_mail',$data)
-                    ->attach(public_path('frontend/image/code-example.pdf'), [
+                    ->attach(public_path('/invoices/invoice_'.$this->invoice->id.'.pdf'), [
                          'as' => 'invoice_'.$this->invoice->id.'.pdf',
                          'mime' => 'application/pdf',
                     ]);

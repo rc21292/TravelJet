@@ -66,9 +66,7 @@ class InvoiceController extends Controller
                     'search' => request('search'),
                 )
             );
-             $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        // echo "<pre>";print_r($last_query);"</pre>";exit;
+            
         } else {
             $invoices =  Invoice::select('invoices.*','bookings.booking_name')
             ->join('bookings','bookings.id','invoices.booking_id')
@@ -77,6 +75,44 @@ class InvoiceController extends Controller
             ->paginate(7);
 
         }
+         $queries = DB::getQueryLog();
+        $last_query = end($queries);
+        // echo "<pre>";print_r($last_query);"</pre>";exit;
+
+        return $invoices;
+    }
+
+
+    public function getInvoices(Request $request,$id)
+    {
+         DB::connection()->enableQueryLog();
+       
+        if (!empty($_GET['search'])) {
+            $search = $_GET['search'];
+            $invoices = Invoice::select('invoices.*','bookings.booking_name')
+            ->join('bookings','bookings.id','invoices.booking_id')
+            ->where('invoices.customer_id', $id)
+            ->where('bookings.booking_name','LIKE', '%'.$search.'%')
+            ->orWhere('invoices.id',$search)
+            ->latest('invoices.created_at')->paginate(7)
+            ->setPath('');
+            $pagination = $invoices->appends(
+                array(
+                    'search' => request('search'),
+                )
+            );
+            
+        } else {
+            $invoices =  Invoice::select('invoices.*','bookings.booking_name')
+            ->join('bookings','bookings.id','invoices.booking_id')
+            ->where('invoices.customer_id', $id)
+            ->latest('invoices.created_at')
+            ->paginate(7);
+
+        }
+         $queries = DB::getQueryLog();
+        $last_query = end($queries);
+        // echo "<pre>";print_r($last_query);"</pre>";exit;
 
         return $invoices;
     }
@@ -159,12 +195,15 @@ class InvoiceController extends Controller
     public function sendInvoice($id)
     {
         $invoice = Invoice::find($id)->first();
-        $myEmail = 'er.krishna.mishra@gmail.com';
+        $user = User::where('id',$invoice->customer_id)->first();
+        $email = $user->email;
+        $email = 'er.krishna.mishra@gmail.com';
+        $name = $user->name;
         $name = 'Krishna Mishra';
 
         $to = [
             [
-                'email' => $myEmail, 
+                'email' => $email, 
                 'name' => $name,
             ]
         ];
@@ -175,6 +214,45 @@ class InvoiceController extends Controller
 
     }
 
+    public function checkInvoice($id)
+    {
+        if (Invoice::where('booking_id', $id)->exists()) {
+            return Invoice::where('booking_id', $id)->count();
+        }else{
+            return 0;
+        }
+        
+    }
+
+    public function sendMailInvoice(Request $request,$id)
+    {
+        DB::connection()->enableQueryLog();
+        InvoiceDetail::where('invoice_id', '=', $id)->delete();
+        $queries = DB::getQueryLog();
+        $last_query = end($queries);
+
+        foreach($request->all() as $data)
+        {
+            InvoiceDetail::create($data);
+        }
+        $invoice = Invoice::find($id)->first();
+        $user = User::where('id',$invoice->customer_id)->first();
+        $email = $user->email;
+        $email = 'er.krishna.mishra@gmail.com';
+        $name = $user->name;
+        $name = 'Krishna Mishra';
+
+        $to = [
+            [
+                'email' => $email, 
+                'name' => $name,
+            ]
+        ];
+
+        Mail::to($to)->send(new invoiceMail($invoice));
+
+        return response()->json('Successfully updated');
+    }
 
     public function updateInvoice(Request $request,$id)
     {
@@ -187,6 +265,12 @@ class InvoiceController extends Controller
         foreach($request->all() as $data)
         {
             InvoiceDetail::create($data);
+        }
+
+        if (isset($request->mail) && !empty($request->mail)) {
+            if ($request->send == 1) {
+                $this->sendInvoice($id);
+            }
         }
 
         return response()->json('Successfully updated');
@@ -291,6 +375,36 @@ class InvoiceController extends Controller
             ->where('id', $data_return->id)
             ->update(['invoice_id' => $id]);
         }
+        return response()->json('Successfully added');
+    }
+
+
+    public function updateAndMail(Request $request,$id)
+    {
+        foreach($request->all() as $data)
+        {
+            $data_return = InvoiceDetail::create($data);
+            DB::table('invoice_details')
+            ->where('id', $data_return->id)
+            ->update(['invoice_id' => $id]);
+        }
+
+        $invoice = Invoice::find($id)->first();
+        $user = User::where('id',$invoice->customer_id)->first();
+        $email = $user->email;
+        $email = 'er.krishna.mishra@gmail.com';
+        $name = $user->name;
+        $name = 'Krishna Mishra';
+
+        $to = [
+            [
+                'email' => $email, 
+                'name' => $name,
+            ]
+        ];
+
+        Mail::to($to)->send(new invoiceMail($invoice));
+
         return response()->json('Successfully added');
     }
 

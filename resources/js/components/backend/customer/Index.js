@@ -6,6 +6,7 @@ import Header from './layouts/Header'
 import Bookings from './bookings/Bookings'
 import CancelledBookings from './bookings/CancelledBookings'
 import Quotations from './quotations/Quotations'
+import Invoices from './invoices/Invoices'
 import Address from './address/Address'
 import Profile from './profile/Profile'
 import Reviews from './Reviews/Reviews'
@@ -79,6 +80,9 @@ class Index extends Component {
                                                             <Route path="/customer/quotations">
                                                                   <Quotations/>
                                                             </Route>
+                                                             <Route path="/customer/invoices">
+                                                                  <Invoices/>
+                                                            </Route> 
                                                             <Route path="/customer/manage-address">
                                                                   <Address/>
                                                             </Route>

@@ -40,7 +40,6 @@ Route::get('quotations/checkQuotaions/{id}','QuotationController@checkQuotaions'
 Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
-Route::delete('invoices/delete/{id}','InvoiceController@destroy');
 Route::post('queries/cancel/{id}','Api\QueryController@cancel');
 Route::post('queries/reBooking/{id}','Api\QueryController@reBooking');
 Route::post('queries/moveToBooked/{id}','Api\QueryController@moveToBooked');
@@ -50,13 +49,6 @@ Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
 Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
-Route::get('invoices/show/{id}','InvoiceController@show');
-Route::get('invoices/invoiceDetails/{id}','InvoiceController@invoiceDetails');
-Route::get('invoices/sendInvoice/{id}','InvoiceController@sendInvoice');
-Route::post('invoices/store','InvoiceController@store');
-Route::post('invoices/storeInvoice','InvoiceController@storeInvoice');
-Route::post('invoices/update/{id}','InvoiceController@update');
-Route::post('invoices/updateInvoice/{id}','InvoiceController@updateInvoice');
 Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
 Route::get('queries/getQuotationStoppages/{id}/{user_id}','Api\QueryController@getQuotationStoppages');
 Route::get('queries/getStopagesData/{id}','Api\QueryController@getStopagesData');
@@ -76,8 +68,6 @@ Route::post('sendotp', 'LoginController@otp');
 Route::post('verifyotp', 'LoginController@verify');
 
 Route::get('payouts/{id}', 'PayoutController@index');
-Route::get('invoices/{id}', 'InvoiceController@index');
-
 Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');
 Route::post('/credits/save_user_credits','CreditsController@save_user_credits');
@@ -111,3 +101,27 @@ Route::get('notifications/{id}', 'NoticeController@index');
 
 Route::get('getCustomerNotificattions/{id}', 'NoticeController@getCustomerNotificattions');
 Route::get('getAgentNotifications/{id}', 'NoticeController@getAgentNotifications');
+
+
+/*invoice api's call*/
+
+/*for agent*/
+Route::get('invoices/{id}', 'InvoiceController@index');
+Route::get('invoices/show/{id}','InvoiceController@show');
+Route::get('invoices/invoiceDetails/{id}','InvoiceController@invoiceDetails');
+Route::get('invoices/sendInvoice/{id}','InvoiceController@sendInvoice');
+Route::get('invoices/checkInvoice/{id}','InvoiceController@checkInvoice');
+Route::post('invoices/store','InvoiceController@store');
+Route::post('invoices/storeInvoice','InvoiceController@storeInvoice');
+Route::post('invoices/update/{id}','InvoiceController@update');
+Route::post('invoices/updateAndMail/{id}','InvoiceController@updateAndMail');
+Route::post('invoices/updateInvoice/{id}','InvoiceController@updateInvoice');
+Route::post('invoices/sendMailInvoice/{id}','InvoiceController@sendMailInvoice');
+Route::delete('invoices/delete/{id}','InvoiceController@destroy');
+/*end for agent*/
+
+/*for customer*/
+Route::get('invoices/getInvoices/{id}', 'InvoiceController@getInvoices');
+/*end for customer*/
+
+/*end invoice api's call*/

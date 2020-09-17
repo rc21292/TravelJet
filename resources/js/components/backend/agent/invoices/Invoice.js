@@ -132,7 +132,38 @@ function Invoice(props) {
           data: data1,
         })
         .then(response => {
-         // window.location.href = "/agent/invoices";
+         window.location.href = "/agent/invoices";
+        })
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    }
+
+    const saveSendInvoice = () => {
+    setError('');
+      if (invoiceData.total == '' || invoiceData.total < 1) {
+        setError('Amount Field Required!');
+        return false;
+      }else{
+        setError('');
+      }
+
+      var data = invoiceData;
+      axios({
+        method: 'post',
+        url: '/api/invoices/storeInvoice',
+        data: data,
+      })
+      .then(response => {
+        var data1 = invoiceDetail;
+        axios({
+          method: 'post',
+          url: '/api/invoices/sendMailInvoice/'+invoiceId,
+          data: data1,
+        })
+        .then(response => {
+         window.location.href = "/agent/invoices";
         })
       })
       .catch(e => {
@@ -240,7 +271,8 @@ function Invoice(props) {
                     <h5 className={"alert alert-danger"}>Error: {error}</h5></FlashMessage> : ''}
             </div>
             <div className="placebidbtn movebtn">
-              <a onClick={saveInvoice} className="btn btn-primary">Save</a><a href="#" className="btn btn-primary">Save &amp; Send</a>
+              <a onClick={saveInvoice} className="btn btn-primary">Save</a>
+              <a onClick={saveSendInvoice} className="btn btn-primary">Save &amp; Send</a>
             </div>
           </div></form>
       </div>

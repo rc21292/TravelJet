@@ -99,7 +99,7 @@ function Credits(props) {
             <div className="row">
               <div className="col-sm-8">
                 <div className="input-group searchbar">
-                  <input type="name" name="project bid" name="search" onChange={handleSearch} className="form-control" placeholder="Search Invoice by Name" />
+                  <input type="name" name="project bid" name="search" onChange={handleSearch} className="form-control" placeholder="Search Invoice by Name or Id" />
                   <span className="input-group-btn">
                     <a onClick={searchInvoice} className="btn btn-primary"><i className="fa fa-search" /></a>
                   </span>
