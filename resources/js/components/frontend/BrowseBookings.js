@@ -391,7 +391,11 @@ function BrowseBookings(props) {
                                                 <i className="fa fa-inr" />{booking.vehicle_budget}
                                               </div>
                                               <span>Booking id : 000000{booking.id}</span>
+                                              {booking.agent_id == user.id ?
+                                              <a title="You already bidded" disabled className="btn btn-primary">View Booking</a>
+                                              :
                                               <a href={'/booking-details/'+booking.id} className="btn btn-primary">View Booking</a>
+                                            }
                                             </div>
                                           </div>
                                         </div>

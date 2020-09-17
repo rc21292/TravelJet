@@ -276,7 +276,8 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        $query = Invoice::find($id)->delete();
+        Invoice::find($id)
+        ->delete();
         DB::table('invoice_details')
         ->where('invoice_id', $id)
         ->delete();

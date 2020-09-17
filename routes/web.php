@@ -29,6 +29,7 @@ Route::get('/customer/profile/{id}', function () { return view('customer'); });
 Route::get('/agent/create-invoice/{id}', function () { return view('agent'); });
 Route::get('/agent/invoice/{id}', function () { return view('agent'); });
 Route::get('/invoice-pdf/{id}', function () { return view('welcome'); });
+Route::get('/view-invoicepdf/{id}', function () { return view('welcome'); });
 // Route::get('/customer/profile-agent/{id}', function () { return view('customer'); });
 Route::get('/quotations/{id}', function () { return view('welcome'); });
 Route::get('/bookings/{id}', function () { return view('welcome'); });

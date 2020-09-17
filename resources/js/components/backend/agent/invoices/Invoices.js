@@ -49,7 +49,12 @@ function Credits(props) {
   }
 
   const downloadPdf = (id) => {
+    window.location.href = '/invoice-pdf/'+id;
+  }
 
+  const deleteInvoice = (id) => {
+    axios.delete('/api/invoices/delete/'+id);
+    window.location.reload(false);
   }
 
   const findByFilter = () => {
@@ -114,11 +119,8 @@ function Credits(props) {
                           <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                             <li><a href={"/agent/invoice/"+invoice.id}>View/Edit</a></li>
                             <li><a onClick={(e) => deleteInvoice(invoice.id)} >Delete</a></li>
-                            <li><a href={"/invoice-pdf/"+invoice.id}>View / Download Pdf</a></li>
-                            {/* comment
-                            <li><a onClick={(e) => downloadPdf(invoice.id)}>Download</a></li>
-                            */}
-                            <li><a href="#">View PDF</a></li>
+                            <li><a href={"/view-invoicepdf/"+invoice.id}>View Pdf</a></li>
+                            <li><a onClick={(e) => downloadPdf(invoice.id)}>Download PDF</a></li>
                           </ul>
                         </div>
                       </td>
