@@ -3744,7 +3744,7 @@ hr {
     margin-top: 15px;
 }
 .taxinvoice {
-    float: right;
+    float: left;
 }
 .taxinvoice h2 {
     margin-top: 10px;
@@ -3765,13 +3765,13 @@ hr {
     font-weight: 600;
 }
 .companyaddress {
-    float: right;
+    float: left;
 }
 .invoicenumber {
     margin-top: 40px;
 }
 .documentdetai {
-    float: right;
+    float: left;
 }
 .invoicetable {
     margin-top: 25px;
