@@ -3734,17 +3734,20 @@ hr {
     background-color: #555;
   }
   .invoicepdf {
-    max-width: 70%;
-    background-color: #fff;
+      width: 776px;
+  background-color: #fff;
+  margin: 0 auto;
     padding: 45px;
+  /*  max-width: 70%;
+    background-color: #fff;
     margin: 40px auto 40px;
-    display: flow-root;
+    display: flow-root;*/
 }
 .invoicelogo {
     margin-top: 15px;
 }
 .taxinvoice {
-    float: left;
+    float: right;
 }
 .taxinvoice h2 {
     margin-top: 10px;
@@ -3765,13 +3768,13 @@ hr {
     font-weight: 600;
 }
 .companyaddress {
-    float: left;
+    float: right;
 }
 .invoicenumber {
     margin-top: 40px;
 }
 .documentdetai {
-    float: left;
+    float: right;
 }
 .invoicetable {
     margin-top: 25px;
