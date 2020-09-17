@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
+
+import FlashMessage from 'react-flash-message'
+
 import { useState, useEffect } from 'react'  
 
 
@@ -14,8 +17,10 @@ function Credits(props) {
   const location = useLocation()
 
   const [user, setUser] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [invoicesData, setInvoicesData] = useState([]);  
+  const [searchData, setSearchData] = useState('');
   const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
@@ -38,6 +43,24 @@ function Credits(props) {
   }, []);  
 
 
+  const searchInvoice = (event) => {
+
+     axios(`/api/invoices/${user.id}?search=${searchData}`)
+    .then(result => {
+      setInvoicesData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+
+  }
+  const handleSearch = (event) => {
+    setSearchData(event.target.value);
+  }
+
   const handlePageChange = (pageNumber) => {
     axios.get('/api/invoices/'+user.id+'?page='+pageNumber)
     .then(result=>{
@@ -52,24 +75,20 @@ function Credits(props) {
     window.location.href = '/invoice-pdf/'+id;
   }
 
-  const deleteInvoice = (id) => {
-    axios.delete('/api/invoices/delete/'+id);
-    window.location.reload(false);
-  }
-
-  const findByFilter = () => {
-
-    axios(`/api/invoices/${user.id}?serch=${serchData}`)
+  const sendInvoice = (id) => {
+    axios('/api/invoices/sendInvoice/'+id)
     .then(result => {
-      setInvoicesData(result.data.data);  
-      setItemsCountPerPage(result.data.per_page);  
-      setTotalItemsCount(result.data.total);  
-      setActivePage(result.data.current_page);
+      setSuccess(result.data);
     })
     .catch(e => {
       console.log(e);
     });
-  };
+  }
+
+  const deleteInvoice = (id) => {
+    axios.delete('/api/invoices/delete/'+id);
+    window.location.reload(false);
+  }
 
   return (  
     <div className="transactionhistory portfollopage">
@@ -80,11 +99,15 @@ function Credits(props) {
             <div className="row">
               <div className="col-sm-8">
                 <div className="input-group searchbar">
-                  <input type="name" name="project bid" className="form-control" placeholder="Search Invoice" />
+                  <input type="name" name="project bid" name="search" onChange={handleSearch} className="form-control" placeholder="Search Invoice by Name" />
                   <span className="input-group-btn">
-                    <a href="#" className="btn btn-primary"><i className="fa fa-search" /></a>
+                    <a onClick={searchInvoice} className="btn btn-primary"><i className="fa fa-search" /></a>
                   </span>
                 </div>
+              </div>
+              <div className="row col-sm-12">
+               {success ? <FlashMessage duration={10000} persistOnHover={true}>
+                <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
               </div>
               <div className="clearfix" />
               <div className="col-sm-12">
@@ -113,7 +136,7 @@ function Credits(props) {
                       <td><i className="fa fa-inr" /> {invoice.total}</td>
                       <td>
                         <div className="dropdown">
-                          <a id="dLabel" role="button" data-toggle="dropdown" className="btn btn-primary" data-target="#" href="/page.html">
+                          <a id="dLabel" role="button" data-toggle="dropdown" className="btn btn-primary" data-target="#" onClick={(e) => sendInvoice(invoice.id)} >
                             Send <span className="caret" />
                           </a>
                           <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">

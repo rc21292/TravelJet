@@ -11,7 +11,7 @@ function ViewPdf({match}) {
   const history = useHistory()
   const location = useLocation()
 
-   const [user, setUser] = useState(false);
+  const [user, setUser] = useState(false);
 
   const [invoiceData, setInvoiceData] = useState({});
 
@@ -38,10 +38,10 @@ function ViewPdf({match}) {
         if (result.data) {
           setInvoiceData(result.data);   
           axios('/api/invoices/invoiceDetails/'+invoice_id).then(result=>{
-        if (result.data) {
-          setInvoiceDetail(result.data);          
-        }
-      });       
+            if (result.data) {
+              setInvoiceDetail(result.data);          
+            }
+          });       
         }
       });
     }   

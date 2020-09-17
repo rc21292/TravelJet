@@ -52,6 +52,7 @@ Route::get('queries/edit/{id}','Api\QueryController@edit');
 Route::get('queries/show/{id}','Api\QueryController@show');
 Route::get('invoices/show/{id}','InvoiceController@show');
 Route::get('invoices/invoiceDetails/{id}','InvoiceController@invoiceDetails');
+Route::get('invoices/sendInvoice/{id}','InvoiceController@sendInvoice');
 Route::post('invoices/store','InvoiceController@store');
 Route::post('invoices/storeInvoice','InvoiceController@storeInvoice');
 Route::post('invoices/update/{id}','InvoiceController@update');

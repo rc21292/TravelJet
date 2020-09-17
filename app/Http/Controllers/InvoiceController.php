@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Invoice;
 use App\InvoiceDetail;
-
-
+use App\Mail\invoiceMail;
+use Mail;
 use App\Helper;
 use App\Language;
 use App\Package;
@@ -50,19 +50,25 @@ class InvoiceController extends Controller
 
     public function index(Request $request,$id)
     {
+         DB::connection()->enableQueryLog();
+       
         if (!empty($_GET['search'])) {
             $search = $_GET['search'];
-            $invoices = Invoice::select('invoices.*')
-            ->join('invoice_details','invoice_details.invoice_id','invoices.id')
+            $invoices = Invoice::select('invoices.*','bookings.booking_name')
             ->join('bookings','bookings.id','invoices.booking_id')
-            ->where('id', $search)
-            ->where('bookings.user_id', $id)
-            ->latest()->paginate(7)->setPath('');
+            ->where('invoices.user_id', $id)
+            ->where('bookings.booking_name','LIKE', '%'.$search.'%')
+            ->orWhere('invoices.id',$search)
+            ->latest('invoices.created_at')->paginate(7)
+            ->setPath('');
             $pagination = $invoices->appends(
                 array(
                     'search' => request('search'),
                 )
             );
+             $queries = DB::getQueryLog();
+        $last_query = end($queries);
+        // echo "<pre>";print_r($last_query);"</pre>";exit;
         } else {
             $invoices =  Invoice::select('invoices.*','bookings.booking_name')
             ->join('bookings','bookings.id','invoices.booking_id')
@@ -149,6 +155,26 @@ class InvoiceController extends Controller
 
         return 'Updated';
     }
+
+    public function sendInvoice($id)
+    {
+        $invoice = Invoice::find($id)->first();
+        $myEmail = 'er.krishna.mishra@gmail.com';
+        $name = 'Krishna Mishra';
+
+        $to = [
+            [
+                'email' => $myEmail, 
+                'name' => $name,
+            ]
+        ];
+
+        Mail::to($to)->send(new invoiceMail($invoice));
+
+        return response()->json('Invoice sended successfully!');
+
+    }
+
 
     public function updateInvoice(Request $request,$id)
     {
