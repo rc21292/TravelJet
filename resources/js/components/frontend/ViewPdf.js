@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
 import Moment from 'react-moment';
-import FlashMessage from 'react-flash-message'
 
 import { useState, useEffect } from 'react'  
 

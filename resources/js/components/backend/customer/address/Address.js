@@ -57,8 +57,6 @@ const [address_type, setAddress_type ] = useState('Home');
 
   },[]); 
 
-
-
   const validateForm = () => {
 
     let errors = {};
@@ -252,15 +250,13 @@ const [address_type, setAddress_type ] = useState('Home');
 
 
 		return (
-
       <div className="manageaddress-page">
 
       {success ? <FlashMessage duration={10000} persistOnHover={true}>
-                <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
+      <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
 
-
-                {error ? <FlashMessage duration={10000} persistOnHover={true}>
-                    <h5 className={"alert alert-danger"}>Error: {error}</h5></FlashMessage> : ''}
+      {error ? <FlashMessage duration={10000} persistOnHover={true}>
+      <h5 className={"alert alert-danger"}>Error: {error}</h5></FlashMessage> : ''}
 
         <h1>Manage Addresses</h1>
         <div className="customer-detail" id="test">
@@ -272,52 +268,85 @@ const [address_type, setAddress_type ] = useState('Home');
             <div className="row">
               <div className="form-group col-sm-4">
                 <input type="text" onChange={handleChange} name="name" value={name} placeholder="Enter Name"  className="form-control" />
-                <div className="errorMsg">{errors.name}</div>
+                <div style={{color:'red'}}>{errors.name}</div>
               </div>
               <div className="form-group col-sm-4">
                 <input type="number" onChange={handleChange} name="mobile" placeholder="10-dist mobile number" value={mobile} className="form-control" />
-                <div className="errorMsg">{errors.mobile}</div>
+                <div style={{color:'red'}}>{errors.mobile}</div>
               </div>
             </div>
             <div className="row">
               <div className="form-group col-sm-4">
                 <input type="number" onChange={handleChange} name="pincode" value={pincode} placeholder="Pincode" className="form-control" />
-                <div className="errorMsg">{errors.pincode}</div>
+                <div style={{color:'red'}}>{errors.pincode}</div>
               </div>
               <div className="form-group col-sm-4">
                 <input type="text" onChange={handleChange} name="locality" value={locality} placeholder="Locality" className="form-control" />
-                <div className="errorMsg">{errors.locality}</div>
+                <div style={{color:'red'}}>{errors.locality}</div>
               </div>
             </div>
             <div className="row">
               <div className="form-group col-sm-8">
                 <textarea onChange={handleChange} name="address" rows={4} cols={50} placeholder="Address (Area and Street)" className="form-control"  value={address}/>
-                <div className="errorMsg">{errors.address}</div>
+                <div style={{color:'red'}}>{errors.address}</div>
               </div>
             </div>
             <div className="row">
               <div className="form-group col-sm-4">
                 <input type="text" onChange={handleChange} name="city" value={city} placeholder="City / District / Town" className="form-control" />
-                <div className="errorMsg">{errors.city}</div>
+                <div style={{color:'red'}}>{errors.city}</div>
               </div>
               <div className="form-group col-sm-4">
                 <select className="custom-select form-control" onChange={handleChange} name="state" value={state} id="inputGroupSelect01">
-                  <option value="">State</option>
-                  <option value={1}>One</option>
-                  <option value={2}>Two</option>
-                  <option value={3}>Three</option>
+                  <option value="Andhra Pradesh">Pick a state...</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Chandigarh">Chandigarh</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                  <option value="Daman and Diu">Daman and Diu</option>
+                  <option value="Delhi NCR">Delhi NCR</option>
+                  <option value="Lakshadweep">Lakshadweep</option>
+                  <option value="Puducherry">Puducherry</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="West Bengal">West Bengal</option>
                 </select>
-                <div className="errorMsg">{errors.state}</div>
+                <div style={{color:'red'}}>{errors.state}</div>
               </div>
             </div>
             <div className="row">
               <div className="form-group col-sm-4">
                 <input type="text" onChange={handleChange} name="landmark" value={landmark} placeholder="Landmark (Optional)" className="form-control" />
-                <div className="errorMsg">{errors.landmark}</div>
+                <div style={{color:'red'}}>{errors.landmark}</div>
               </div>
               <div className="form-group col-sm-4">
                 <input type="number" onChange={handleChange} name="alternate_phone" value={alternate_phone} placeholder="Alternate Phone (Optional)" className="form-control" />
-                <div className="errorMsg">{errors.alternate_phone}</div>
+                <div style={{color:'red'}}>{errors.alternate_phone}</div>
               </div>
             </div>
             <div className="addresstype">
@@ -342,7 +371,7 @@ const [address_type, setAddress_type ] = useState('Home');
                       Work
                     </label>
                   </div>
-                    <div className="errorMsg">{errors.address_type}</div>
+                    <div style={{color:'red'}}>{errors.address_type}</div>
                 </div>
                 <div className="col-sm-2">
                   <div className="form-group">
@@ -358,31 +387,25 @@ const [address_type, setAddress_type ] = useState('Home');
             </div>
           </form>
         </div>
-
-
-          {  
-                                addresses.map((query, idx) => {  
-                                return  <div className="customerinfo" key={idx}>
-          <table className="table">
-            <tbody>
-                                    <tr>
-                                    <td><span>{query.address_type}</span></td>
-                                    </tr>
-                                    <tr>
-                <td className="namewith">{query.name}</td>
-                <td>{query.mobile}</td>
-              </tr>
-              <tr>
-                <td>{query.landmark}, {query.locality}, {query.address}, {query.city}, {query.state} - {query.pincode}</td>
-              </tr>
+         {  
+          addresses.map((query, idx) => {  
+          return  <div className="customerinfo" key={idx}>
+            <table className="table">
+              <tbody>
+                <tr>
+                  <td><span>{query.address_type}</span></td>
+                </tr>
+                <tr>
+                  <td className="namewith">{query.name}</td>
+                  <td>{query.mobile}</td>
+                </tr>
+                <tr>
+                  <td>{query.landmark}, {query.locality}, {query.address}, {query.city}, {query.state} - {query.pincode}</td>
+                </tr>
               </tbody>
-          </table>
-        </div>
-                               
-                            })}  
-
-       
+            </table>
+          </div>
+        })}         
       </div>
-
 		);
 	}

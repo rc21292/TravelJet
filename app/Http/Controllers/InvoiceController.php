@@ -192,6 +192,11 @@ class InvoiceController extends Controller
         return 'Updated';
     }
 
+    public function savePdfFile(Request $request)
+    {
+       echo "<pre>";print_r($request->all());"</pre>";exit;
+    }
+
     public function sendInvoice($id)
     {
         $invoice = Invoice::find($id)->first();

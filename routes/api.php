@@ -67,6 +67,8 @@ Route::get('transaction_history/{id}', 'UserTransactionController@index');
 Route::post('sendotp', 'LoginController@otp');
 Route::post('verifyotp', 'LoginController@verify');
 
+Route::post('savePdfFile', 'InvoiceController@savePdfFile');
+
 Route::get('payouts/{id}', 'PayoutController@index');
 Route::get('/users/getbalance/{id}','UserController@balance');
 Route::post('/users/save_razorpay_details','UserController@save_razorpay_details');

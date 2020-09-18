@@ -43,7 +43,9 @@ class LoginController extends Controller
 
   public function send($mob_num,$c)
   {   
-    $url = "https://sms.azmobia.com/http-tokenkeyapi.php?authentic-key=383162656574726f3538371542130398&senderid=BEETRO&route=1&number=$mob_num&message=Your%20Otp%20for%20Beetro%20Gym%20is%20$c";
+
+    $url = "https://api.textlocal.in/send?apikey=eVOjMJgzkkw-IMW7saJmZSZUI9owgph5AMLvNaxTm4&numbers=$mob_num&sender=TXTLCL&message=Your%20Otp%20for%20Beetro%20Gym%20is%20$c";
+    // $url = "https://sms.azmobia.com/http-tokenkeyapi.php?authentic-key=383162656574726f3538371542130398&senderid=BEETRO&route=1&number=$mob_num&message=Your%20Otp%20for%20Beetro%20Gym%20is%20$c";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url); 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 

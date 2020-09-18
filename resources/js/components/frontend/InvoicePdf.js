@@ -2,6 +2,8 @@ import React from 'react'
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
 
+import Moment from 'react-moment';
+
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react' 
 
@@ -9,108 +11,53 @@ import Pdf from "react-to-pdf";
 
 const ref = React.createRef();
 
-function Credits(props) { 
+function InvoicePdf({match}) { 
 
   const history = useHistory()
   const location = useLocation()
 
-   const [user, setUser] = useState(false);
+  const [user, setUser] = useState(false);
 
-  const [payoutsData, setPayoutsData] = useState([]);  
-  const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
-  const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
+  const [invoiceData, setInvoiceData] = useState({});
+
+  const [bookingData, setBookingData] = useState({}); 
+  const [invoiceId, setInvoiceId] = useState(''); 
+  const [customer, setCustomer] = useState({});   
+  const [error, setError] = useState('');   
+
+  const [invoiceDetail, setInvoiceDetail] = useState([]);
 
   useEffect(() => {  
+
+    let invoice_id = match.params.id;  
+    setInvoiceId(invoice_id);
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
+      axios('/api/invoices/show/'+invoice_id).then(result=>{
+        if (result.data) {
+          setInvoiceData(result.data);   
+          axios('/api/invoices/invoiceDetails/'+invoice_id).then(result=>{
+            if (result.data) {
+              setInvoiceDetail(result.data);          
+            }
+          });       
+        }
       });
     }   
 
   }, []);  
 
-
-  const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
-
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
-  };
-
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
-
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
-
-  }
-  const findByFilter = () => {
-
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-  };
-
   return (  
        <div className="invoice">
         <div className="container">
           <div className="row">
-          <Pdf targetRef={ref} filename="code-example.pdf">
-        {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
-      </Pdf>
-            <div className="invoicepdf" ref={ref}>
+            <Pdf targetRef={ref} filename={"invoice_"+match.params.id+".pdf"}>
+              {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
+            </Pdf>
+             <div className="invoicepdf" ref={ref}>
               <div className="row">
                 <div className="col-sm-6">
                   <div className="invoicelogo">
@@ -120,7 +67,7 @@ const onChangeYear = e => {
                 <div className="col-sm-6">
                   <div className="taxinvoice">
                     <h2>Tax Invoice</h2>
-                    <span>Paid</span>
+                    <span>{invoiceData.status}</span>
                   </div>
                 </div>
               </div>
@@ -130,8 +77,8 @@ const onChangeYear = e => {
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="billaddress">
-                      <div className="name">Rahul Kumar</div>
-                      <p>C-48, Diesel Shed Road, Kalka ji<br /> Mandir, New Delhi - 44 <br /> GSTIN: Z7AAGCP4442G1ZF</p>
+                      <div className="name">{invoiceData.customer_name}</div>
+                      <p>{invoiceData.billing_address}</p>
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -146,9 +93,9 @@ const onChangeYear = e => {
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="invoicedetai">
-                      <p><b>Invoice Number:</b> 00001</p>
-                      <p><b>Invoice Date:</b> 27-08-2020</p>
-                      <p><b>Due Date:</b> 27-08-2020</p>
+                      <p><b>Invoice Number:</b> {invoiceData.invoice_number}</p>
+                      <p><b>Invoice Date:</b> <Moment format="DD-MM-YYYY">{invoiceData.invoice_date}</Moment></p>
+                      <p><b>Due Date:</b> <Moment format="DD-MM-YYYY">{invoiceData.due_date}</Moment></p>
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -170,14 +117,17 @@ const onChangeYear = e => {
                       <th scope="col">Amount</th>
                     </tr>
                   </thead>
-                  <tbody className="customerbody">
-                    <tr>
-                      <td><span>Booking Delhi to Manali</span> <br /> Round trip booking for delhi to manali with stoppage chandigarh, kullu, rohtang</td>
-                      <td>1</td>
-                      <td><i className="fa fa-inr" /> 15000</td>
-                      <td><i className="fa fa-inr" /> 15000</td>
+                  {invoiceDetail.map((x, i) => {
+                      return ( <tbody key={i} className="customerbody">
+                        <tr>
+                      <td><span>{x.booking_name}</span> <br /> {x.booking_description}</td>
+                      <td>{x.qty}</td>
+                      <td><i className="fa fa-inr" /> {x.rate}</td>
+                      <td><i className="fa fa-inr" /> {x.amount}</td>
                     </tr>
-                  </tbody>
+                      </tbody>
+                      );
+                    })}
                 </table>
               </div>
               <div className="invoicetotal">
@@ -185,19 +135,19 @@ const onChangeYear = e => {
                   <tbody className="totalbody">
                     <tr>
                       <td colSpan={5} className="lablename">Sub Total :</td>
-                      <td className="payprice"> <i className="fa fa-inr" /> 15000</td>
+                      <td className="payprice"> <i className="fa fa-inr" /> {invoiceData.sub_total}</td>
                     </tr>
                     <tr>
                       <td colSpan={5} className="lablename">Service Charge 10% :</td>
-                      <td className="payprice"> <i className="fa fa-inr" /> 1500</td>
+                      <td className="payprice"> <i className="fa fa-inr" /> { ((invoiceData.sub_total*10)/100) }</td>
                     </tr>
                     <tr>
-                      <td colSpan={5} className="lablename">GST 18% :</td>
-                      <td className="payprice"> <i className="fa fa-inr" /> 2700</td>
+                      <td colSpan={5} className="lablename">GST 8% :</td>
+                      <td className="payprice"> <i className="fa fa-inr" /> { ((invoiceData.sub_total*8)/100) }</td>
                     </tr>
                     <tr>
                       <td colSpan={5} className="lablename">Total :</td>
-                      <td className="payprice"> <i className="fa fa-inr" /> <b>19200</b></td>
+                      <td className="payprice"> <i className="fa fa-inr" /> <b>{invoiceData.total}</b></td>
                     </tr>
                   </tbody>
                 </table>
@@ -212,4 +162,4 @@ const onChangeYear = e => {
   )  
 }  
   
-export default Credits
+export default InvoicePdf

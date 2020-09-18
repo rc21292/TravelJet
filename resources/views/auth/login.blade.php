@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    @include('layouts.front-head')
+    @include('layouts.front-head-register')
 </head>
 <body>
  <!-- Sign In -->
@@ -62,6 +62,92 @@
     </div>
 </div>
 </div>
-<!-- Sign In // End-->
+<!-- FOOTER -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="col-sm-3">
+                <div class="payment-option">
+                    <div class="footer-title">payment & security</div>
+                    <img src="/frontend/image/icons/payments.png" alt="payments">
+                    <div class="footer-title">follow us on</div>
+                    <div class="social-icon">
+                    <ul class="list-inline">
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-facebook-f icon"></i></a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fa fa-twitter icon"></i></a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fa fa-instagram icon"></i></a></li>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="footer-title">payment & security</div>
+                <div class="footer-menu">
+                <ul class="list-unstyled">
+                    <li><a href="#">Company Info</a></li>
+                    <li><a href="#">Payment Procedure</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms and Conditions</a></li>
+                    <li><a href="#">Cancellation Policy</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="footer-title">Services</div>
+                <div class="footer-menu">
+                <ul class="list-unstyled">
+                    <li><a href="#">Local Car Booking</a></li>
+                    <li><a href="#">Round Trip Booking</a></li>
+                    <li><a href="#">Round Trip with Sight Seeing</a></li>
+                    <li><a href="#">Airport Ride</a></li>
+                    <li><a href="#">Outstation Trip</a></li>
+                    <li><a href="#">Pilgrimage Tour</a></li>
+                    <li><a href="#">Weekend Ride</a></li>
+                    <li><a href="#">Road Trip</a></li>
+                </ul>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="footer-title">Popular Outstation rides</div>
+                <div class="footer-menu">
+                <ul class="list-unstyled">
+                    <li><a href="#">Delhi to Shimla</a></li>
+                    <li><a href="#">Delhi to Manali</a></li>
+                    <li><a href="#">Delhi to jaipur</a></li>
+                    <li><a href="#">Delhi to Mumbai</a></li>
+                    <li><a href="#">Delhi to Mussoorie</a></li>
+                    <li><a href="#">Delhi to Nainital</a></li>
+                    <li><a href="#">Delhi to Haridwar</a></li>
+                    <li><a href="#">Shimla to Manali</a></li>
+                    <li><a href="#">Manali to Ladakh</a></li>
+                    <li><a href="#">Manali to Spiti</a></li>
+                </ul>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="footer-title">Partner with us</div>
+                <div class="footer-menu">
+                <ul class="list-unstyled">
+                    <li><a href="/DriveWithUs">Drive with us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="/login">Register</a></li>
+                    <li><a href="/register">Login</a></li>
+                </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <div class="container">
+            <p>Copyright © 2020 Travel Jet</p>
+        </div>
+    </div>
 </body>
 </html>
