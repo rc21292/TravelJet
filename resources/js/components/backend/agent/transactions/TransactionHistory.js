@@ -172,7 +172,7 @@ const onChangeSearchTransactionType = e => {
                   <td>{query.created_on}</td>
                   <td>{query.type}</td>
                   <td dangerouslySetInnerHTML={{__html: query.description}} ></td>
-                  <td><i className="fa fa-inr" /> {query.amount}11</td>
+                  <td><i className="fa fa-inr" /> {query.amount}</td>
                 </tr>
                 })}  
               </tbody>

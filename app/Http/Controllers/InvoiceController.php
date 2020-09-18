@@ -194,12 +194,16 @@ class InvoiceController extends Controller
 
     public function savePdfFile(Request $request)
     {
-       echo "<pre>";print_r($request->all());"</pre>";exit;
+       $file = $request->file('data');
+       $fname = $request->file_name;
+       $destination = public_path() . '/invoices/' . $fname;
+       $location = $_FILES["data"]["tmp_name"];
+       move_uploaded_file($location, $destination);
     }
 
     public function sendInvoice($id)
     {
-        $invoice = Invoice::find($id)->first();
+        $invoice = Invoice::where('id',$id)->first();
         $user = User::where('id',$invoice->customer_id)->first();
         $email = $user->email;
         $email = 'er.krishna.mishra@gmail.com';
@@ -212,7 +216,6 @@ class InvoiceController extends Controller
                 'name' => $name,
             ]
         ];
-
         Mail::to($to)->send(new invoiceMail($invoice));
 
         return response()->json('Invoice sended successfully!');
