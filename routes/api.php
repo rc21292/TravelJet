@@ -67,6 +67,9 @@ Route::get('transaction_history/{id}', 'UserTransactionController@index');
 Route::post('sendotp', 'LoginController@otp');
 Route::post('verifyotp', 'LoginController@verify');
 
+
+Route::get('wallet_transactions/{id}', 'WalletTransactionController@index');
+
 Route::post('savePdfFile', 'InvoiceController@savePdfFile');
 
 Route::get('payouts/{id}', 'PayoutController@index');

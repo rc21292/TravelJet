@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "moment": "^2.27.0",
+        "react-csv": "^2.0.3",
         "react-flash-message": "^1.0.2",
         "react-js-pagination": "^3.0.3",
         "react-load-script": "0.0.6",

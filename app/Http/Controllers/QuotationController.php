@@ -6,6 +6,8 @@ use App\Quotation;
 use App\User;
 use App\Booking;
 use App\Notice;
+use App\WalletTransaction;
+use App\UserTransaction;
 use App\QuotationDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -78,10 +80,47 @@ class QuotationController extends Controller
 
     $user = User::where('id', $booking->user_id)->first();
 
-        /*$message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> awarded booking </span> <a href='/bookings/".$quotation->booking_id."'>".$booking->booking_name."</a>";
+    /*notifications */
 
-        Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
-        */
+    /*notice to agent for payment*/
+
+    $user->deposit($request->amount);
+
+    $user->withdraw($request->amount);
+
+     /*agent message*/
+    $user = User::where('id',$quotation->user_id)->first();
+    $user->deposit($request->amount);
+    $pay_message_agent = "Recived Rs. $request->amount from Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+    UserTransaction::create(['user_id' => $booking->user_id, 'receiver_id' =>  $quotation->user_id, 'description' => $pay_message_agent , 'type' => 'deposit' , 'amount' => $request->amount]);
+
+
+    $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> paid partial amount Rs. $request->amount for booking </span> <a href='/agent/leads?tab=2'>".$booking->booking_name."</a>";
+
+    Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
+
+    $message_tra = "Paid for ".$booking->booking_name;
+    WalletTransaction::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'booking_id' => $quotation->booking_id, 'transaction_id' => $request->payment_id, 'booking_name' => $booking->booking_name, 'amount' => $request->amount , 'status' => 1 , 'type' => 'withdraw', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);
+
+   
+    /*commission from agent to admin*/
+    $user = User::where('id',$quotation->user_id)->first();
+    $user->withdraw(((($request->amount)*10)/100));
+    $agent_am = ((($request->amount)*10)/100);
+    $pay_message_agent_admin = "Paid Rs. $agent_am commision to Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+    UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($request->amount)*10)/100)]);
+
+
+    /*agent to admin commission*/
+    $user_agent = User::where('id', $quotation->user_id)->first();
+    
+    $admin_am = ((($request->amount)*10)/100);
+    $user = User::find(1)->first();
+    $user->deposit($admin_am);
+    $pay_message_admin = "Recived Rs. $admin_am from  <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a> as commission";
+    UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($request->amount)*10)/100)]);
+
+    /*end notifications*/
 
         return response()->json([
             'success' => true,
@@ -101,17 +140,45 @@ class QuotationController extends Controller
         ->where('id', $quotation->booking_id)
         ->update(['status'=> 'awarded']);
 
-       $user = User::where('id',$request->user_id)->first();
+        $user = User::where('id',$request->user_id)->first();
         $user->withdraw($request->wallet);
 
         $booking =  Booking::where('id',$quotation->booking_id)->first();
 
         $user = User::where('id', $booking->user_id)->first();
+        $user_agent = User::where('id', $quotation->user_id)->first();
 
         $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> awarded booking </span> <a href='/bookings/".$quotation->booking_id."'>".$booking->booking_name."</a>";
 
         Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
 
+        /*user transaction*/
+        $user->withdraw($request->wallet);
+        $pay_message_customer = "Paid Rs. $request->amount for ".$booking->booking_name;
+        UserTransaction::create(['user_id' => $booking->user_id, 'receiver_id' =>  $booking->user_id, 'description' => $pay_message_customer , 'type' => 'withdraw' , 'amount' => $request->amount]);
+        /*end user transaction*/
+
+        /*agent message*/
+        $user = User::where('id',$quotation->user_id)->first();
+        $user->deposit($request->amount);
+        $pay_message_agent = "Recived Rs. $request->amount from Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+        UserTransaction::create(['user_id' => $booking->user_id, 'receiver_id' =>  $quotation->user_id, 'description' => $pay_message_agent , 'type' => 'deposit' , 'amount' => $request->amount]);
+
+        /*agent to admin commission*/
+        $admin_am = ((($request->amount)*10)/100);
+        $user = User::find(1)->first();
+        $user->deposit($admin_am);
+        $pay_message_admin = "Recived Rs. $admin_am from  <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a> as commission";
+        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($request->amount)*10)/100)]);        
+
+        /*commission from agent to admin*/
+        $user = User::where('id',$quotation->user_id)->first();
+        $user->withdraw(((($request->amount)*10)/100));
+        $pay_message_agent_admin = "Paid Rs. $admin_am commision to Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($request->amount)*10)/100)]);                
+
+        $message_tra = "Paid for ".$booking->booking_name;
+        WalletTransaction::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'booking_id' => $quotation->booking_id, 'transaction_id' => $request->payment_id, 'booking_name' => $booking->booking_name, 'amount' => $request->amount , 'status' => 1 , 'type' => 'withdraw', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);
 
         return response()->json([
             'success' => true,
@@ -156,6 +223,9 @@ class QuotationController extends Controller
             ->where('id', $request->booking_id)
             ->update(['status' => 'bidded']);
 
+        /*cut 10 credits from agent for bidding*/
+
+        UserCredit::where('user_id', $request->user_id)->update(['credits' => DB::raw('credits - 10')]);
 
         $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> bidded on booking </span> <a href='/customer/quotations/'>".$booking->booking_name."</a>";
 

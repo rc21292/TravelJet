@@ -177,7 +177,7 @@ class QueryController extends Controller
          $result = Booking::
          leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
          ->select('bookings.booking_name','bookings.id','bookings.created_at as date')
-         ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')
+         ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','awarded')->where('bookings.status','!=','cancelled')
          ->groupBy('bookings.id')
          ->latest('bookings.created_at')
          ->paginate(4);
@@ -255,7 +255,7 @@ class QueryController extends Controller
 
         $user = User::where('id',$request->user_id)->first();
 
-        $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <a href='/customer-booking/". $data_re->id."'>".$request->booking_name."</a>";
+        $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <bidding href='/booking-detail/". $data_re->id."'>".$request->booking_name."</a>";
 
         Notice::create(['user_id' => $request->user_id, 'receiver_id' => 0, 'data' => $message , 'type' => 'job_post', 'created_at' => \Carbon\Carbon::now()]);
 
@@ -263,34 +263,7 @@ class QueryController extends Controller
             'success' => true,
             'addresses' => '',
             'message' => 'Booking Saved successfully!'
-        ], 201);  
-
-        return $request->all();
-        // $query = new Query;
-        // $query->user_id = '4';
-        // $query->booking_type = $request->booking_type;
-        // $query->start_at = $request->start_at;
-        // $query->end_on = $request->end_on;
-        // $query->pick_up = $request->pick_up;
-        // if($request->booking_type == 'Round Trip'){
-        // $query->drop_on = $request->pick_up;
-        // $query->destination = $request->destination;
-        // $query->sightseeing = 'No';
-        // }elseif($request->booking_type == 'Round Trip with Sightseeing'){
-        // $query->drop_on = $request->drop_on;
-        // $query->destination = $request->destination;
-        // $query->sightseeing = 'Yes';
-        // }else{
-        // $query->drop_on = $request->destination;
-        // $query->destination = $request->destination;
-        // $query->sightseeing = 'No';
-        // }
-        // $query->persons = $request->persons;
-        // $query->cab_type = $request->cab_type;
-        // $query->book_in = $request->book_in;
-        // $query->budget = $request->budget;
-        // $query->description = $request->description;
-        // $query->save();
+        ], 201);
     }
 
     /**

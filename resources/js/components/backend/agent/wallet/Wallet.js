@@ -1,36 +1,62 @@
-import React, { Component } from 'react';
-import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
+import React from 'react'  
+import axios from 'axios';  
+import { useHistory, useLocation } from 'react-router-dom'
+import Moment from 'react-moment';
 
-import axios from 'axios';
 import Pagination from "react-js-pagination";
+import { useState, useEffect } from 'react'  
 
-export default class Wallet extends Component {
+function Wallet(props) {
 
-  constructor(props) {
+  const history = useHistory()
 
-    super(props)
-    this.state = {
-      balance: 0
-    }
+  const [user, setUser] = useState(false);
+  const [balance, setBalance] = useState(false);
+
+  const [walletTransactions, setWalletTransactions] = useState([]);  
+  const [activePage, setActivePage] = useState(1);  
+  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
+  const [totalItemsCount, setTotalItemsCount] = useState(1);  
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
+
+  useEffect(() => {  
+
+    let stateqq = localStorage["appState"];
+    if (stateqq) {
+      let AppState = JSON.parse(stateqq);
+      setUser(AppState.user);
+      axios.get('/api/users/getbalance/'+AppState.user.id)
+      .then(response=>{
+        setBalance(response.data.balance);
+      });
+
+      axios('/api/transaction_history/'+AppState.user.id).then(result=>{
+        setWalletTransactions(result.data.user_transactions.data);  
+        setItemsCountPerPage(result.data.user_transactions.per_page);  
+        setTotalItemsCount(result.data.user_transactions.total);  
+        setActivePage(result.data.user_transactions.current_page);
+      });
+    }   
+
+  }, []);  
+
+
+  const handlePageChange = (pageNumber) => {
+    axios.get('/api/transaction_history/'+user.id+'?page='+pageNumber)
+    .then(result=>{
+     setWalletTransactions(result.data.user_transactions.data);  
+     setItemsCountPerPage(result.data.user_transactions.per_page);  
+     setTotalItemsCount(result.data.user_transactions.total);  
+     setActivePage(result.data.user_transactions.current_page); 
+   });
   }
 
+  const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+      return s.charAt(0).toUpperCase() + s.slice(1)
+  }
 
-    componentDidMount()
-    {
-      let logstate = localStorage["appState"];
-      if (logstate) {
-        let AppState = JSON.parse(logstate);
-        axios.get('/api/users/getbalance/'+AppState.user.id)
-        .then(response=>{
-          this.setState({
-            balance:response.data.balance
-          })
-        });
-      }  
-    }
-
-	render() {
-		return (
+    return (
           <div className="wallet-page">
             {/* Page Heading */}
             <h1>My Wallet</h1>
@@ -41,7 +67,7 @@ export default class Wallet extends Component {
                     Total Balance
                   </div>
                   <div className="price">
-                    <i className="fa fa-rupee" /> {this.state.balance}
+                    <i className="fa fa-rupee" /> {balance}
                   </div>
                 </div>
               </div>
@@ -58,61 +84,23 @@ export default class Wallet extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Released 30% Payment from</span> <a href="#">Rahul Kumar</a> <span>for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Done Commision Payment to Travel Jet for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Released 30% Payment from</span> <a href="#">Rahul Kumar</a> <span>for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Done Commision Payment to Travel Jet for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Released 30% Payment from</span> <a href="#">Rahul Kumar</a> <span>for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Done Commision Payment to Travel Jet for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Released 30% Payment from</span> <a href="#">Rahul Kumar</a> <span>for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
-                      <tr>
-                        <td>14-Jul-20</td>
-                        <td>Deposit</td>
-                        <td><span>Done Commision Payment to Travel Jet for Booking</span> <a href="#">Delhi to Manali</a></td>
-                        <td><i className="fa fa-inr" /> 5000</td>
-                      </tr>
+                      {
+                        walletTransactions.map((query, idx) => {  
+                        return  <tr key={idx}>
+                          <td>{query.created_on}</td>
+                          <td>{query.type}</td>
+                          <td dangerouslySetInnerHTML={{__html: query.description}} ></td>
+                          <td><i className="fa fa-inr" /> {query.amount}</td>
+                        </tr>
+                        })
+                      }  
                     </tbody>
                   </table>
                 </div>
                 <div className="clearfix" />
                 <div className="col-sm-12">
                   <div className="alltransactions">
-                    <a href="/ahent/transactions" className="btn btn-primary">View All Transactions</a>
+                    <a href="/agent/transactions" className="btn btn-primary">View All Transactions</a>
                   </div>
                 </div>
               </div>
@@ -120,6 +108,7 @@ export default class Wallet extends Component {
           </div>
 
 
-		);
-	}
-}
+    );
+  }
+
+  export default Wallet;

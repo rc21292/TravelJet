@@ -51,7 +51,7 @@ class UserTransactionController extends Controller
         $symbol = !empty($currency) && !empty($currency[0]['currency']) ? Helper::currencyList($currency[0]['currency']) : array();
 
         DB::connection()->enableQueryLog();
-        $user_transaction_s = $this->user_transactions::where('user_id', $id)->latest();
+        $user_transaction_s = $this->user_transactions::where('receiver_id', $id)->latest();
 
         if ($request->has('transation_type') && !empty($request->transation_type)) {
             $transation_type = $request->transation_type;
@@ -86,7 +86,15 @@ class UserTransactionController extends Controller
             $to_date = date('m/d/Y');
         }
 
-         return response()->json([
+        foreach ($user_transactions as $key => $value) {
+
+            if ($value->description) {
+                $user_transactions[$key]['description_data'] =strip_tags($value->description);
+            }                 
+
+        }
+
+        return response()->json([
             'success' => true,
             'user_transactions' => $user_transactions,
             'transation_type' => $transation_type,

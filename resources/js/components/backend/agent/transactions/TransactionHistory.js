@@ -1,7 +1,7 @@
 import React from 'react'  
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
-
+import { CSVLink } from "react-csv";
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
 
@@ -12,6 +12,20 @@ function TransactionHistory(props) {
    const [user, setUser] = useState(false);
 
   const [bookingData, setBookingData] = useState([]);  
+
+  const [headersData, setHeadersData] = useState([
+    { label: "Date", key: "created_on" },
+    { label: "Transaction Type", key: "type" },
+    { label: "Transaction Description", key: "description_data" },
+    { label: "Amount", key: "amount" }
+  ]);
+
+ 
+const [csvData, setCsvData] = useState([]);
+
+  const [csvReport, setCsvReport] = useState({data: csvData,headers: headersData,filename: 'Transactions.csv'});  
+
+
   const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
@@ -31,6 +45,7 @@ function TransactionHistory(props) {
         setUser(AppState.user);
          axios('/api/transaction_history/'+AppState.user.id).then(result=>{
       setBookingData(result.data.user_transactions.data);  
+      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setFromCount(result.data.user_transactions.from);  
@@ -47,6 +62,7 @@ function TransactionHistory(props) {
   axios.get('/api/transaction_history/'+user.id+'?transation_type='+searchTransactionType+'&from_date='+searchDateFrom+'&to_date='+searchDateTo+'&page='+pageNumber)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
+     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
@@ -63,6 +79,21 @@ function TransactionHistory(props) {
       });  
   };  
 
+
+  const downloadReport = (event, done) => {
+    // API call to get data
+    const objReport = {
+      filename: 'transactions.csv',
+      headers: headersData,
+      data: csvData
+    };
+    setCsvReport({ csvReport: objReport }, () => {
+      done();
+    });
+  }
+
+console.log(csvData);
+console.log(csvReport);
 
 const onChangeSearchTransactionType = e => {
     const searchTransactionType = e.target.value;
@@ -86,6 +117,7 @@ const onChangeSearchTransactionType = e => {
     axios.get('/api/transaction_history/'+user.id)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
+     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
@@ -100,7 +132,8 @@ const onChangeSearchTransactionType = e => {
 
     axios(`/api/transaction_history/${user.id}?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
     .then(result => {
-      setBookingData(result.data.user_transactions.data);  
+      setBookingData(result.data.user_transactions.data); 
+      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
@@ -136,10 +169,10 @@ const onChangeSearchTransactionType = e => {
                   </div>
                 </div>
                 <div className="col-sm-4">
-                  <input type="date" name="from_date" className="form-control" defaultValue="date" value={searchDateFrom} onChange={onChangeSearchDateFrom}/> 
+                  <input type="date" name="from_date" className="form-control" value={searchDateFrom} onChange={onChangeSearchDateFrom}/> 
                 </div>
                 <div className="col-sm-4">
-                  <input type="date" name="to_date" className="form-control" defaultValue="date" value={searchDateTo} onChange={onChangeSearchDateTo}/>
+                  <input type="date" name="to_date" className="form-control" value={searchDateTo} onChange={onChangeSearchDateTo}/>
                 </div>    
               </div>
             </div>
@@ -148,7 +181,9 @@ const onChangeSearchTransactionType = e => {
             <div className="transaction-show">
               <ul className="list-inline">
                 <li><a onClick={findByFilter} className="btn btn-primary">Filter</a></li>
-                <li><a href="#" className="btn btn-light">Export</a></li>
+                <li>
+                <CSVLink className="btn btn-primary" {...csvReport}>Export</CSVLink>
+                </li>
                 <li><a onClick={resetFilter} className="btn btn-primary">Reset</a></li>
               </ul>
             </div>
