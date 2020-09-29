@@ -26,7 +26,10 @@ Route::get('queries/getBookedBookings/{id}','Api\QueryController@getBookedBookin
 Route::get('queries/getAgentBookedBookings/{id}','Api\QueryController@getAgentBookedBookings');
 Route::get('queries','Api\QueryController@getQueries');
 Route::post('queries/store','Api\QueryController@store');
+
+/*quotation apis*/
 Route::post('quotations/storeBid','QuotationController@storeBid');
+Route::get('quotations/getBookedBooking/{id}','QuotationController@getBookedBooking');
 Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
 Route::post('quotations/storeQuotationDetails/{id}','QuotationController@storeQuotationDetails');
 Route::post('quotations/updateQuotationDetails/{id}','QuotationController@updateQuotationDetails');

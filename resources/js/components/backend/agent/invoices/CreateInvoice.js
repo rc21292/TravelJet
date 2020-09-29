@@ -35,7 +35,7 @@ function CreateInvoice(props) {
   const [customer, setCustomer] = useState({});   
   const [error, setError] = useState('');   
 
-  const [invoiceDetail, setInvoiceDetail] = useState([{ booking_name: "", booking_description: "", qty: 1, rate: "", amount: ""}]);
+  const [invoiceDetail, setInvoiceDetail] = useState([]);
 
 
   useEffect(() => {
@@ -50,23 +50,24 @@ function CreateInvoice(props) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
 
-      axios.get('/api/queries/show/'+booking_id+'?type=booked').then((result) => { 
+        axios.get('/api/quotations/getBookedBooking/'+booking_id).then((result) => { 
         setBookingData(result.data); 
+        console.log(result.data); 
+          setInvoiceDetail([{ booking_name: result.data.booking_name, booking_description: result.data.description, qty: 1, rate: result.data.total_payment, amount: result.data.total_payment}]); 
 
-        axios.get('/api/users/show/'+result.data.user_id)
-        .then(response=>{
-          if (response.data) {
-            setCustomer(response.data);
-            setInvoiceData({...invoiceData,'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id});
-          }
-        });
-      }); 
+          let sub_total = result.data.total_payment;
 
-      /*axios('/api/invoices/show/'+booking_id+'/'+AppState.user.id).then(result=>{
-        if (result.data) {
-        setInvoiceData(result.data);          
-        }
-      });*/
+          let tax = ((parseInt(sub_total)*18)/100);
+          let total = parseInt(sub_total) + parseInt(tax);
+
+          axios.get('/api/users/show/'+result.data.user_id)
+          .then(response=>{
+            if (response.data) {
+              setCustomer(response.data);
+              setInvoiceData({...invoiceData,'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id,'sub_total' : sub_total, 'tax' : tax, 'total' : total});
+            }
+          });
+        }); 
     }   
 
   }, []);  
@@ -194,6 +195,8 @@ function CreateInvoice(props) {
         console.log(e);
       });
     }
+
+    console.log(invoiceDetail);
 
   return (  
       <div className="transactionhistory portfollopage">

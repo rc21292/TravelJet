@@ -400,10 +400,20 @@ class QuotationController extends Controller
         return QuotationDetail::select('quotation_details.*','users.name')->join('users','users.id','quotation_details.user_id')->where('quotation_details.quotation_id',$id)->first();
     }
 
+    public function getBookedBooking($booking_id)
+    {
+
+        return $result_data = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*','quotations.total_payment')
+                     ->where('booking_id',$booking_id)
+                     ->where('quotations.status','booked')->where('bookings.status','booked')->first();
+
+        return Quotation::where('booking_id',$booking_id)->where('status','booked')->first();
+    }
 
     public function getQuotationByBookingId(Request $request, $id)
     {
-
         if ($request->status == 'awarded') {
             $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
 
