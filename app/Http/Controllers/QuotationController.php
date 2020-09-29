@@ -231,7 +231,6 @@ class QuotationController extends Controller
 
         Notice::create(['user_id' => $request->user_id, 'receiver_id' => $booking->user_id, 'data' => $message , 'type' => 'quotation', 'created_at' => \Carbon\Carbon::now()]);
 
-
         return response()->json([
             'success' => true,
             'id' => $data_re->id,

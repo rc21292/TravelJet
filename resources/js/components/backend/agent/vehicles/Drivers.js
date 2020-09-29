@@ -1,285 +1,168 @@
-import React from 'react'  
-import axios from 'axios';  
-import moment from 'react-moment'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useState ,useEffect } from "react";
 
-import Pagination from "react-js-pagination";
-import { useState, useEffect } from 'react'  
+function Drivers() {
+  const [inputList, setInputList] = useState([{  name: "", mobile: "", driving_licence: "", licence_photo: null, status:"Approval Pending" }]);
 
-function Drivers(props) { 
+  const [user, setUser] = useState(false);
 
-  const history = useHistory()
-  const location = useLocation()
-
-   const [user, setUser] = useState(false);
-
-  const [payoutsData, setPayoutsData] = useState([]);  
-  const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
-  const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState("");
-
-  useEffect(() => {  
-
+  useEffect(() => {
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
-        setItemsCountPerPage(result.data.payouts.per_page);  
-        setTotalItemsCount(result.data.payouts.total);  
-        setActivePage(result.data.payouts.current_page);
+      axios.get('/api/drivers/getDrivers/'+AppState.user.id).then(result=>{
+        if(result.data.length > 0){
+        setInputList(result.data);
+      }else{
+        setInputList([{  name: "", mobile: "", driving_licence: "", licence_photo: null, status:"Approval Pending" }])
+      }
       });
     }   
+  },[]); 
 
-  }, []);  
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...inputList];
+    list[index][name] = value;
+    setInputList(list);
+  };inputList
 
 
-  const handlePageChange = (pageNumber) => {
-    console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
+  const handleFileChange =  (e, index) => {
+    const { name, value } = e.target;
+    const list = [...inputList];
+    list[index][name] = e.target.files[0] ;
+    setInputList(list);     
+  }; 
 
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
+  const handleRemoveClick = index => {
+    const list = [...inputList];
+    list.splice(index, 1);
+    setInputList(list);
   };
 
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
+  const handleAddClick = () => {
+    setInputList([...inputList, { name: "", mobile: "", driving_licence: "", licence_photo: null, status:"Approval Pending" }]);
   };
 
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
+  console.log(inputList); 
 
-  }
-  const findByFilter = () => {
+  const saveDriverData = (event) => {
 
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
+    event.preventDefault();
+
+    let errors = {};
+
+    var data = new FormData();
+
+    Object.keys(inputList).map(function(keyName, keyIndex) {
+      data.append("name["+keyName+"]",inputList[keyName].name)
+      data.append("mobile["+keyName+"]",inputList[keyName].mobile)
+      data.append("driving_licence["+keyName+"]",inputList[keyName].driving_licence)
+      data.append("licence_photo["+keyName+"]",inputList[keyName].licence_photo)
+
+    })
+    axios({
+      method: 'post',
+      url: '/api/drivers/saveDriver/'+user.id,
+      data: data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+
     })
     .catch(e => {
       console.log(e);
     });
-  };
 
-  return (  
-     <div className="drivers">
-        <div className="transactionhistory mydriver">
-          {/* Page Heading */}
-          <h1>My Driver</h1>
-          <div className="vehicletable">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Driver Name</th>
-                  <th>Mobile Number</th>
-                  <th>Driving Licence</th>
-                  <th>Upload Licence</th>
-                  <th>Status</th>
-                  <th />
+  }
+
+  return (
+    <div className="transactionhistory mydriver">
+        {/* Page Heading */}
+        <h1>My Driver</h1>
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="vehicletable">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Driver Name</th>
+                    <th>Mobile Number</th>
+                    <th>Driving Licence</th>
+                    <th>Upload Licence</th>
+                    <th>Status</th>
                 </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#">Verified</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#" className="approval">Approval Pending</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#">Verified</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#" className="approval">Approval Pending</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#">Verified</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#" className="approval">Approval Pending</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#">Verified</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#" className="approval">Approval Pending</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#">Verified</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="title" placeholder="Driver Name" className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="Mobile No." className="form-control" /></td>
-                  <td><input type="text" name="title" placeholder="DL-000000000" className="form-control" /></td>
-                  <td>
-                    <div className="upload-field">
-                      <input type="text" className="form-control" placeholder="Upload Licence" />
-                      <ul className="list-inline upload-icon">
-                        <li><a href="#" title><div className="file-upload1"><input type="file" /><i className="fa fa-paperclip" /></div></a></li>
-                      </ul>
-                    </div>
-                  </td>
-                  <td><a href="#" className="approval">Approval Pending</a></td>
-                  <td><a href="#" className="btn btn-link">Remove</a></td>
-                </tr>
-                <tr>
-                  <td colSpan={6}><a href="#" className="btn btn-primary">Add More</a></td>
-                </tr>
-              </tbody>
-            </table>
+                </thead>
+                
+                <tbody>
+                 {inputList.map((x,i)=>{
+                           return(   
+                  <>                      
+                  <tr>
+                    <td>
+                      <input type="text" name="name" placeholder="Driver Name" value={x.name}  onChange={e => handleInputChange(e, i)} className="form-control" />
+                    </td>
+                    <td>
+                      <input type="text" name="mobile" placeholder="Mobile No." value={x.mobile}  onChange={e => handleInputChange(e, i)} className="form-control" />
+                    </td>
+                    <td>
+                      <input type="text" name="driving_licence" placeholder="DL-000000000" value={x.driving_licence}  onChange={e => handleInputChange(e, i)} className="form-control" />
+                    </td>
+                    <td>
+                      <div className="upload-field">
+                        <input type="text" className="form-control" placeholder="Upload Document" />
+                        <ul className="list-inline upload-icon">
+                          <li>
+                            <a href="#" title>
+                              <div className="file-upload1">
+                                <input type="file" name="licence_photo" onChange={e => handleFileChange(e, i)} />                           
+                                <i className="fa fa-paperclip" />
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="#" className={x.status == 'Verified' ? '' : 'approval'}>{x.status}</a>
+                    </td>
+                    <td>
+                      {inputList.length !== 1 && 
+                      <a className="btn btn-link"  onClick={() => handleRemoveClick(i)}>Remove</a>
+                      }
+                    </td>
+                  </tr>
+                  {inputList.length - 1 === i &&
+                    <tr>
+                      <td colSpan={6}><button type="button" className="btn btn-primary" onClick={handleAddClick}>Add More</button></td>
+                    </tr>
+                   }
+                  </>
+
+
+                 );
+
+
+                  })
+                }                                    
+                                
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="placebidbtn movebtn">
+            <a href="#" className="btn btn-primary"  onClick={saveDriverData}>Save</a>
           </div>
         </div>
-        <div className="placebidbtn movebtn">
-          <a href="#" className="btn btn-primary">Save</a>
-        </div>
+          <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div>
       </div>
-  )  
-}  
-  
-export default Drivers
+
+
+  );
+}
+
+export default Drivers;

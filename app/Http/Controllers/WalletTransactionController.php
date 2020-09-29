@@ -27,7 +27,7 @@ class WalletTransactionController extends Controller
     public function index($id)
     {
         DB::connection()->enableQueryLog();
-        return  $wallet_transactions = $this->wallet_transactions::where('user_id', $id)->paginate(10);
+        return  $wallet_transactions = $this->wallet_transactions::where('user_id', $id)->latest()->paginate(10);
 
         $queries = DB::getQueryLog();
         $last_query = end($queries);

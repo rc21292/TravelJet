@@ -40,7 +40,12 @@ Route::get('quotations/checkQuotaions/{id}','QuotationController@checkQuotaions'
 Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
+
+/*cancle agent booking*/
 Route::post('queries/cancel/{id}','Api\QueryController@cancel');
+/*cancel customer booking*/
+Route::post('queries/cancelCustBooking/{id}','Api\QueryController@cancelCustBooking');
+
 Route::post('queries/reBooking/{id}','Api\QueryController@reBooking');
 Route::post('queries/moveToBooked/{id}','Api\QueryController@moveToBooked');
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
@@ -69,8 +74,6 @@ Route::post('verifyotp', 'LoginController@verify');
 
 
 Route::get('wallet_transactions/{id}', 'WalletTransactionController@index');
-
-Route::post('savePdfFile', 'InvoiceController@savePdfFile');
 
 Route::get('payouts/{id}', 'PayoutController@index');
 Route::get('/users/getbalance/{id}','UserController@balance');
@@ -123,6 +126,7 @@ Route::post('invoices/updateAndMail/{id}','InvoiceController@updateAndMail');
 Route::post('invoices/updateInvoice/{id}','InvoiceController@updateInvoice');
 Route::post('invoices/sendMailInvoice/{id}','InvoiceController@sendMailInvoice');
 Route::delete('invoices/delete/{id}','InvoiceController@destroy');
+Route::post('savePdfFile', 'InvoiceController@savePdfFile');
 /*end for agent*/
 
 /*for customer*/
@@ -130,3 +134,7 @@ Route::get('invoices/getInvoices/{id}', 'InvoiceController@getInvoices');
 /*end for customer*/
 
 /*end invoice api's call*/
+
+/*drivers*/
+Route::get('drivers/getDrivers/{id}','DriverController@index');
+Route::post('drivers/saveDriver/{id}','DriverController@store');

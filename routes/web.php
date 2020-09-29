@@ -127,6 +127,7 @@ Route::get('/query/store', 'Api\QueryController@store')->name('storequery');
 Auth::routes();
 
 Route::get('/logout', 'HomeController@logout');
+Route::post('/sendOtp', 'LoginController@otp')->name('sendOtp');
 
 
 

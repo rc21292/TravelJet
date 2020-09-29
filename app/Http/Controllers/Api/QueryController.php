@@ -8,6 +8,8 @@ use App\Query;
 use App\Booking;
 use App\Quotation;
 use App\QuotationDetail;
+use App\UserTransaction;
+use App\WalletTransaction;
 use App\User;
 use App\Notice;
 use DB;
@@ -505,6 +507,54 @@ class QueryController extends Controller
         return 'saved';
     }
 
+    public function cancelCustBooking(Request $request, $id)
+    {
+        $query = Booking::find($id);
+        $query->cancellation_reason = $request->reason;
+        $query->status = 'cancelled';
+        /*$query->save();
+        DB::table('quotations')
+        ->where('id', $request->quotation_id)
+        ->update(['status' => 'cancelled']);*/
+
+        $booking = Booking::find($id)->first();
+        $quotation = Quotation::where('id',$request->quotation_id)->first();
+
+
+        $paid_amount = $quotation->payment_first;
+        foreach (json_decode($quotation->payments_status) as $key => $value) {
+            if ($value == 'paid') {
+               $paid_amount += $key;
+            }
+        }
+
+        $user = User::where('id',$booking->user_id)->first();
+        // $user->deposit($paid_amount);
+
+        $returned_amt = $paid_amount-(($paid_amount*10)/100);
+        $agent = User::where('id',$quotation->user_id)->first();
+        // $agent->withdraw($returned_amt);
+
+        $admin = User::where('id',1)->first();
+        // $admin->withdraw((($paid_amount*10)/100));
+
+        $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> cancelled booking </span> <a href='/cancelled-booking/".$id."'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $user->id, 'receiver_id' => $agent->id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);        
+
+        $pay_message_agent = "Return Rs. $returned_amt to <a href='/profile/".$user->id."'> ".$user->name." </a> for cancelled booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        UserTransaction::create(['user_id' => $user->id, 'receiver_id' =>  $agent->id, 'description' => $pay_message_agent , 'type' => 'withdraw' , 'amount' => $returned_amt]);
+
+        $pay_message_to_customer = "received Rs. $paid_amount from <a href='/profile/".$agent->id."'> ".$agent->name." </a> for cancelled booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        UserTransaction::create(['user_id' => $agent->id, 'receiver_id' =>  $user->id, 'description' => $pay_message_to_customer , 'type' => 'deposit' , 'amount' => $paid_amount]);
+
+        $message_tra = "deposit for cancelled booking ".$booking->booking_name;
+        WalletTransaction::create(['user_id' => $user->id, 'receiver_id' => $agent->id, 'booking_id' => $quotation->booking_id, 'transaction_id' => '', 'booking_name' => $booking->booking_name, 'amount' => $paid_amount , 'status' => 1 , 'type' => 'deposit', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);
+        return 'saved';
+    }
+
 
     public function cancel(Request $request, $id)
     {
@@ -515,6 +565,42 @@ class QueryController extends Controller
         DB::table('quotations')
         ->where('id', $request->quotation_id)
         ->update(['status' => 'cancelled']);
+
+        $booking = Booking::find($id)->first();
+        $quotation = Quotation::where('id',$request->quotation_id)->first();
+
+
+        $paid_amount = $quotation->payment_first;
+        foreach (json_decode($quotation->payments_status) as $key => $value) {
+            if ($value == 'paid') {
+               $paid_amount += $key;
+            }
+        }
+
+        $user = User::where('id',$booking->user_id)->first();
+        // $user->deposit($paid_amount);
+
+        $returned_amt = $paid_amount-(($paid_amount*10)/100);
+        $agent = User::where('id',$quotation->user_id)->first();
+        // $agent->withdraw($returned_amt);
+
+        $admin = User::where('id',1)->first();
+        // $admin->withdraw((($paid_amount*10)/100));
+
+        $message = "<a href='/profile/".$agent->id."'> ".$agent->name." </a> <span> cancelled booking </span> <a href='/cancelled-booking/".$id."'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $quotation->user_id, 'receiver_id' => $booking->user_id, 'data' => $message , 'type' => 'quotation', 'created_at' => \Carbon\Carbon::now()]);        
+
+        $pay_message_agent = "Return Rs. $returned_amt to <a href='/profile/".$user->id."'> ".$user->name." </a> for cancelled booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        UserTransaction::create(['user_id' => $user->id, 'receiver_id' =>  $agent->id, 'description' => $pay_message_agent , 'type' => 'withdraw' , 'amount' => $returned_amt]);
+
+        $pay_message_to_customer = "received Rs. $paid_amount from <a href='/profile/".$agent->id."'> ".$agent->name." </a> for cancelled booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        UserTransaction::create(['user_id' => $agent->id, 'receiver_id' =>  $user->id, 'description' => $pay_message_to_customer , 'type' => 'deposit' , 'amount' => $paid_amount]);
+
+        $message_tra = "deposit for cancelled booking ".$booking->booking_name;
+        WalletTransaction::create(['user_id' => $user->id, 'receiver_id' => $agent->id, 'booking_id' => $quotation->booking_id, 'transaction_id' => '', 'booking_name' => $booking->booking_name, 'amount' => $paid_amount , 'status' => 1 , 'type' => 'deposit', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);
         return 'saved';
     }
 

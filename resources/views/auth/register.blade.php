@@ -7,6 +7,7 @@
 
 @endsection
 <body>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="signIn create-account">
         <div class="container">
             <div class="row">
@@ -16,14 +17,14 @@
                     <div class="signIn_form">
                        <form method="POST" action="{{ route('register') }}">
                         @csrf
-                        <div class="form-group required">
+                        <div class="form-group required" style="display: none;" >
                             <label>Who Are You ?</label>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" name="role" id="customRadio1" value="agent">
+                                <input type="radio" class="custom-control-input" name="role" id="customRadio1" value="agent" checked>
                                 <label class="custom-control-label" for="role" required>Agent</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" name="role" id="customRadio2" value="customer" checked>
+                                <input type="radio" class="custom-control-input" name="role" id="customRadio2" value="customer">
                                 <label class="custom-control-label" for="role" required>Customer</label>
                             </div>
                         </div>
@@ -50,25 +51,41 @@
                             <div class="row">
                                 <div class="col-sm-7 col-sm-offset-1">
                                     <div class="form-group required">
-                                        <input type="number" name="phone" class="form-control" placeholder="Mobile No." Required>
+                                        <input type="number" name="phone" value="{{ old('phone') }}" id="phone" class="form-control" placeholder="Mobile No." Required>
+                                         @error('phone')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                                        <div id="mobile-error" style="color: red;"></div>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <button class="btn btn-default generateOTP">Generate OTP</button>
+                                        <button class="btn btn-default generateOTP" id="send-otp">Generate OTP</button>
                                     </div>
+                                    <div id="otp-error" style="float: left;color: red;"></div>
+                                    <div id="otp-success" style="float: left;"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group required">
                             <label>Enter OTP</label>
-                            <input type="name" name="otp" class="form-control" placeholder="One time Password">
+                            <input type="name" name="otp" value="{{ old('otp') }}" class="form-control" placeholder="One time Password">
+                            @error('otp')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                            @if (Session::has('otp'))
+                               <div style="color:red;">{{ Session::get('otp') }}</div>
+                            @endif
                         </div>
                         <div class="row confirmPass">
                             <div class="col-sm-6">
                                 <div class="form-group required">
                                     <label>Password</label>
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Set Password">
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" value="{{ old('password') }}" placeholder="Set Password">
 
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -85,7 +102,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-warning">Sign Up</button>
+                            <button type="submit" id="signUp" class="btn btn-warning">Sign Up</button>
                         </div>
                     </form>
                     <a href="/">Back to Home</a>
@@ -192,3 +209,34 @@
     </div>
 </body>
 </html>
+<script type="text/javascript">
+    $(document).on('click','#send-otp',function(e) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $("#signUp").prop('disabled', false);
+        var phone = $('#phone').val();
+        if (phone == '') {
+            $("#mobile-error").html('Please enter mobile number!');
+            return;
+        }
+        $.ajax({
+            type:'POST',
+            url:"{{ route('sendOtp') }}",
+            data:{phone:phone},
+            success:function(data){
+                if (data.message == 'Otp Sent Successfully') {
+                    $("#otp-success").html('Otp sended successfully!');
+                    $("#signUp").prop('disabled', false);
+                }else{
+                    $("#otp-error").html('Error in sending otp!');
+                    $("#signUp").prop('disabled', true);
+                }
+            }
+        });    
+    });
+</script>

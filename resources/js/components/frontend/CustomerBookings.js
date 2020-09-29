@@ -76,9 +76,9 @@ function CustomerBookings({match}) {
     }else{
        setError('');
        let data = {'reason' :saveData,'quotation_id' : quotationData.id};
-       axios.post('/api/queries/cancel/'+ match.params.id,data)  
+       axios.post('/api/queries/cancelCustBooking/'+ match.params.id,data)  
       .then((result) => {  
-        window.location.href = "/customer/cancelled-bookings";
+        // window.location.href = "/customer/cancelled-bookings";
       }); 
     }
   
