@@ -388,7 +388,8 @@ function QuotationDetaills({id}) {
                           <td />
                         </tr>
                         <tr>
-                          <td>Destination Covered</td>
+                          {/*<td>Destination Covered</td>*/}
+                          <td>Destination</td>
                           <td>{ bookingsData.to_places}</td>
                           <td />
                           <td />
