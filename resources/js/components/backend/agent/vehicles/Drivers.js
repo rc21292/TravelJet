@@ -157,7 +157,6 @@ function Drivers() {
             <a href="#" className="btn btn-primary"  onClick={saveDriverData}>Save</a>
           </div>
         </div>
-          <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div>
       </div>
 
 
