@@ -8,6 +8,7 @@ use App\Booking;
 use App\Notice;
 use App\WalletTransaction;
 use App\UserTransaction;
+use App\UserCredit;
 use App\QuotationDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
