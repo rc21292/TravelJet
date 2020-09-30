@@ -17,7 +17,7 @@ class DriverController extends Controller
      */
     public function index($user_id)
     {
-        return Driver::where('user_id',$user_id)->latest()->get();
+        return Driver::where('user_id',$user_id)->get();
     }
 
     /**
@@ -38,33 +38,62 @@ class DriverController extends Controller
      */
     public function store(Request $request, $user_id)
     {
-        Driver::where('user_id',$user_id)->delete();
+        $ids = array(); 
+        for ($i = 0; $i < count($request->name); $i++) 
+        {  
+            if (($request->id[$i] != '') && !empty($request->id[$i])) {
+                array_push($ids, $request->id[$i]);
+            }
+        }
+
+        $driver_data = Driver::where('user_id',$user_id)->whereNotIn('id', $ids)->get();
+        foreach ($driver_data->toArray() as $key => $value) {
+
+            if (!empty($value['licence_photo'])) {
+                if(file_exists(Helper::PublicPath() . '/drivers/'.$user_id.'/'.$value['licence_photo'])){
+                    unlink(Helper::PublicPath() . '/drivers/'.$user_id.'/'.$value['licence_photo']);
+                }
+            }
+        }
+
+        Driver::where('user_id',$user_id)->whereNotIn('id', $ids)->delete();
+
         for ($i = 0; $i < count($request->name); $i++) 
         {    
-            if(isset($request->licence_photo[$i]) && !empty($request->licence_photo[$i])){
+            if(isset($request->licence_photo[$i]) && !empty($request->licence_photo[$i]) && !is_string($request->licence_photo[$i])){
 
                $temp_path = Helper::PublicPath() . '/drivers/'.$user_id;
                 if (!file_exists($temp_path)) {
                     File::makeDirectory($temp_path, 0755, true, true);
                 }
                $profile_image = $request->licence_photo[$i];
-               $image_name = time().''.$profile_image->getClientOriginalName();
+               $image_name = 'driver_'.$user_id.'_'.time().''.$profile_image->getClientOriginalName();
                 Helper::uploadDriversImage($temp_path, $request->licence_photo[$i],$image_name,'');
-               $fname = 'driver_'.$user_id.'_'.time();
-               $destination = public_path() . '/drivers/'.$user_id.'/'. $fname;
-             
-              $location = $request->licence_photo[$i];
-               // move_uploaded_file($location, $destination);
            }else{
-            $fname = null;
+            $image_name = empty($request->licence_photo[$i]) ? '' : $request->licence_photo[$i];
            }
-           DB::table('drivers')->insert([
+
+           if (isset($request->id[$i]) && !empty($request->id[$i])) {
+                DB::table('drivers')
+                ->where('id', $request->id[$i])
+                ->update([
+                   "user_id"=>$user_id,
+                "name"=>$request->name[$i],
+                "mobile"=>$request->mobile[$i],
+                "driving_licence"=>$request->driving_licence[$i],
+                "licence_photo"=>$image_name,
+                ]);
+            }else{
+               DB::table('drivers')->insert([
                 "user_id"=>$user_id,
                 "name"=>$request->name[$i],
                 "mobile"=>$request->mobile[$i],
                 "driving_licence"=>$request->driving_licence[$i],
                 "licence_photo"=>$image_name,
             ]);
+            }
+
+           
         }
 
        return "success";

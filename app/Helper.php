@@ -340,6 +340,40 @@ class Helper extends Model
         }
     }
 
+    public static function uploadVehiclesImage($temp_path, $image, $file_name = "")
+    {
+        $json = array();
+        if (!empty($image)) {
+            $file_original_name = $image->getClientOriginalName();
+            $parts = explode('.', $file_original_name);
+            $extension = end($parts);
+            $extension = $image->getClientOriginalExtension();
+            if ($extension === "jpg" || $extension === "png" || $extension === "jpeg") {
+                $file_original_name = !empty($file_name) ? $file_name : $file_original_name;
+                // create directory if not exist.
+                if (!file_exists($temp_path)) {
+                    File::makeDirectory($temp_path, 0755, true, true);
+                }
+                // generate small image size
+                $small_img = Image::make($image);
+                // save original image size
+                $img = Image::make($image);
+                $img->save($temp_path . '/' . $file_original_name);
+                $json['message'] = trans('lang.img_uploaded');
+                $json['type'] = 'success';
+                return $json;
+            } else {
+                $json['message'] = trans('lang.img_jpg_png');
+                $json['type'] = 'error';
+                return $json;
+            }
+        } else {
+            $json['message'] = trans('lang.image not found');
+            $json['type'] = 'error';
+            return $json;
+        }
+    }
+
     public static function uploadDriversImage($temp_path, $image, $file_name = "")
     {
         $json = array();

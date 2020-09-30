@@ -1,7 +1,7 @@
 import React, { useState ,useEffect } from "react";
 
 function Drivers() {
-  const [inputList, setInputList] = useState([{  name: "", mobile: "", driving_licence: "", licence_photo: null, status:"Approval Pending" }]);
+  const [inputList, setInputList] = useState([{  name: "", mobile: "", driving_licence: "", licence_photo: "", status:"Approval Pending" }]);
 
   const [user, setUser] = useState(false);
 
@@ -14,7 +14,7 @@ function Drivers() {
         if(result.data.length > 0){
         setInputList(result.data);
       }else{
-        setInputList([{  name: "", mobile: "", driving_licence: "", licence_photo: null, status:"Approval Pending" }])
+        setInputList([{ id: "", name: "", mobile: "", driving_licence: "", licence_photo: "", status:"Approval Pending" }])
       }
       });
     }   
@@ -42,10 +42,8 @@ function Drivers() {
   };
 
   const handleAddClick = () => {
-    setInputList([...inputList, { name: "", mobile: "", driving_licence: "", licence_photo: null, status:"Approval Pending" }]);
+    setInputList([...inputList, { id: "", name: "", mobile: "", driving_licence: "", licence_photo: "", status:"Approval Pending" }]);
   };
-
-  console.log(inputList); 
 
   const saveDriverData = (event) => {
 
@@ -56,6 +54,7 @@ function Drivers() {
     var data = new FormData();
 
     Object.keys(inputList).map(function(keyName, keyIndex) {
+      data.append("id["+keyName+"]",inputList[keyName].id)
       data.append("name["+keyName+"]",inputList[keyName].name)
       data.append("mobile["+keyName+"]",inputList[keyName].mobile)
       data.append("driving_licence["+keyName+"]",inputList[keyName].driving_licence)
@@ -92,7 +91,7 @@ function Drivers() {
                     <th>Driver Name</th>
                     <th>Mobile Number</th>
                     <th>Driving Licence</th>
-                    <th>Upload Licence</th>
+                    <th style={{width:'22%'}}>Upload Licence Image</th>
                     <th>Status</th>
                 </tr>
                 </thead>
@@ -113,7 +112,7 @@ function Drivers() {
                     </td>
                     <td>
                       <div className="upload-field">
-                        <input type="text" className="form-control" placeholder="Upload Document" />
+                        <input type="text" className="form-control" placeholder={(x.licence_photo != '') ? x.licence_photo : 'Upload Document' } />
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#" title>

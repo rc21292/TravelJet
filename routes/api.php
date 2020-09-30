@@ -141,3 +141,8 @@ Route::get('invoices/getInvoices/{id}', 'InvoiceController@getInvoices');
 /*drivers*/
 Route::get('drivers/getDrivers/{id}','DriverController@index');
 Route::post('drivers/saveDriver/{id}','DriverController@store');
+
+/*vechicles*/
+
+Route::get('vehicles/getVehicles/{id}','VehicleController@index');
+Route::post('vehicles/saveVehicles/{id}','VehicleController@store');
