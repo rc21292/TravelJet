@@ -416,7 +416,7 @@ class QuotationController extends Controller
     public function getQuotationByBookingId(Request $request, $id)
     {
         if ($request->status == 'awarded') {
-            $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->where('quotations.status','awarded')->first();
+            $quotation = Quotation::select('quotation_details.*','quotations.*','users.name')->join('quotation_details','quotations.id','quotation_details.quotation_id')->leftjoin('users','users.id','quotations.user_id')->where('quotations.booking_id',$id)->whereIn('quotations.status',['awarded','booked'])->first();
 
 
             $quotation->payments = unserialize($quotation->payments);
