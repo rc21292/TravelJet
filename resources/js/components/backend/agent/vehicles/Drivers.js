@@ -70,7 +70,7 @@ function Drivers() {
       }
     })
     .then(response => {
-
+      window.location.reload(false);
     })
     .catch(e => {
       console.log(e);
