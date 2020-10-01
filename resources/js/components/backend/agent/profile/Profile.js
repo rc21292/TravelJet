@@ -295,10 +295,10 @@ function Profile() {
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">Category</label>
                     <select onChange={handleChange} name="category"  value={profileData.category} className="form-control">
-                      <option>Select Category</option>
-                      <option onChange={handleChange} name="1">1</option>
-                      <option onChange={handleChange} name="2">2</option>
-                      <option onChange={handleChange} name="3">3</option>
+                      <option value="">Select Category</option>
+                      <option onChange={handleChange} name="Male">Male</option>
+                      <option onChange={handleChange} name="Female">Female</option>
+                      <option onChange={handleChange} name="Other">Other</option>
                     </select>
                   </div>
                   <div className="form-group col-md-6">
