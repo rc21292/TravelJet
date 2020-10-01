@@ -11,7 +11,6 @@ const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"
 
 function Profile() {
 
-
     const initialProfileState = {
     user_id: null,
     name:"",
@@ -89,6 +88,10 @@ function Profile() {
     const { name, value } = event.target;
    setProfileData({...profileData, [name]:value})
   }
+
+  const handleClick = () => {  
+    history.push('/agent/change-password')   
+  };  
 
   const saveProfile = (event) => {
     event.preventDefault();
@@ -302,7 +305,7 @@ function Profile() {
                     </select>
                   </div>
                   <div className="form-group col-md-6">
-                    <label htmlFor="inputname3" className="col-form-label">Password</label>
+                    <label htmlFor="inputname3" className="col-form-label">Password <a onClick={() => handleClick()} className="change">Change Password</a></label>
                     <input readOnly type="password" onChange={handleChange} name="password" value={profileData.password} className="form-control" placeholder="Password" />
                   </div>
                 </div>
