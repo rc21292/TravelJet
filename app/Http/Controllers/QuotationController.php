@@ -153,6 +153,10 @@ class QuotationController extends Controller
 
         Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
 
+        $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> paid initial amount Rs. $request->amount for booking </span> <a href='/agent/leads?tab=2'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'data' => $message , 'type' => 'award', 'created_at' => \Carbon\Carbon::now()]);
+
         /*user transaction*/
         $user->withdraw($request->wallet);
         $pay_message_customer = "Paid Rs. $request->amount for ".$booking->booking_name;
@@ -176,7 +180,7 @@ class QuotationController extends Controller
         $user = User::where('id',$quotation->user_id)->first();
         $user->withdraw(((($request->amount)*10)/100));
         $pay_message_agent_admin = "Paid Rs. $admin_am commision to Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
-        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($request->amount)*10)/100)]);                
+        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($request->amount)*10)/100)]);   
 
         $message_tra = "Paid for ".$booking->booking_name;
         WalletTransaction::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'booking_id' => $quotation->booking_id, 'transaction_id' => $request->payment_id, 'booking_name' => $booking->booking_name, 'amount' => $request->amount , 'status' => 1 , 'type' => 'withdraw', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);

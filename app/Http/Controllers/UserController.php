@@ -89,15 +89,207 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->save();
 
+        if(isset($request->cinno_photo) && !empty($request->cinno_photo) && !is_string($request->cinno_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->cinno_photo;
+            $cinno_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->cinno_photo,$cinno_photo_name,'');
+        }else{
+            $cinno_photo_name = empty($request->cinno_photo) ? '' : $request->cinno_photo;
+        }
+
+        if(isset($request->gstno_photo) && !empty($request->gstno_photo) && !is_string($request->gstno_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->gstno_photo;
+            $gstno_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->gstno_photo,$gstno_photo_name,'');
+        }else{
+            $gstno_photo_name = empty($request->gstno_photo) ? '' : $request->gstno_photo;
+        }
+
+        if(isset($request->passport_size_photo) && !empty($request->passport_size_photo) && !is_string($request->passport_size_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->passport_size_photo;
+            $passport_size_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->passport_size_photo,$passport_size_photo_name,'');
+        }else{
+            $passport_size_photo_name = empty($request->passport_size_photo) ? '' : $request->passport_size_photo;
+        }
+
+        if(isset($request->signature_photo) && !empty($request->signature_photo) && !is_string($request->signature_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->signature_photo;
+            $signature_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->signature_photo,$signature_photo_name,'');
+        }else{
+            $signature_photo_name = empty($request->signature_photo) ? '' : $request->signature_photo;
+        }
+
+        if(isset($request->aadhar_front_photo) && !empty($request->aadhar_front_photo) && !is_string($request->aadhar_front_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->aadhar_front_photo;
+            $aadhar_front_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->aadhar_front_photo,$aadhar_front_photo_name,'');
+        }else{
+            $aadhar_front_photo_name = empty($request->aadhar_front_photo) ? '' : $request->aadhar_front_photo;
+        }
+
+
+        if(isset($request->aadhar_back_photo) && !empty($request->aadhar_back_photo) && !is_string($request->aadhar_back_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->aadhar_back_photo;
+            $aadhar_back_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->aadhar_back_photo,$aadhar_back_photo_name,'');
+        }else{
+            $aadhar_back_photo_name = empty($request->aadhar_back_photo) ? '' : $request->aadhar_back_photo;
+        }
+
+        if(isset($request->driving_license_front_photo) && !empty($request->driving_license_front_photo) && !is_string($request->driving_license_front_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->driving_license_front_photo;
+            $driving_license_front_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->driving_license_front_photo,$driving_license_front_photo_name,'');
+        }else{
+            $driving_license_front_photo_name = empty($request->driving_license_front_photo) ? '' : $request->driving_license_front_photo;
+        }
+
+        if(isset($request->driving_license_back_photo) && !empty($request->driving_license_back_photo) && !is_string($request->driving_license_back_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->driving_license_back_photo;
+            $driving_license_back_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->driving_license_back_photo,$driving_license_back_photo_name,'');
+        }else{
+            $driving_license_back_photo_name = empty($request->driving_license_back_photo) ? '' : $request->driving_license_back_photo;
+        }
+
+        if(isset($request->pancard_photo) && !empty($request->pancard_photo) && !is_string($request->pancard_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->pancard_photo;
+            $pancard_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->pancard_photo,$pancard_photo_name,'');
+        }else{
+            $pancard_photo_name = empty($request->pancard_photo) ? '' : $request->pancard_photo;
+        }
+
+        if(isset($request->passport_front_photo) && !empty($request->passport_front_photo) && !is_string($request->passport_front_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->passport_front_photo;
+            $passport_front_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->passport_front_photo,$passport_front_photo_name,'');
+        }else{
+            $passport_front_photo_name = empty($request->passport_front_photo) ? '' : $request->passport_front_photo;
+        }
+
+        if(isset($request->passport_back_photo) && !empty($request->passport_back_photo) && !is_string($request->passport_back_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->passport_back_photo;
+            $passport_back_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->passport_back_photo,$passport_back_photo_name,'');
+        }else{
+            $passport_back_photo_name = empty($request->passport_back_photo) ? '' : $request->passport_back_photo;
+        }
+
+        if(isset($request->office_address_proof_photo) && !empty($request->office_address_proof_photo) && !is_string($request->office_address_proof_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->office_address_proof_photo;
+            $office_address_proof_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->office_address_proof_photo,$office_address_proof_photo_name,'');
+        }else{
+            $office_address_proof_photo_name = empty($request->office_address_proof_photo) ? '' : $request->office_address_proof_photo;
+        }
+
+        if(isset($request->company_pancard_photo) && !empty($request->company_pancard_photo) && !is_string($request->company_pancard_photo)){
+               $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+                if (!file_exists($temp_path)) {
+                    File::makeDirectory($temp_path, 0755, true, true);
+                }
+               $profile_image = $request->company_pancard_photo;
+               $company_pancard_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+                Helper::uploadProfileDocuments($temp_path, $request->company_pancard_photo,$company_pancard_photo_name,'');
+           }else{
+            $company_pancard_photo_name = empty($request->company_pancard_photo) ? '' : $request->company_pancard_photo;
+           }
+
+
+        if(isset($request->office_address_proof_photo) && !empty($request->office_address_proof_photo) && !is_string($request->office_address_proof_photo)){
+            $temp_path = Helper::PublicPath() . '/uploads/users/'.$id.'/documents/';
+            if (!file_exists($temp_path)) {
+                File::makeDirectory($temp_path, 0755, true, true);
+            }
+            $profile_image = $request->office_address_proof_photo;
+            $office_address_proof_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            Helper::uploadProfileDocuments($temp_path, $request->office_address_proof_photo,$office_address_proof_photo_name,'');
+        }else{
+            $office_address_proof_photo_name = empty($request->office_address_proof_photo) ? '' : $request->office_address_proof_photo;
+        }
+
+
+
         $data = $request->all();
         $agent = AgentProfile::where('user_id',$id)->first();
 
         if(!$agent){
-            AgentProfile::create($data);
+            $agent_profile_data = AgentProfile::create($data);
+            $agent_profile_id = $agent_profile_data->id;
         }
         if($agent){
             AgentProfile::where('user_id',$id)->update($data);
+            $agent_profile_id = $id;
         }
+
+        AgentProfile::where('user_id',$agent_profile_id)->update([
+            'cinno_photo' => $cinno_photo_name,
+            'gstno_photo' => $gstno_photo_name,
+            'passport_size_photo' => $passport_size_photo_name,
+            'signature_photo' => $signature_photo_name,
+            'aadhar_front_photo' => $aadhar_front_photo_name,
+            'aadhar_back_photo' => $aadhar_back_photo_name,
+            'driving_license_front_photo' => $driving_license_front_photo_name,
+            'driving_license_back_photo' => $driving_license_back_photo_name,
+            'pancard_photo' => $pancard_photo_name,
+            'passport_front_photo' => $passport_front_photo_name,
+            'passport_back_photo' => $passport_back_photo_name,
+            'company_pancard_photo' => $company_pancard_photo_name,
+            'office_address_proof_photo' => $office_address_proof_photo_name,
+            /*'profile' => $profile_name,
+            */
+        ]);
 
         $agent_profile = AgentProfile::where('user_id',$id);
 

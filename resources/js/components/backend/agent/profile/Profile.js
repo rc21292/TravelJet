@@ -92,13 +92,28 @@ function Profile() {
 
   const saveProfile = (event) => {
     event.preventDefault();
-    var query = profileData;
-    axios.post('/api/users/saveAgentProfile/'+user.id,query).then(res=>
-    {
-      window.location.reload(false);
+    var data = new FormData();
+    Object.keys(profileData).map(function(keyName) {
+      data.append(keyName,profileData[keyName]);
     });
+    axios({
+      method: 'post',
+      url: '/api/users/saveAgentProfile/'+user.id,
+      data: data,
+      config: { headers: {'Content-Type': 'multipart/form-data' }}
+    }).then(res=>
+    {
+     window.location.reload(false);
+   });
   }
 
+  const fileChange = (event) => {
+     event.preventDefault();
+    const { name, value } = event.target;
+    setProfileData({...profileData, [name] : event.target.files[0]});
+  }
+
+  console.log(profileData);
 
   const fileSelect = (event) => {
     event.preventDefault();
@@ -109,7 +124,7 @@ function Profile() {
     bodyFormData.append('image', event.target.files[0]);
     axios({
     method: 'post',
-    url: 'http://13.235.238.138/api/users/insertImages',
+    url: '/api/users/insertImages',
     data: bodyFormData,
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
@@ -176,9 +191,9 @@ function Profile() {
                         <input type="text" className="form-control" />
                         <ul className="list-inline upload-icon2">
                           <li>
-                            <a href="#" title>
+                            <a href="#" title="">
                               <div className="file-upload1">
-                                <input type="file" onChange={fileSelect} /><i className="fa fa-cloud-upload" />
+                                <input type="file" title={profileData.profile} onChange={fileSelect} /><i className="fa fa-cloud-upload" />
                               </div>
                             </a>
                           </li>
@@ -188,7 +203,7 @@ function Profile() {
                   </div>
                   <div className="form-group col-md-9">
                     <label htmlFor="inputname3" className="col-form-label">About us</label>
-                    <textarea onChange={handleChange} name="about" value={profileData.about} rows={4} cols={50} placeholder="About us" className="form-control" defaultValue={""} />
+                    <textarea onChange={handleChange} name="about" value={profileData.about} rows={4} cols={50} placeholder="About us" className="form-control" />
                   </div>
                 </div>
                 <div className="form-row">
@@ -205,19 +220,49 @@ function Profile() {
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">State</label>
                     <select onChange={handleChange} name="state"  value={profileData.state} className="form-control">
-                      <option>Select State</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
+                      <option value="Andhra Pradesh">Pick a state...</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                      <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Chandigarh">Chandigarh</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                      <option value="Daman and Diu">Daman and Diu</option>
+                      <option value="Delhi NCR">Delhi NCR</option>
+                      <option value="Lakshadweep">Lakshadweep</option>
+                      <option value="Puducherry">Puducherry</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Manipur">Manipur</option>
+                      <option value="Meghalaya">Meghalaya</option>
+                      <option value="Mizoram">Mizoram</option>
+                      <option value="Nagaland">Nagaland</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Sikkim">Sikkim</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Tripura">Tripura</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="West Bengal">West Bengal</option>
                     </select>
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">Country</label>
                     <select onChange={handleChange} name="country"  value={profileData.country} className="form-control">
-                      <option>Select Country</option>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
+                      <option value="India">India</option>
                     </select>
                   </div>
                 </div>
@@ -272,12 +317,12 @@ function Profile() {
                         <div className="col-md-6">
                           <label htmlFor="inputname3" className="col-form-label">Passport Photo</label>
                           <div className="upload-field2">
-                            <input type="text" onChange={handleChange} name="passport_size_photo" className="form-control" />
+                            <input type="text" className="form-control" />
                             <ul className="list-inline upload-icon2">
                               <li>
                                 <a href="#">
                                   <div className="file-upload1">
-                                    <input type="file" onChange={handleChange} name="" /><i className="fa fa-cloud-upload" />
+                                    <input type="file" title={profileData.passport_size_photo} onChange={fileChange} name="passport_size_photo" /><i className="fa fa-cloud-upload" />
                                   </div>
                                 </a>
                               </li>
@@ -287,12 +332,12 @@ function Profile() {
                         <div className="col-md-6">
                           <label htmlFor="inputname3" className="col-form-label">Upload Signature</label>
                           <div className="upload-field2">
-                            <input type="text" onChange={handleChange} name="signature_photo" className="form-control" />
+                            <input type="text" className="form-control" />
                             <ul className="list-inline upload-icon2">
                               <li>
                                 <a href="#">
                                   <div className="file-upload1">
-                                    <input type="file" onChange={handleChange} name="" /><i className="fa fa-cloud-upload" />
+                                    <input type="file" title={profileData.signature_photo} onChange={fileChange} name="signature_photo" /><i className="fa fa-cloud-upload" />
                                   </div>
                                 </a>
                               </li>
@@ -310,12 +355,12 @@ function Profile() {
                               <div className="row">
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" onChange={handleChange} name="aadhar_front_photo" placeholder="Front" />
+                                    <input type="text" className="form-control" placeholder="Front" />
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
                                           <div className="file-upload1">
-                                            <input type="file" onChange={handleChange} name="" />
+                                            <input type="file" title={profileData.aadhar_front_photo} onChange={fileChange} name="aadhar_front_photo" />
                                           </div>
                                         </a>
                                       </li>
@@ -324,12 +369,12 @@ function Profile() {
                                 </div>
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" onChange={handleChange} name="aadhar_back_photo" placeholder="Back" />
+                                    <input type="text" className="form-control" placeholder="Back" />
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
                                           <div className="file-upload1">
-                                            <input type="file" onChange={handleChange} name="" />
+                                            <input type="file" title={profileData.aadhar_back_photo} onChange={fileChange} name="aadhar_back_photo" />
                                           </div>
                                         </a>
                                       </li>
@@ -343,12 +388,12 @@ function Profile() {
                               <div className="row">
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" onChange={handleChange} name="driving_license_front_photo" placeholder="Front" />
+                                    <input type="text" className="form-control"  placeholder="Front" />
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
                                           <div className="file-upload1">
-                                            <input type="file" onChange={handleChange} name="" />
+                                            <input type="file" title={profileData.driving_license_front_photo} onChange={fileChange} name="driving_license_front_photo" />
                                           </div>
                                         </a>
                                       </li>
@@ -357,12 +402,12 @@ function Profile() {
                                 </div>
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" onChange={handleChange} name="driving_license_back_photo" placeholder="Back" />
+                                    <input type="text" className="form-control" placeholder="Back" />
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
                                           <div className="file-upload1">
-                                            <input type="file" onChange={handleChange} name="" />
+                                            <input type="file" title={profileData.driving_license_back_photo} onChange={fileChange} name="driving_license_back_photo" />
                                           </div>
                                         </a>
                                       </li>
@@ -380,12 +425,12 @@ function Profile() {
                           <div className="row">
                             <div className="col-md-12">
                               <div className="upload-field5">
-                                <input type="text" className="form-control" onChange={handleChange} name="pancard_photo" placeholder="Upload Pan Card" />
+                                <input type="text" className="form-control" placeholder="Upload Pan Card" />
                                 <ul className="list-inline upload-icon">
                                   <li>
                                     <a href="#">
                                       <div className="file-upload6">
-                                        <input type="file" onChange={handleChange} name="" />
+                                        <input type="file" title={profileData.pancard_photo} onChange={fileChange} name="pancard_photo" />
                                       </div>
                                     </a>
                                   </li>
@@ -399,12 +444,12 @@ function Profile() {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="upload-field">
-                                <input type="text" className="form-control" onChange={handleChange} name="passport_front_photo" placeholder="Front" />
+                                <input type="text" className="form-control"  placeholder="Front" />
                                 <ul className="list-inline upload-icon">
                                   <li>
                                     <a href="#">
                                       <div className="file-upload1">
-                                        <input type="file" onChange={handleChange} name="" />
+                                        <input type="file" title={profileData.passport_front_photo} onChange={fileChange} name="passport_front_photo" />
                                       </div>
                                     </a>
                                   </li>
@@ -413,12 +458,12 @@ function Profile() {
                             </div>
                             <div className="col-md-6">
                               <div className="upload-field">
-                                <input type="text" className="form-control" onChange={handleChange} name="passport_back_photo" placeholder="Back" />
+                                <input type="text" className="form-control"  placeholder="Back" />
                                 <ul className="list-inline upload-icon">
                                   <li>
                                     <a href="#">
                                       <div className="file-upload1">
-                                        <input type="file" onChange={handleChange} name="" />
+                                        <input type="file" title={profileData.passport_back_photo} onChange={fileChange} name="passport_back_photo" />
                                       </div>
                                     </a>
                                   </li>
@@ -462,12 +507,12 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">CIN Number if PVT LTD</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" onChange={handleChange} name="cinno_photo" placeholder="Upload COI" />
+                        <input type="text" className="form-control" placeholder="Upload COI" />
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
                               <div className="file-upload3">
-                                <input type="file" onChange={handleChange} name="" />
+                                <input type="file" title={profileData.cinno_photo} value="" onChange={fileChange} name="cinno_photo" />
                               </div>
                             </a>
                           </li>
@@ -477,12 +522,12 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">Company Pan Card</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" onChange={handleChange} name="company_pancard_photo" placeholder="Upload Company Pan" />
+                        <input type="text" className="form-control" placeholder="Upload Company Pan" />
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
                               <div className="file-upload3">
-                                <input type="file" onChange={handleChange} name="" />
+                                <input type="file" title={profileData.company_pancard_photo} onChange={fileChange} name="company_pancard_photo" />
                               </div>
                             </a>
                           </li>
@@ -492,12 +537,12 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">Office address proof</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" onChange={handleChange} name="office_address_proof_photo" placeholder="Upload Office Address Proof" />
+                        <input type="text" className="form-control" placeholder="Upload Office Address Proof" />
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
                               <div className="file-upload3">
-                                <input type="file" onChange={handleChange} name="" />
+                                <input type="file" title={profileData.office_address_proof_photo} onChange={fileChange} name="office_address_proof_photo" />
                               </div>
                             </a>
                           </li>
@@ -507,12 +552,12 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">GST Number (Optional)</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" onChange={handleChange} name="gstno_photo" value={profileData.gstno_photo} placeholder="Upload GST Certificate" />
+                        <input type="text" className="form-control" placeholder="Upload GST Certificate" />
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
                               <div className="file-upload3">
-                                <input type="file" onChange={handleChange} name="" />
+                                <input type="file" title={profileData.gstno_photo} onChange={fileChange} name="gstno_photo" />
                               </div>
                             </a>
                           </li>
@@ -562,7 +607,6 @@ function Profile() {
               </div>
             </form>
           </div>
-          {/*Edit Form*/}
         </div>
       </div>
 
