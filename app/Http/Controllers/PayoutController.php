@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Payout;
+use App\User;
 use App\Helper;
 use DB;
 use Illuminate\Support\Facades\Input;
@@ -35,7 +36,7 @@ class PayoutController extends Controller
                 ->select('*')
                 ->whereYear('created_at', '=', $year)
                 ->whereMonth('created_at', '=', $month)
-                ->latest()->paginate(7)->setPath('');
+                ->latest()->paginate(10)->setPath('');
             $pagination = $payouts->appends(
                 array(
                     'year' => request('year'),
@@ -43,7 +44,7 @@ class PayoutController extends Controller
                 )
             );
         } else {
-            $payouts =  Payout::latest()->paginate(7);
+            $payouts =  Payout::latest()->paginate(10);
         }
         $selected_year = !empty($_GET['year']) ? $_GET['year'] : date('Y');
         $selected_month = !empty($_GET['month']) ? $_GET['month'] : '';
@@ -237,6 +238,31 @@ class PayoutController extends Controller
             $json['message'] = trans('lang.verify_code');
             return $json;
         }
+    }
+
+    public function savePayoutRequest(Request $request)
+    {
+      $check = DB::table('payout_requests')
+                  ->insert(array(
+                    'amount'      => $request->amount,
+                    'user_id'     => $request->user_id,
+                    'created_at' => Now()
+                  ));
+      return 'success';
+    }
+
+    public function getRequestedPayouts(Request $request,$id)
+    {
+      $payout_amount = DB::table('payout_requests')->where('status','requested')->where('user_id',$id)->sum('amount');
+      $wallet_amount = User::where('id',$id)->first()->balance;
+      $total_requsted_amount = $payout_amount;
+      $pending_requsted_amount = $wallet_amount - $payout_amount;
+
+      return response()->json([
+            'total_requsted_amount' => $total_requsted_amount,
+            'pending_requsted_amount' => $pending_requsted_amount,
+            'wallet_amount' => $wallet_amount,
+        ], 200);
     }
 
      public function getRequestedPayoutDetails(Request $request)

@@ -104,6 +104,8 @@ Route::get('transaction_history/{id}', 'UserTransactionController@index');
 Route::get('wallet_transactions/{id}', 'WalletTransactionController@index');
 
 Route::get('payouts/{id}', 'PayoutController@index');
+Route::get('payouts/getRequestedPayouts/{id}', 'PayoutController@getRequestedPayouts');
+Route::post('payouts/savePayoutRequest','PayoutController@savePayoutRequest');
 
 /*agent credits apis*/
 Route::post('credits/save_user_credits','CreditsController@save_user_credits');

@@ -5,26 +5,32 @@ import { useHistory, useLocation } from 'react-router-dom'
 
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
+import FlashMessage from 'react-flash-message'
+import Moment from 'react-moment'
 
 function Payouts(props) { 
 
   const history = useHistory()
   const location = useLocation()
 
-   const [user, setUser] = useState(false);
-
+  const [user, setUser] = useState(false);
+  const [error, setError] = useState();  
+  const [success, setSuccess] = useState('');
   const [payoutsData, setPayoutsData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
-  const [selectYear, setSelectYear] = useState([]);  
-  const [selectedYear, setSelectedYear] = useState();  
-  const [selectedMonth, setSelectedMonth] = useState();  
-  const [selectMonth, setSelectMonth] = useState([]);  
+  const [fromCount, setFromCount] = useState(1);  
+  const [toCount, setToCount] = useState(1);  
+  const [totalPages, setTotalPages] = useState(1);
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
   const [searchTransactionType, setSearchTransactionType] = useState("");
   const [searchDateFrom, setSearchDateFrom] = useState("");
   const [searchDateTo, setSearchDateTo] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [requestedData, setRequestedData] = useState({});
+
+  const [saveData, setSaveData] = useState(''); 
 
   useEffect(() => {  
 
@@ -32,92 +38,80 @@ function Payouts(props) {
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
+      axios.get('/api/users/getbalance/'+AppState.user.id)
+      .then(response=>{
+        setBalance(response.data.balance)
+      });
+      axios.get('/api/payouts/getRequestedPayouts/'+AppState.user.id)
+      .then(response=>{
+        setRequestedData(response.data)
+      });
       axios('/api/payouts/'+AppState.user.id).then(result=>{
-        setPayoutsData(result.data.payouts.data);  
-        setSelectYear(result.data.years);  
-        setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-        setSelectMonth(result.data.months);  
+        setPayoutsData(result.data.payouts.data);
+        setFromCount(result.data.payouts.from);  
+        setToCount(result.data.payouts.to);  
+        setTotalPages(result.data.payouts.last_page);  
         setItemsCountPerPage(result.data.payouts.per_page);  
         setTotalItemsCount(result.data.payouts.total);  
         setActivePage(result.data.payouts.current_page);
       });
-    }   
-
+    }
   }, []);  
 
+  const handleChange = (event) => {
+    setSaveData(event.target.value);
+  }
+
+  const requestPayout = (event) => {  
+
+    if (saveData == '') {
+      setError('please Enter Amount!');
+      return false;
+    }else{
+       setError('');
+       let data = {'amount' :saveData,'user_id' : user.id};
+       axios.post('/api/payouts/savePayoutRequest',data)  
+      .then((result) => {  
+         axios.get('/api/payouts/getRequestedPayouts/'+user.id)
+      .then(response=>{
+        setRequestedData(response.data)
+      });
+          setSuccess('Amount Requested successfully!');
+      }); 
+    }     
+  }; 
 
   const handlePageChange = (pageNumber) => {
     console.log(location.pathname)
-  axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
-    
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-  });
-}
-
-const onChangeYear = e => {
-    const year = e.target.value;
-    setSelectedYear(year);  
-  };
-
-  const onChangeMonth = e => {
-    const month = e.target.value;
-    setSelectedMonth(month);  
-  };
-
-  const resetFilter = () => {
-      setSelectedYear("");  
-      setSelectedMonth(""); 
-    axios.get('/api/payouts/'+user.id)
-  .then(result=>{
-     setPayoutsData(result.data.payouts.data);  
-     setSelectedYear(result.data.selected_year);  
-        setSelectedMonth(result.data.selected_month);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-     
-  }); 
-
+    axios.get('/api/payouts/'+user.id+'?month='+selectedMonth+'&year='+selectedYear+'&page='+pageNumber)
+    .then(result=>{
+     setPayoutsData(result.data.payouts.data);
+     setItemsCountPerPage(result.data.payouts.per_page);
+     setFromCount(result.data.payouts.from);  
+     setToCount(result.data.payouts.to);  
+     setTotalPages(result.data.payouts.last_page);
+     setTotalItemsCount(result.data.payouts.total);  
+     setActivePage(result.data.payouts.current_page);
+   });
   }
-  const findByFilter = () => {
-
-    axios(`/api/payouts/${user.id}?month=${selectedMonth}&year=${selectedYear}`)
-    .then(result => {
-      setPayoutsData(result.data.payouts.data);  
-      setItemsCountPerPage(result.data.payouts.per_page);  
-      setTotalItemsCount(result.data.payouts.total);  
-      setActivePage(result.data.payouts.current_page);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-  };
 
   return (  
      <div className="payout">
-        {/* Page Heading */}
         <h1>Payouts</h1>
         <div className="payouttable">
           <table className="table">
             <tbody>
               <tr>
                 <td>Total Amount on wallet</td>
-                <td>: <i className="fa fa-inr" /> 90900</td>
+                <td>: <i className="fa fa-inr" /> {requestedData.wallet_amount}</td>
               </tr>
               <tr>
                 <td>Total Amount requested</td>
-                <td>: <i className="fa fa-inr" /> 0</td>
+                <td>: <i className="fa fa-inr" /> {requestedData.total_requsted_amount}</td>
               </tr>
               <tr>
                 <td>Pending amount to be requested</td>
-                <td>: <i className="fa fa-inr" /> 90900</td>
+                <td>: <i className="fa fa-inr" /> {requestedData.pending_requsted_amount}</td>
               </tr>
             </tbody>
           </table>
@@ -127,12 +121,15 @@ const onChangeYear = e => {
             <div className="col-sm-9">
               <h5>Please Enter Amount for Requesting Payment</h5>
               <div className="row">
+              {success ? <FlashMessage duration={10000} persistOnHover={true}>
+                <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
                 <div className="form-group col-sm-9">
-                  <input type="text" placeholder="Please Enter Amount" className="form-control" />
+                  <input type="number" onChange={handleChange} placeholder="Please Enter Amount" className="form-control" />
                 </div>
                 <div className="form-group col-sm-3">
-                  <a href="#" className="btn btn-primary">Request</a>
+                  <a onClick={requestPayout} className="btn btn-primary">Request</a>
                 </div>
+                <div className="form-group col-sm-12" style={{color:'red'}}> {error && error} </div>
               </div>
             </div>
           </div>
@@ -148,80 +145,38 @@ const onChangeYear = e => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
-                <tr>
-                  <td>14-Jul-20</td>
-                  <td><i className="fa fa-inr" /> 5000</td>
-                  <td>Bank Transfer</td>
-                  <td>123456789</td>
-                </tr>
+               {  
+                payoutsData.map((query, idx) => {  
+                  return  <tr key={idx}>
+                      <td> <Moment format="DD-MMM-YYYY">{query.created_at}</Moment></td>  
+                      <td>{query.amount}</td>
+                      <td>{query.payment_method}</td>  
+                      <td>{query.transaction_id}</td>  
+                  </tr>  
+                  })
+                }
               </tbody>
             </table>
           </div>
           <div className="clearfix" />
-          <div className="col-sm-6">
-            <nav aria-label="Page navigation" className="paginationdiv">
-              <ul className="pagination">
-                <li className="page-item">
-                  <a href="#" aria-label="Previous">
-                    <i className="fa fa-angle-left" />
-                  </a>
-                </li>
-                <li className="active"><a className="page-link" href="#">1</a></li>
-                <li><a className="page-link" href="#">2</a></li>
-                <li>
-                  <a href="#" aria-label="Next">
-                    <i className="fa fa-angle-right" />
-                  </a>
-                </li>
-              </ul>
-            </nav>
+          <div className="col-sm-6" style={{marginTop:'-22px'}}>
+            <Pagination
+              activePage={activePage}
+              itemsCountPerPage={itemsCountPerPage}
+              totalItemsCount={totalItemsCount}
+              pageRangeDisplayed={pageRangeDisplayed}
+              onChange={handlePageChange}
+              itemClass="page-item"
+              linkClass="page-link"
+              prevPageText="Prev"
+              nextPageText="Next"
+              lastPageText="Last"
+              firstPageText="First"
+              />
           </div>
-
           <div className="col-sm-6">
             <div className="showingpage">
-              <p>Showing 1 to 8 of 15 (2 Pages)</p>
+              <p>Showing {fromCount} to {toCount} of {totalItemsCount} ({totalPages} Pages)</p>
             </div>
           </div>
         </div>
