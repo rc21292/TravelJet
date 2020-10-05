@@ -34,6 +34,7 @@ function CreateInvoice(props) {
   const [bookingId, setBookingId] = useState(''); 
   const [customer, setCustomer] = useState({});   
   const [error, setError] = useState('');   
+  const [errors, setErrors] = useState({});   
 
   const [invoiceDetail, setInvoiceDetail] = useState([]);
 
@@ -52,7 +53,6 @@ function CreateInvoice(props) {
 
         axios.get('/api/quotations/getBookedBooking/'+booking_id).then((result) => { 
         setBookingData(result.data); 
-        console.log(result.data); 
           setInvoiceDetail([{ booking_name: result.data.booking_name, booking_description: result.data.description, qty: 1, rate: result.data.total_payment, amount: result.data.total_payment}]); 
 
           let sub_total = result.data.total_payment;
@@ -115,7 +115,32 @@ function CreateInvoice(props) {
   };
 
   const handleChange = (event) => {
+    const errors = {}
     let {name,value} = event.target;
+    if (name == 'invoice_date') {
+      var myDate = new Date(value);
+        var today = new Date();
+        if ( myDate < today ) { 
+          errors["invoice_date"] = "Invoice Date must be garter than today's date!";
+            setErrors(errors)
+            return false;
+        }
+         errors["invoice_date"] = "";
+            setErrors(errors)
+    }
+
+    if (name == 'due_date') {
+      var myDate = new Date(value);
+        var today = new Date(invoiceData.invoice_date);
+        if ( myDate <= today ) { 
+          errors["due_date"] = "Due Date must be garter than invoice date!";
+            setErrors(errors)
+            return false;
+        }
+         errors["due_date"] = "";
+            setErrors(errors)
+    }
+
     setInvoiceData({...invoiceData,[name] : value });
   }
 
@@ -141,6 +166,41 @@ function CreateInvoice(props) {
       }else{
         setError('');
       }
+
+
+      var myDate = new Date(invoiceData.invoice_date);
+      var today = new Date();
+      if ( myDate < today ) { 
+        errors["invoice_date"] = "Invoice Date must be garter than today's date!";
+        setErrors(errors)
+        return false;
+      }
+
+      if (invoiceData.invoice_date == '') {
+        errors["invoice_date"] = "Field Required!";
+        setErrors(errors)
+        return false;
+      }
+
+      errors["invoice_date"] = "";
+      setErrors(errors)
+
+      if (invoiceData.invoice_date == '') {
+        errors["due_date"] = "Field Required!";
+        setErrors(errors)
+        return false;
+      }
+
+      var myDate = new Date(invoiceData.due_date);
+      var today = new Date(invoiceData.invoice_date);
+      if ( myDate <= today ) { 
+        errors["due_date"] = "Due Date must be garter than invoice date!";
+        setErrors(errors)
+        return false;
+      }
+      errors["due_date"] = "";
+      setErrors(errors)
+
 
       var data = invoiceData;
       axios({
@@ -196,8 +256,6 @@ function CreateInvoice(props) {
       });
     }
 
-    console.log(invoiceDetail);
-
   return (  
       <div className="transactionhistory portfollopage">
         {/* Page Heading */}
@@ -226,12 +284,14 @@ function CreateInvoice(props) {
                     <div className="form-group">
                       <label htmlFor="inputname3" className="col-form-label">Invoice Date</label>
                       <input type="date" name="invoice_date" onChange={handleChange} value={invoiceData.invoice_date} className="form-control" /> 
+                      <div className={{color:'red'}}>{errors.invoice_date}</div>
                     </div>
                   </div>
                   <div className="col-sm-12">
                     <div className="form-group">
                       <label htmlFor="inputname3" className="col-form-label">Due Date</label>
                       <input type="date" name="due_date" onChange={handleChange} value={invoiceData.due_date} className="form-control" /> 
+                      <div className={{color:'red'}}>{errors.due_date}</div>
                     </div>
                   </div>
                   <div className="col-sm-12">

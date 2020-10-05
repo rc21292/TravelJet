@@ -38,7 +38,7 @@ class AgentProfile extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id','name','father_name','email','mobile','address','pincode','city','state','country','alt_number','dob','birth_place','marital_state','category','password','passport_size_photo','signature_photo','aadhar_front_photo','aadhar_back_photo','driving_license_front_photo','driving_license_back_photo','pancard_photo','passport_front_photo','passport_back_photo','business_type','company','website','cinno_photo','company_pancard_photo','office_address_proof_photo','gstno_photo','business_description','beneficiary_name','branch_ifsc_code','account_number','confirm_account_number','paytm_number'
+        'user_id','name','father_name','email','mobile','phone','address','pincode','city','state','country','alt_number','dob','birth_place','marital_state','category','password','passport_size_photo','signature_photo','aadhar_front_photo','aadhar_back_photo','driving_license_front_photo','driving_license_back_photo','pancard_photo','passport_front_photo','passport_back_photo','business_type','company','website','cinno_photo','company_pancard_photo','office_address_proof_photo','gstno_photo','business_description','beneficiary_name','branch_ifsc_code','account_number','confirm_account_number','paytm_number'
 
     ];
 

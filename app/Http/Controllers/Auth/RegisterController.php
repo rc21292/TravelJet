@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use App\UserOtp;
+use App\AgentProfile;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -88,15 +89,22 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
-        
-
-        return User::create([
+    {  
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'role' => $data['role'],
             'phone'=> $data['phone'],
             'password' => Hash::make($data['password']),
-        ]);
+        ]);    
+
+        AgentProfile::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone'=> $data['phone'],
+            'user_id'=> $user->id,
+        ]); 
+
+        return $user;  
     }
 }
