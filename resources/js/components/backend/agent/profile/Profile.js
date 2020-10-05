@@ -163,27 +163,27 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputnmae3" className="col-form-label">Your Name</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="name" value={(profileData.name == 'null' ? '' : profileData.name)} placeholder="Your Name" />
+                    <input type="text" className="form-control" onChange={handleChange} name="name" value={((profileData.name == 'null' || profileData.name == null) ? '' : profileData.name)} placeholder="Your Name" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Father Name</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="father_name" value={(profileData.father_name == 'null' ? '' : profileData.father_name)} placeholder="Father Name" />
+                    <input type="text" className="form-control" onChange={handleChange} name="father_name" value={((profileData.father_name == 'null' || profileData.father_name == null) ? '' : profileData.father_name)} placeholder="Father Name" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Email</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="email" value={(profileData.email == 'null' ? '' : profileData.email)} placeholder="Email" />
+                    <input type="text" className="form-control" onChange={handleChange} name="email" value={((profileData.email == 'null' || profileData.email == null) ? '' : profileData.email)} placeholder="Email" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Mobile Number</label>
-                    <input type="number" className="form-control" onChange={handleChange} name="phone" value={(profileData.phone == 'null' ? '' : profileData.phone)} placeholder="Mobile Number" />
+                    <input type="number" className="form-control" onChange={handleChange} name="phone" value={((profileData.phone == 'null' || profileData.phone == null) ? '' : profileData.phone)} placeholder="Mobile Number" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-12">
                     <label htmlFor="inputname3" className="col-form-label">Address</label>
-                    <textarea onChange={handleChange} name="address" rows={4} cols={50} placeholder="Address" className="form-control" onChange={handleChange} name="address" value={(profileData.address == 'null' ? '' : profileData.address)} />
+                    <textarea onChange={handleChange} name="address" rows={4} cols={50} placeholder="Address" className="form-control" onChange={handleChange} name="address" value={((profileData.address == 'null' || profileData.address == null) ? '' : profileData.address)} />
                   </div>
                 </div>
                 <div className="form-row">
@@ -206,23 +206,23 @@ function Profile() {
                   </div>
                   <div className="form-group col-md-9">
                     <label htmlFor="inputname3" className="col-form-label">About us</label>
-                    <textarea onChange={handleChange} name="about" value={(profileData.about == 'null' ? '' : profileData.about)} rows={4} cols={50} placeholder="About us" className="form-control" />
+                    <textarea onChange={handleChange} name="about" value={((profileData.about == 'null' || profileData.about == null) ? '' : profileData.about)} rows={4} cols={50} placeholder="About us" className="form-control" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Pincode</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="pincode" value={(profileData.pincode == 'null' ? '' : profileData.pincode)} placeholder="Pincode" />
+                    <input type="text" className="form-control" onChange={handleChange} name="pincode" value={((profileData.pincode == 'null' || profileData.pincode == null) ? '' : profileData.pincode)} placeholder="Pincode" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">City</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="city" value={(profileData.city == 'null' ? '' : profileData.city)} placeholder="City" />
+                    <input type="text" className="form-control" onChange={handleChange} name="city" value={((profileData.city == 'null' || profileData.city == null) ? '' : profileData.city)} placeholder="City" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">State</label>
-                    <select onChange={handleChange} name="state"  value={(profileData.state == 'null' ? '' : profileData.state)} className="form-control">
+                    <select onChange={handleChange} name="state"  value={((profileData.state == 'null' || profileData.state == null) ? '' : profileData.state)} className="form-control">
                       <option value="Andhra Pradesh">Pick a state...</option>
                       <option value="Andhra Pradesh">Andhra Pradesh</option>
                       <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -264,7 +264,7 @@ function Profile() {
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">Country</label>
-                    <select onChange={handleChange} name="country"  value={(profileData.country == 'null' ? '' : profileData.country)} className="form-control">
+                    <select onChange={handleChange} name="country"  value={((profileData.country == 'null' || profileData.country == null) ? '' : profileData.country)} className="form-control">
                       <option value="India">India</option>
                     </select>
                   </div>
@@ -272,21 +272,21 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Alternate Number</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="alt_number" value={(profileData.alt_number == 'null' ? '' : profileData.alt_number)} placeholder="Alternate Number" />
+                    <input type="text" className="form-control" onChange={handleChange} name="alt_number" value={((profileData.alt_number == 'null' || profileData.alt_number == null) ? '' : profileData.alt_number)} placeholder="Alternate Number" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Date of Birth</label>
-                    <input type="date" className="form-control" onChange={handleChange} name="dob" value={(profileData.dob == 'null' ? '' : profileData.dob)} placeholder="Date of Birth" />
+                    <input type="date" className="form-control" onChange={handleChange} name="dob" value={((profileData.dob == 'null' || profileData.dob == null) ? '' : profileData.dob)} placeholder="Date of Birth" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Town of Birth</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="birth_place" value={(profileData.birth_place == 'null' ? '' : profileData.birth_place)} placeholder="Town of Birth" />
+                    <input type="text" className="form-control" onChange={handleChange} name="birth_place" value={((profileData.birth_place == 'null' || profileData.birth_place == null) ? '' : profileData.birth_place)} placeholder="Town of Birth" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">Marital Status</label>
-                    <select onChange={handleChange} name="marital_state"  value={(profileData.marital_state == 'null' ? '' : profileData.marital_state)} className="form-control">
+                    <select onChange={handleChange} name="marital_state"  value={((profileData.marital_state == 'null' || profileData.marital_state == null) ? '' : profileData.marital_state)} className="form-control">
                       <option>Select Marital Status</option>
                       <option value="married" >Maired</option>
                       <option value="unmarried">Single</option>
@@ -297,7 +297,7 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputState">Category</label>
-                    <select onChange={handleChange} name="category"  value={(profileData.category == 'null' ? '' : profileData.category)} className="form-control">
+                    <select onChange={handleChange} name="category"  value={((profileData.category == 'null' || profileData.category == null) ? '' : profileData.category)} className="form-control">
                       <option value="">Select Category</option>
                       <option onChange={handleChange} name="Male">Male</option>
                       <option onChange={handleChange} name="Female">Female</option>
@@ -306,7 +306,7 @@ function Profile() {
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Password <a onClick={() => handleClick()} className="change">Change Password</a></label>
-                    <input readOnly type="password" onChange={handleChange} name="password" value={(profileData.password == 'null' ? '' : profileData.password)} className="form-control" placeholder="Password" />
+                    <input readOnly type="password" onChange={handleChange} name="password" value={((profileData.password == 'null' || profileData.password == null) ? '' : profileData.password)} className="form-control" placeholder="Password" />
                   </div>
                 </div>
               </div>
@@ -487,7 +487,7 @@ function Profile() {
                   <div className="row">
                     <label className="col-form-label col-sm-4 pt-0">Please Select your business type:</label>
                     <div className="col-sm-3">
-                      <select onChange={handleChange} name="business_type"  value={(profileData.business_type == 'null' ? '' : profileData.business_type)} className="form-control">
+                      <select onChange={handleChange} name="business_type"  value={((profileData.business_type == 'null' || profileData.business_type == null) ? '' : profileData.business_type)} className="form-control">
                         <option>Select Business</option>
                         <option value="individual">Individual</option>
                         <option value="company">Company</option>
@@ -498,11 +498,11 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Company Name</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="company" value={(profileData.company == 'null' ? '' : profileData.company)} placeholder="Company Name" />
+                    <input type="text" className="form-control" onChange={handleChange} name="company" value={((profileData.company == 'null' || profileData.company == null) ? '' : profileData.company)} placeholder="Company Name" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Website (Optional)</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="website" value={(profileData.website == 'null' ? '' : profileData.website)} placeholder="Website (Optional)" />
+                    <input type="text" className="form-control" onChange={handleChange} name="website" value={((profileData.website == 'null' || profileData.website == null) ? '' : profileData.website)} placeholder="Website (Optional)" />
                   </div>
                 </div>
                 <div className="col-sm-12">
@@ -569,7 +569,7 @@ function Profile() {
                     </div>
                     <div className="col-sm-12">
                       <label htmlFor="inputname3" className="col-form-label">About your Business</label>
-                      <textarea onChange={handleChange} name="w3review" rows={4} cols={50} onChange={handleChange} value={(profileData.business_description == 'null' ? '' : profileData.business_description)} name="business_description" placeholder="About your Business..." className="form-control" />
+                      <textarea onChange={handleChange} name="w3review" rows={4} cols={50} onChange={handleChange} value={((profileData.business_description == 'null' || profileData.business_description == null) ? '' : profileData.business_description)} name="business_description" placeholder="About your Business..." className="form-control" />
                     </div>
                   </div>
                 </div>
@@ -580,27 +580,27 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Beneficiary Name</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="beneficiary_name" value={(profileData.beneficiary_name == 'null' ? '' : profileData.beneficiary_name)} placeholder="Beneficiary Name" />
+                    <input type="text" className="form-control" onChange={handleChange} name="beneficiary_name" value={((profileData.beneficiary_name == 'null' || profileData.beneficiary_name == null) ? '' : profileData.beneficiary_name)} placeholder="Beneficiary Name" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Branch IFSC Code</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="branch_ifsc_code" value={(profileData.branch_ifsc_code == 'null' ? '' : profileData.branch_ifsc_code)} placeholder="Branch IFSC Code" />
+                    <input type="text" className="form-control" onChange={handleChange} name="branch_ifsc_code" value={((profileData.branch_ifsc_code == 'null' || profileData.branch_ifsc_code == null) ? '' : profileData.branch_ifsc_code)} placeholder="Branch IFSC Code" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Account Number</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="account_number" value={(profileData.account_number == 'null' ? '' : profileData.account_number)} placeholder="Account Number" />
+                    <input type="text" className="form-control" onChange={handleChange} name="account_number" value={((profileData.account_number == 'null' || profileData.account_number == null) ? '' : profileData.account_number)} placeholder="Account Number" />
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Re Enter Account Number</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="confirm_account_number" value={(profileData.confirm_account_number == 'null' ? '' : profileData.confirm_account_number)} placeholder="Re Enter Account Number" />
+                    <input type="text" className="form-control" onChange={handleChange} name="confirm_account_number" value={((profileData.confirm_account_number == 'null' || profileData.confirm_account_number == null) ? '' : profileData.confirm_account_number)} placeholder="Re Enter Account Number" />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Paytm (If Any)</label>
-                    <input type="text" className="form-control" onChange={handleChange} name="paytm_number" value={(profileData.paytm_number == 'null' ? '' : profileData.paytm_number)} placeholder="Paytm (If Any)" />
+                    <input type="text" className="form-control" onChange={handleChange} name="paytm_number" value={((profileData.paytm_number == 'null' || profileData.paytm_number == null) ? '' : profileData.paytm_number)} placeholder="Paytm (If Any)" />
                   </div>
                 </div>
               </div>
