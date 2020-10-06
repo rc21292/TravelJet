@@ -22,6 +22,7 @@ function Credits(props) {
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
+      console.log(AppState.user);
       setUser(AppState.user);
 
       const script = document.createElement("script")
@@ -63,7 +64,7 @@ function Credits(props) {
         axios.post('/api/credits/save_user_credits',query)
         .then(response=>{
           setCredits(response.data.credits);
-          setSuccess(' '+(response.data.added_credits)+' Added Successfully!');
+          setSuccess(' '+(response.data.added_credits)+' Credits Added Successfully!');
           });
       } catch (err) {
         console.log(err);
@@ -102,7 +103,7 @@ function Credits(props) {
         </div>
         <div className="row col-sm-12">
            {success ? <FlashMessage duration={10000} persistOnHover={true}>
-                <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
+                <h5 className={"alert alert-info"}>success: {success}</h5></FlashMessage> : ''}
         </div>
         <div className="row">
         { creditsData.map((credit_data,i)=>{

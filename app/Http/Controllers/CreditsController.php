@@ -38,7 +38,7 @@ class CreditsController extends Controller
 
    public function getCredits($id)
    {
-       $inital_credits = 50;
+       $inital_credits = 5;
        $credits_data = UserCredit::where('user_id',$id)->first();
        if ($credits_data) {
            $credit = $credits_data->credits;
@@ -72,7 +72,7 @@ class CreditsController extends Controller
             DB::table('user_credits')->insert(
                 [
                     'user_id' => $request->user_id,
-                    'credits' => 50+$credits_data->credits
+                    'credits' => 5+$credits_data->credits
                 ]
             );
         }

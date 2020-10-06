@@ -137,7 +137,8 @@ function QuotationDetaills({id}) {
           wallet:wallet_amount,
           for:'Booking',
           user_id:user.id,
-          amount:(new_amount),
+          amount:new_amount,
+          total_amount:(parseInt(new_amount)+parseInt(wallet_amount)),
         }
 
         axios.post('/api/users/save_razorpay_details',query)
@@ -388,8 +389,13 @@ function QuotationDetaills({id}) {
                           <td />
                         </tr>
                         <tr>
-                          {/*<td>Destination Covered</td>*/}
-                          <td>Destination</td>
+                          <td>Pickup Location</td>
+                          <td>{ bookingsData.from_places}</td>
+                          <td />
+                          <td />
+                        </tr>
+                        <tr>
+                          <td>Drop Location</td>
                           <td>{ bookingsData.to_places}</td>
                           <td />
                           <td />

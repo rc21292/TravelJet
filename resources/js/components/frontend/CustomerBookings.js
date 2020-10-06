@@ -89,6 +89,11 @@ function CustomerBookings({match}) {
     setSaveData(event.target.value);
   }
 
+  const capitalize = (s) => {
+  if (typeof s !== 'string') return ''
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 
    const openCheckout = (quotation_id,amount) => {
     let new_amount = amount;
@@ -109,6 +114,7 @@ function CustomerBookings({match}) {
           for:'Booking',
           user_id:user.id,
           amount:(new_amount),
+          total_amount:(parseInt(new_amount)+parseInt(wallet_amount)),
         }
 
         axios.post('/api/users/save_razorpay_details',query)
@@ -277,7 +283,7 @@ function CustomerBookings({match}) {
                                               return( <tr key={i}>
                                               <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} {i==3 && 'Fifth'} Part</td>
                                               <td> <i className="fa fa-inr" />{payments_data.payment}</td>
-                                              <td><span>{payments_data.status}</span>{payments_data.status == 'unpaid' && <a onClick={(event) => openCheckout(quotationData.id,payments_data.payment)} className="btn btn-primary">Pay Now</a>}</td>
+                                              <td><b>{capitalize(payments_data.status)} <a href="#"><i className="fa fa-eye" /></a> </b>{payments_data.status == 'unpaid' && <a onClick={(event) => openCheckout(quotationData.id,payments_data.payment)} className="btn btn-primary">Pay Now</a>}</td>
                                               </tr>
                                                 )
                                               })

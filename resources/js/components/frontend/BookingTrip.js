@@ -640,7 +640,7 @@ const BookingTrip = (props) => {
 	                            <option value="Uttarakhand">Uttarakhand</option>
 	                            <option value="West Bengal">West Bengal</option>
 	                          </select>
-	                          <input type="text" id="from_places" name="from_places" ref={autoCompleteRef}  placeholder="Tell us your starting point.." className="startpoint form-control" />
+	                          <input type="text" id="from_places" onTouchEnd={(event) => handleChange(event.target.value)} name="from_places" ref={autoCompleteRef}  placeholder="Tell us your starting point.." className="startpoint form-control" />
 	                        </div>
 	                        <div style={{color:'red',marginTop:'-15px'}}>{errors.pickupstate}{errors.from_places}</div>
 	                        <div className="add-stop">
@@ -722,7 +722,7 @@ const BookingTrip = (props) => {
 	                      </div>
 	                      <div className="clearfix" />
 	                      <div className="kilometrediv">
-	                        <div className="custom-control custom-switch">
+	                        <div className="custom-control custom-switch" style={{display:'none'}}>
 	                          <label className="custom-control-label" htmlFor="customSwitch1">I want to drop my car in a different city</label>
 	                          <label className="switch">
 	                            <input onChange={handleChecked} type="checkbox" name="in_city" />

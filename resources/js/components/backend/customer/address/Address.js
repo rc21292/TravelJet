@@ -97,14 +97,14 @@ const [address_type, setAddress_type ] = useState('Home');
       formIsValid = false;
       errors["state"] = "field is Required!";
     }
-     if (!landmark) {
+    /* if (!landmark) {
       formIsValid = false;
       errors["landmark"] = "field is Required!";
     }
      if (!alternate_phone) {
       formIsValid = false;
       errors["alternate_phone"] = "field is Required!";
-    }
+    }*/
     //  if (!address_type) {
     //   formIsValid = false;
     //   errors["address_type"] = "field is Required!";
@@ -177,7 +177,7 @@ const [address_type, setAddress_type ] = useState('Home');
       setState(value);
       break;
 
-      case 'landmark': 
+     /* case 'landmark': 
       errors.landmark = 
       value.length < 1
       ? 'field is Required!'
@@ -191,7 +191,7 @@ const [address_type, setAddress_type ] = useState('Home');
       ? 'field is Required!'
       : '';
       setAlternate_phone(value);
-      break;
+      break;*/
 
       case 'address_type': 
       setAddress_type(value);
@@ -253,7 +253,7 @@ const [address_type, setAddress_type ] = useState('Home');
       <div className="manageaddress-page">
 
       {success ? <FlashMessage duration={10000} persistOnHover={true}>
-      <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
+      <h5 className={"alert alert-success"}>success: {success}</h5></FlashMessage> : ''}
 
       {error ? <FlashMessage duration={10000} persistOnHover={true}>
       <h5 className={"alert alert-danger"}>Error: {error}</h5></FlashMessage> : ''}

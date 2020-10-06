@@ -113,7 +113,7 @@ function ProfileAgent({match}) {
           </div>
           <figure className="wt-userlistingimg">
           {agentProfile.profile ?
-            <img src={"/uploads/users/"+agentProfile.user_id+"/"+agentProfile.profile} alt="image description" />
+            <img src={"/uploads/users/"+agentProfile.user_id+"/profile/"+agentProfile.profile} alt="image description" />
           : 
           <img src="/uploads/users/profile.png" alt="image description" />
         }
@@ -137,13 +137,11 @@ function ProfileAgent({match}) {
                   </div>
                 </div>
               </div>
-              <div className="roundtrip">Himachal | Uttarakhand | Delhi | Uttarpradesh | Panjab</div>
+              <div className="roundtrip"> {agentProfile.city} | {agentProfile.state}</div>
               <div className="country">
-                <img src="/images/icons/flag.png" alt="flag" /> <span>{agentProfile.state}, {agentProfile.country}</span>
+                <img src="/images/icons/flag.png" alt="flag" /> <span>{agentProfile.country}</span>
               </div>
               <ul className="wt-userlisting-breadcrumb">
-                <li><span> <a className="btn btn-info">Contact Vendor</a></span>
-                </li>
                 <li><span> <a onClick={openChatBox} className="btn btn-default chatbtn">Chat Now</a></span>
                 </li>
               </ul>
