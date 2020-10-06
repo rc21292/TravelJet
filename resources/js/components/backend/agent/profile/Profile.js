@@ -116,15 +116,16 @@ function Profile() {
     setProfileData({...profileData, [name] : event.target.files[0]});
   }
 
-  console.log(profileData);
-
   const fileSelect = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    setProfileData({...profileData, proile : event.target.files[0]});
+    const field_name = event.target.name;
+    setProfileData({...profileData, name : event.target.files[0]});
 
      var bodyFormData = new FormData();
-    bodyFormData.append('image', event.target.files[0]);
+    bodyFormData.append('name', field_name);
+    bodyFormData.append('user_id', user.id);
+    bodyFormData.append(name, event.target.files[0]);
     axios({
     method: 'post',
     url: '/api/users/insertImages',
@@ -133,11 +134,12 @@ function Profile() {
     })
     .then(function (response) {
         const query = {
-          avtar:response.data
+          name : field_name,
+          image:response.data
         }
         axios.post('/api/users/updateAgentProfile/'+user.id,query).then(result=>
         {
-          setProfileData({...profileData, proile : result.data});
+          setProfileData({...profileData, [name] : result.data});
         });
     })
     .catch(function (response) {
@@ -196,7 +198,7 @@ function Profile() {
                           <li>
                             <a href="#" title="">
                               <div className="file-upload1">
-                                <input type="file" title={profileData.profile} onChange={fileSelect} /><i className="fa fa-cloud-upload" />
+                                <input type="file" name="profile" title={profileData.profile} onChange={fileSelect} />{profileData.profile ? <img style={{marginLeft: '1px'}} src={'/uploads/users/'+profileData.user_id+'/profile/medium-'+profileData.profile}></img> : <i className="fa fa-cloud-upload" /> }
                               </div>
                             </a>
                           </li>
@@ -325,7 +327,7 @@ function Profile() {
                               <li>
                                 <a href="#">
                                   <div className="file-upload1">
-                                    <input type="file" title={profileData.passport_size_photo} onChange={fileChange} name="passport_size_photo" /><i className="fa fa-cloud-upload" />
+                                    <input type="file" title={profileData.passport_size_photo} onChange={fileSelect} name="passport_size_photo" />{profileData.passport_size_photo ? <img style={{marginLeft: '58px'}} src={'/uploads/users/'+profileData.user_id+'/passport_size_photo/medium-'+profileData.passport_size_photo}></img> : <i className="fa fa-cloud-upload" /> }
                                   </div>
                                 </a>
                               </li>
@@ -340,7 +342,7 @@ function Profile() {
                               <li>
                                 <a href="#">
                                   <div className="file-upload1">
-                                    <input type="file" title={profileData.signature_photo} onChange={fileChange} name="signature_photo" /><i className="fa fa-cloud-upload" />
+                                    <input type="file" title={profileData.signature_photo} onChange={fileSelect} name="signature_photo" />{profileData.signature_photo  ? <img style={{marginLeft: '58px'}} src={'/uploads/users/'+profileData.user_id+'/signature_photo/medium-'+profileData.signature_photo }></img> : <i className="fa fa-cloud-upload" /> }
                                   </div>
                                 </a>
                               </li>
@@ -358,7 +360,7 @@ function Profile() {
                               <div className="row">
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" placeholder="Front" />
+                                    <input type="text" className="form-control" placeholder={(profileData.aadhar_front_photo !== 'null') ? profileData.aadhar_front_photo : "Front" }/>
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
@@ -372,7 +374,7 @@ function Profile() {
                                 </div>
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" placeholder="Back" />
+                                    <input type="text" className="form-control" placeholder={(profileData.aadhar_back_photo !== 'null') ? profileData.aadhar_back_photo : "Back" }/>
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
@@ -391,7 +393,7 @@ function Profile() {
                               <div className="row">
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control"  placeholder="Front" />
+                                    <input type="text" className="form-control"  placeholder={(profileData.driving_license_front_photo !== 'null') ? profileData.driving_license_front_photo : "Back" }/>
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
@@ -405,7 +407,7 @@ function Profile() {
                                 </div>
                                 <div className="col-md-6">
                                   <div className="upload-field">
-                                    <input type="text" className="form-control" placeholder="Back" />
+                                    <input type="text" className="form-control" placeholder={(profileData.driving_license_back_photo !== 'null') ? profileData.driving_license_back_photo : "Back" }/>
                                     <ul className="list-inline upload-icon">
                                       <li>
                                         <a href="#">
@@ -428,7 +430,7 @@ function Profile() {
                           <div className="row">
                             <div className="col-md-12">
                               <div className="upload-field5">
-                                <input type="text" className="form-control" placeholder="Upload Pan Card" />
+                                <input type="text" className="form-control" placeholder={(profileData.pancard_photo !== 'null') ? profileData.pancard_photo : "Upload Pan Card" }/>
                                 <ul className="list-inline upload-icon">
                                   <li>
                                     <a href="#">
@@ -447,7 +449,7 @@ function Profile() {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="upload-field">
-                                <input type="text" className="form-control"  placeholder="Front" />
+                                <input type="text" className="form-control"  placeholder={((profileData.passport_front_photo !== 'null')) ? (profileData.passport_front_photo) : 'Upload Company Pan'} />
                                 <ul className="list-inline upload-icon">
                                   <li>
                                     <a href="#">
@@ -461,7 +463,7 @@ function Profile() {
                             </div>
                             <div className="col-md-6">
                               <div className="upload-field">
-                                <input type="text" className="form-control"  placeholder="Back" />
+                                <input type="text" className="form-control"  placeholder={((profileData.passport_back_photo !== 'null')) ? (profileData.passport_back_photo) : 'Upload Company Pan'} />
                                 <ul className="list-inline upload-icon">
                                   <li>
                                     <a href="#">
@@ -510,7 +512,7 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">CIN Number if PVT LTD</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" placeholder="Upload COI" />
+                        <input type="text" className="form-control" placeholder={(profileData.cinno_photo !== 'null') ? profileData.cinno_photo : "Upload COI" }/>
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
@@ -525,7 +527,7 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">Company Pan Card</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" placeholder="Upload Company Pan" />
+                        <input type="text" className="form-control" placeholder={((profileData.company_pancard_photo !== 'null')) ? (profileData.company_pancard_photo) : 'Upload Company Pan'} />
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
@@ -540,7 +542,7 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">Office address proof</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" placeholder="Upload Office Address Proof" />
+                        <input type="text" className="form-control" placeholder={(profileData.office_address_proof_photo !== 'null') ? profileData.office_address_proof_photo : "Upload Office Address Proof" }/>
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">
@@ -555,7 +557,7 @@ function Profile() {
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">GST Number (Optional)</label>
                       <div className="upload-field4">
-                        <input type="text" className="form-control" placeholder="Upload GST Certificate" />
+                        <input type="text" className="form-control" placeholder={(profileData.gstno_photo !== 'null') ? profileData.gstno_photo : "Upload GST Certificate" }/>
                         <ul className="list-inline upload-icon">
                           <li>
                             <a href="#">

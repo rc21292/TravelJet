@@ -91,11 +91,8 @@ class DriverController extends Controller
                 "driving_licence"=>$request->driving_licence[$i],
                 "licence_photo"=>$image_name,
             ]);
-            }
-
-           
+            }           
         }
-
        return "success";
    }
 

@@ -82,7 +82,6 @@ class UserController extends Controller
 
     public function saveAgentProfile(Request $request, $id)
     {
-
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
@@ -95,7 +94,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->cinno_photo;
-            $cinno_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $cinno_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->cinno_photo,$cinno_photo_name,'');
         }else{
             $cinno_photo_name = empty($request->cinno_photo) ? '' : $request->cinno_photo;
@@ -107,7 +106,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->gstno_photo;
-            $gstno_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $gstno_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->gstno_photo,$gstno_photo_name,'');
         }else{
             $gstno_photo_name = empty($request->gstno_photo) ? '' : $request->gstno_photo;
@@ -119,7 +118,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->passport_size_photo;
-            $passport_size_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $passport_size_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->passport_size_photo,$passport_size_photo_name,'');
         }else{
             $passport_size_photo_name = empty($request->passport_size_photo) ? '' : $request->passport_size_photo;
@@ -131,7 +130,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->signature_photo;
-            $signature_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $signature_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->signature_photo,$signature_photo_name,'');
         }else{
             $signature_photo_name = empty($request->signature_photo) ? '' : $request->signature_photo;
@@ -143,7 +142,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->aadhar_front_photo;
-            $aadhar_front_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $aadhar_front_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->aadhar_front_photo,$aadhar_front_photo_name,'');
         }else{
             $aadhar_front_photo_name = empty($request->aadhar_front_photo) ? '' : $request->aadhar_front_photo;
@@ -156,7 +155,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->aadhar_back_photo;
-            $aadhar_back_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $aadhar_back_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->aadhar_back_photo,$aadhar_back_photo_name,'');
         }else{
             $aadhar_back_photo_name = empty($request->aadhar_back_photo) ? '' : $request->aadhar_back_photo;
@@ -168,7 +167,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->driving_license_front_photo;
-            $driving_license_front_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $driving_license_front_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->driving_license_front_photo,$driving_license_front_photo_name,'');
         }else{
             $driving_license_front_photo_name = empty($request->driving_license_front_photo) ? '' : $request->driving_license_front_photo;
@@ -180,7 +179,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->driving_license_back_photo;
-            $driving_license_back_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $driving_license_back_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->driving_license_back_photo,$driving_license_back_photo_name,'');
         }else{
             $driving_license_back_photo_name = empty($request->driving_license_back_photo) ? '' : $request->driving_license_back_photo;
@@ -192,7 +191,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->pancard_photo;
-            $pancard_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $pancard_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->pancard_photo,$pancard_photo_name,'');
         }else{
             $pancard_photo_name = empty($request->pancard_photo) ? '' : $request->pancard_photo;
@@ -204,7 +203,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->passport_front_photo;
-            $passport_front_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $passport_front_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->passport_front_photo,$passport_front_photo_name,'');
         }else{
             $passport_front_photo_name = empty($request->passport_front_photo) ? '' : $request->passport_front_photo;
@@ -216,7 +215,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->passport_back_photo;
-            $passport_back_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $passport_back_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->passport_back_photo,$passport_back_photo_name,'');
         }else{
             $passport_back_photo_name = empty($request->passport_back_photo) ? '' : $request->passport_back_photo;
@@ -228,7 +227,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->office_address_proof_photo;
-            $office_address_proof_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $office_address_proof_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->office_address_proof_photo,$office_address_proof_photo_name,'');
         }else{
             $office_address_proof_photo_name = empty($request->office_address_proof_photo) ? '' : $request->office_address_proof_photo;
@@ -240,7 +239,7 @@ class UserController extends Controller
                     File::makeDirectory($temp_path, 0755, true, true);
                 }
                $profile_image = $request->company_pancard_photo;
-               $company_pancard_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+               $company_pancard_photo_name = $profile_image->getClientOriginalName();
                 Helper::uploadProfileDocuments($temp_path, $request->company_pancard_photo,$company_pancard_photo_name,'');
            }else{
             $company_pancard_photo_name = empty($request->company_pancard_photo) ? '' : $request->company_pancard_photo;
@@ -253,7 +252,7 @@ class UserController extends Controller
                 File::makeDirectory($temp_path, 0755, true, true);
             }
             $profile_image = $request->office_address_proof_photo;
-            $office_address_proof_photo_name = $id.'_'.time().''.$profile_image->getClientOriginalName();
+            $office_address_proof_photo_name = $profile_image->getClientOriginalName();
             Helper::uploadProfileDocuments($temp_path, $request->office_address_proof_photo,$office_address_proof_photo_name,'');
         }else{
             $office_address_proof_photo_name = empty($request->office_address_proof_photo) ? '' : $request->office_address_proof_photo;
@@ -342,32 +341,36 @@ class UserController extends Controller
         return 'Success';
     }
 
-    public function insertImages(Request $request, $type = '')
+    public function insertImages(Request $request)
     {
-
-        $path = Helper::PublicPath() . '/uploads/users/temp/';
-        if (!empty($request['image'])) {
-            $profile_image = $request['image'];
-            $image_size = array(
-                'small' => array(
-                    'width' => 36,
-                    'height' => 36,
-                ),
-                'medium-small' => array(
-                    'width' => 60,
-                    'height' => 60,
-                ),
-                'medium' => array(
-                    'width' => 100,
-                    'height' => 100,
-                ),
-            );
-            Helper::uploadTempImageWithSize($path, $profile_image, '', $image_size);
-            return $profile_image->getClientOriginalName();;
-        } else {
-            Helper::uploadTempImage($path, $request->image);
-            return $request->image->getClientOriginalName();;
+        $files = glob(Helper::PublicPath() . '/uploads/users/'.$request->user_id.'/'.$request->name.'/*');
+        foreach($files as $file){
+            if(is_file($file))
+                unlink($file);
         }
+
+        $path = Helper::PublicPath() . '/uploads/users/'.$request->user_id.'/'.$request->name;
+
+        if (!empty($request['profile'])) {
+            $profile_image = $request['profile'];
+        }elseif (!empty($request['passport_size_photo'])) {
+            $profile_image = $request['passport_size_photo'];
+        }elseif (!empty($request['signature_photo'])) {
+            $profile_image = $request['signature_photo'];
+        }
+        $image_size = array(
+            'small' => array(
+                'width' => 100,
+                'height' => 100,
+            ),
+            'medium' => array(
+                'width' => 160,
+                'height' => 160,
+            ),
+        );
+        Helper::uploadTempImageWithSize($path, $profile_image, '', $image_size);
+        return $profile_image->getClientOriginalName();
+        
     }
 
     public function deletePortfolioImage($id)
@@ -511,21 +514,16 @@ class UserController extends Controller
         }
 
         $old_path = Helper::PublicPath() . '/uploads/users/temp';
-        if (!empty($request['avtar'])) {
-            $filename = $request['avtar'];
-            if (file_exists($old_path . '/' . $request['avtar'])) {
-                $new_path = Helper::PublicPath() . '/uploads/users/' . $id;
-                if (!file_exists($new_path)) {
-                    File::makeDirectory($new_path, 0755, true, true);
-                }
-                $filename = time() . '-' . $request['avtar'];
-                rename($old_path . '/' . $request['avtar'], $new_path . '/' . $filename);
-            
-            }
+        if ($request['name'] == 'profile') {
+            $filename = $request['image'];
             $profile->profile = filter_var($filename, FILTER_SANITIZE_STRING);
-        } else {
-            $profile->profile = null;
-        }     
+        } else if ($request['name'] == 'passport_size_photo') {
+            $filename = $request['image'];
+            $profile->passport_size_photo = filter_var($filename, FILTER_SANITIZE_STRING);
+        } else if ($request['name'] == 'signature_photo') {
+            $filename = $request['image'];
+            $profile->signature_photo = filter_var($filename, FILTER_SANITIZE_STRING);
+        }
 
         $profile->save();
         return response()->json($filename);

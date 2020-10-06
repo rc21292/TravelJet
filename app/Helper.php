@@ -481,9 +481,11 @@ class Helper extends Model
                             }
                         );
                         #echo $temp_path . $key . '-' . $file_original_name; exit;
-                        $result = $small_img->save($temp_path.'/' . $file_original_name);
+                        $result = $small_img->save($temp_path.'/' . $key . '-' .$file_original_name);
                     }
                 }
+                $img = Image::make($image);
+                $img->save($temp_path . '/' . $file_original_name);
                 // save original image size
                 $json['message'] = trans('lang.img_uploaded');
                 $json['type'] = 'success';

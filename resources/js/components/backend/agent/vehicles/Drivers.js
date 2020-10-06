@@ -1,9 +1,10 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState ,useEffect, Fragment } from "react";
 
 function Drivers() {
   const [inputList, setInputList] = useState([{  name: "", mobile: "", driving_licence: "", licence_photo: "", status:"Approval Pending" }]);
 
   const [user, setUser] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let stateqq = localStorage["appState"];
@@ -46,6 +47,7 @@ function Drivers() {
   };
 
   const saveDriverData = (event) => {
+    setLoading(true);
 
     event.preventDefault();
 
@@ -70,6 +72,7 @@ function Drivers() {
       }
     })
     .then(response => {
+      setLoading(false);
       window.location.reload(false);
     })
     .catch(e => {
@@ -99,13 +102,13 @@ function Drivers() {
                 <tbody>
                  {inputList.map((x,i)=>{
                            return(   
-                  <>                      
-                  <tr>
+                  <Fragment key={i}>                      
+                  <tr >
                     <td>
                       <input type="text" name="name" placeholder="Driver Name" value={x.name}  onChange={e => handleInputChange(e, i)} className="form-control" />
                     </td>
                     <td>
-                      <input type="text" name="mobile" placeholder="Mobile No." value={x.mobile}  onChange={e => handleInputChange(e, i)} className="form-control" />
+                      <input type="number" name="mobile" placeholder="Mobile No." value={x.mobile}  onChange={e => handleInputChange(e, i)} className="form-control" />
                     </td>
                     <td>
                       <input type="text" name="driving_licence" placeholder="DL-000000000" value={x.driving_licence}  onChange={e => handleInputChange(e, i)} className="form-control" />
@@ -115,7 +118,7 @@ function Drivers() {
                         <input type="text" className="form-control" placeholder={(x.licence_photo != '') ? x.licence_photo : 'Upload Document' } />
                         <ul className="list-inline upload-icon">
                           <li>
-                            <a href="#" title>
+                            <a href="#" title="">
                               <div className="file-upload1">
                                 <input type="file" name="licence_photo" onChange={e => handleFileChange(e, i)} />                           
                                 <i className="fa fa-paperclip" />
@@ -139,7 +142,7 @@ function Drivers() {
                       <td colSpan={6}><button type="button" className="btn btn-primary" onClick={handleAddClick}>Add More</button></td>
                     </tr>
                    }
-                  </>
+                  </Fragment>
 
 
                  );
@@ -154,7 +157,11 @@ function Drivers() {
           </div>
 
           <div className="placebidbtn movebtn">
-            <a href="#" className="btn btn-primary"  onClick={saveDriverData}>Save</a>
+            <a href="#" className="btn btn-primary" 
+             disabled={loading}
+             onClick={saveDriverData}>
+             {loading ? "Loading..." : "Save"}
+             </a>
           </div>
         </div>
       </div>
