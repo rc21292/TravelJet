@@ -203,9 +203,7 @@ function Leads(props) {
       setActivePage3(result.data.current_page);
     });
   }
-
-  console.log(activeTab)
-
+  
   return (
 
      <div className="myleads">

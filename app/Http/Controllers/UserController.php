@@ -357,6 +357,8 @@ class UserController extends Controller
             $profile_image = $request['passport_size_photo'];
         }elseif (!empty($request['signature_photo'])) {
             $profile_image = $request['signature_photo'];
+        }elseif (!empty($request['business_logo'])) {
+            $profile_image = $request['business_logo'];
         }
         $image_size = array(
             'small' => array(
@@ -523,6 +525,9 @@ class UserController extends Controller
         } else if ($request['name'] == 'signature_photo') {
             $filename = $request['image'];
             $profile->signature_photo = filter_var($filename, FILTER_SANITIZE_STRING);
+        } else if ($request['name'] == 'business_logo') {
+            $filename = $request['image'];
+            $profile->business_logo = filter_var($filename, FILTER_SANITIZE_STRING);
         }
 
         $profile->save();

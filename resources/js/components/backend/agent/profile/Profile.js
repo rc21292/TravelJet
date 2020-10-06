@@ -65,6 +65,7 @@ function Profile() {
   const [readonlyPhone, setReadonlyPhone] = useState(true);
 
   const [gender, setGender] = useState('');
+  const [isShow, setIsShow] = useState(true);
 
   const history = useHistory()
 
@@ -76,6 +77,9 @@ function Profile() {
       setProfileData({...profileData, user_id: AppState.user.id,name: AppState.user.name,email: AppState.user.email,phone: AppState.user.phone});
       axios('/api/users/getAgentProfile/'+AppState.user.id).then(result=>{
         setProfileData(result.data);
+        if (result.data.business_type == 'individual') {
+          setIsShow(false);
+        }
       });
       if (AppState.isLoggedIn == false) {
         history.push('/login');
@@ -86,6 +90,11 @@ function Profile() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    if (name == 'business_type' && value == 'individual') {
+      setIsShow(false);
+    }else{
+      setIsShow(true);
+    }
    setProfileData({...profileData, [name]:value})
   }
 
@@ -497,7 +506,7 @@ function Profile() {
                     </div>
                   </div>
                 </div>
-                <div className="form-row">
+                <div className="form-row" style={isShow ? {display:'block'} : {display:'none'}}>
                   <div className="form-group col-md-6">
                     <label htmlFor="inputname3" className="col-form-label">Company Name</label>
                     <input type="text" className="form-control" onChange={handleChange} name="company" value={((profileData.company == 'null' || profileData.company == null) ? '' : profileData.company)} placeholder="Company Name" />
@@ -507,7 +516,7 @@ function Profile() {
                     <input type="text" className="form-control" onChange={handleChange} name="website" value={((profileData.website == 'null' || profileData.website == null) ? '' : profileData.website)} placeholder="Website (Optional)" />
                   </div>
                 </div>
-                <div className="col-sm-12">
+                <div className="col-sm-12" style={isShow ? {display:'block'} : {display:'none'}}>
                   <div className="row">
                     <div className="col-md-3">
                       <label htmlFor="inputname3" className="col-form-label">CIN Number if PVT LTD</label>
@@ -569,9 +578,26 @@ function Profile() {
                         </ul>
                       </div>
                     </div>
-                    <div className="col-sm-12">
+                    <div className="row col-sm-12">
+                    <div className="col-md-3">
+                          <label htmlFor="inputname3" className="col-form-label">Business Logo</label>
+                          <div className="upload-field2">
+                            <input type="text" className="form-control" />
+                            <ul className="list-inline upload-icon2">
+                              <li>
+                                <a href="#">
+                                  <div className="file-upload1">
+                                    <input type="file" title={profileData.business_logo} onChange={fileSelect} name="business_logo" />{profileData.business_logo ? <img style={{marginLeft: '36px'}} src={'/uploads/users/'+profileData.user_id+'/business_logo/'+profileData.business_logo}></img> : <i className="fa fa-cloud-upload" /> }
+                                  </div>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                    <div className="col-sm-9">
                       <label htmlFor="inputname3" className="col-form-label">About your Business</label>
-                      <textarea onChange={handleChange} name="w3review" rows={4} cols={50} onChange={handleChange} value={((profileData.business_description == 'null' || profileData.business_description == null) ? '' : profileData.business_description)} name="business_description" placeholder="About your Business..." className="form-control" />
+                      <textarea onChange={handleChange} name="w3review" rows={7} cols={50} onChange={handleChange} value={((profileData.business_description == 'null' || profileData.business_description == null) ? '' : profileData.business_description)} name="business_description" placeholder="About your Business..." className="form-control" />
+                    </div>
                     </div>
                   </div>
                 </div>

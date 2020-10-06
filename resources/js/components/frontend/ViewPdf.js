@@ -17,6 +17,7 @@ function ViewPdf({match}) {
   const [bookingData, setBookingData] = useState({}); 
   const [invoiceId, setInvoiceId] = useState(''); 
   const [customer, setCustomer] = useState({});   
+  const [address, setAddress] = useState({});   
   const [error, setError] = useState('');   
 
   const [invoiceDetail, setInvoiceDetail] = useState([]);
@@ -40,7 +41,11 @@ function ViewPdf({match}) {
             if (result.data) {
               setInvoiceDetail(result.data);          
             }
-          });       
+          });     
+          axios.get('/api/getAgentAddresses/'+AppState.user.id)
+          .then(response=>{
+            setAddress(response.data);
+          });  
         }
       });
     }   
@@ -56,7 +61,9 @@ function ViewPdf({match}) {
               <div className="row">
                 <div className="col-sm-6">
                   <div className="invoicelogo">
-                    <img src="/frontend/image/invoicelogo.png" alt="logo" />
+                  {address.business_type == 'company' ? 
+                    <img src={'/uploads/users/'+user.id+'/business_logo/'+address.business_logo} alt="logo" />
+                     : <h1 style={{ fontWeight: 'bold' }}>{address.name}</h1> }
                   </div>
                 </div>
                 <div className="col-sm-6">
@@ -76,10 +83,10 @@ function ViewPdf({match}) {
                       <p>{invoiceData.billing_address}</p>
                     </div>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-5 col-sm-offset-1">
                     <div className="companyaddress">
-                      <div className="name">Star Travels Pvt. Ltd.</div>
-                      <p>2nd Floor, B Quadrant,No. C 22,<br /> G Block, Bandra Kurla Complex, Bandra<br /> East Mumbai - 400051, Maharashtra</p>
+                      <div className="name">{address.business_type == 'company' ? address.company : address.name }.</div>
+                      <p>{address.address}</p>
                     </div>
                   </div>
                 </div>

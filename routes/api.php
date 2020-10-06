@@ -97,6 +97,8 @@ Route::post('verifyotp', 'LoginController@verify');
 /*customer address apis*/
 Route::post('save_address/{id}','AddressController@store');
 Route::get('getAddresses/{id}','AddressController@index');
+Route::get('getCustomerAddresses/{id}','AddressController@show');
+Route::get('getAgentAddresses/{id}','AddressController@getAgentAddresses');
 Route::post('change-password/{id}','ChangePasswordController@store');
 
 

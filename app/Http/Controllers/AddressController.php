@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Address;
+use App\AgentProfile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -61,9 +62,15 @@ class AddressController extends Controller
      * @param  \App\Address  $address
      * @return \Illuminate\Http\Response
      */
-    public function show(Address $address)
+    public function show($id)
     {
-        //
+        return $addresses = Address::where('user_id' , $id)->latest()->first();
+    }
+
+
+    public function getAgentAddresses($id)
+    {
+        return $addresses = AgentProfile::select('address','business_type','business_logo','company','name')->where('user_id' , $id)->first();
     }
 
     /**

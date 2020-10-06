@@ -33,6 +33,7 @@ function CreateInvoice(props) {
   const [bookingData, setBookingData] = useState({}); 
   const [bookingId, setBookingId] = useState(''); 
   const [customer, setCustomer] = useState({});   
+  const [address, setAddress] = useState({});   
   const [error, setError] = useState('');   
   const [errors, setErrors] = useState({});   
 
@@ -53,20 +54,25 @@ function CreateInvoice(props) {
 
         axios.get('/api/quotations/getBookedBooking/'+booking_id).then((result) => { 
         setBookingData(result.data); 
-          setInvoiceDetail([{ booking_name: result.data.booking_name, booking_description: result.data.description, qty: 1, rate: result.data.total_payment, amount: result.data.total_payment}]); 
+          setInvoiceDetail([{ booking_name: result.data.booking_name, booking_description: result.data.description, qty: 1, rate: result.data.payment, amount: result.data.payment}]); 
 
-          let sub_total = result.data.total_payment;
+          let sub_total = result.data.payment;
 
-          let tax = ((parseInt(sub_total)*18)/100);
+          let tax = ((parseInt(sub_total)*15)/100);
           let total = parseInt(sub_total) + parseInt(tax);
 
           axios.get('/api/users/show/'+result.data.user_id)
           .then(response=>{
             if (response.data) {
               setCustomer(response.data);
-              setInvoiceData({...invoiceData,'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id,'sub_total' : sub_total, 'tax' : tax, 'total' : total});
+              axios.get('/api/getCustomerAddresses/'+result.data.user_id)
+              .then(response=>{
+                setAddress(response.data);
+                setInvoiceData({...invoiceData,'billing_address' : response.data.landmark+', '+response.data.locality+', '+response.data.address+', '+response.data.city+', '+response.data.state+' - '+response.data.pincode, 'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id,'sub_total' : sub_total, 'tax' : tax, 'total' : total});
+              });
             }
-          });
+          });         
+          
         }); 
     }   
 
@@ -81,7 +87,7 @@ function CreateInvoice(props) {
 
     let sub_total = add;
 
-    let tax = ((parseInt(sub_total)*18)/100);
+    let tax = ((parseInt(sub_total)*15)/100);
     let total = parseInt(sub_total) + parseInt(tax);
 
     setInvoiceData({...invoiceData, 'sub_total' : sub_total, 'tax' : tax, 'total' : total});
@@ -160,6 +166,7 @@ function CreateInvoice(props) {
 
    const saveInvoice = () => {
     setError('');
+    const errors = {}
       if (invoiceData.total == '' || invoiceData.total < 1) {
         setError('Amount Field Required!');
         return false;
@@ -284,14 +291,14 @@ function CreateInvoice(props) {
                     <div className="form-group">
                       <label htmlFor="inputname3" className="col-form-label">Invoice Date</label>
                       <input type="date" name="invoice_date" onChange={handleChange} value={invoiceData.invoice_date} className="form-control" /> 
-                      <div className={{color:'red'}}>{errors.invoice_date}</div>
+                      <div style={{color:'red'}}>{errors.invoice_date}</div>
                     </div>
                   </div>
                   <div className="col-sm-12">
                     <div className="form-group">
                       <label htmlFor="inputname3" className="col-form-label">Due Date</label>
                       <input type="date" name="due_date" onChange={handleChange} value={invoiceData.due_date} className="form-control" /> 
-                      <div className={{color:'red'}}>{errors.due_date}</div>
+                      <div style={{color:'red'}}>{errors.due_date}</div>
                     </div>
                   </div>
                   <div className="col-sm-12">
@@ -342,7 +349,7 @@ function CreateInvoice(props) {
                       <td className="payprice"> <i className="fa fa-inr" /> {invoiceData.sub_total}</td>
                     </tr>
                     <tr>
-                      <td colSpan={5} className="lablename">GST 18% :</td>
+                      <td colSpan={5} className="lablename">GST 15% :</td>
                       <td className="payprice"> <i className="fa fa-inr" /> {invoiceData.tax}</td>
                     </tr>
                     <tr>

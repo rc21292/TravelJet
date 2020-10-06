@@ -410,7 +410,7 @@ class QuotationController extends Controller
 
         return $result_data = Booking::
                      join('quotations', 'bookings.id' ,'quotations.booking_id')
-                     ->select('bookings.*','quotations.total_payment')
+                     ->select('bookings.*','quotations.payment')
                      ->where('booking_id',$booking_id)
                      ->where('quotations.status','booked')->where('bookings.status','booked')->first();
 
