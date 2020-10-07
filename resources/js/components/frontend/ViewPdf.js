@@ -36,16 +36,18 @@ function ViewPdf({match}) {
 
       axios('/api/invoices/show/'+invoice_id).then(result=>{
         if (result.data) {
-          setInvoiceData(result.data);   
+          setInvoiceData(result.data);
+
+          axios.get('/api/getAgentAddresses/'+result.data.user_id)
+          .then(response=>{
+            setAddress(response.data);
+          });   
+
           axios('/api/invoices/invoiceDetails/'+invoice_id).then(result=>{
             if (result.data) {
               setInvoiceDetail(result.data);          
             }
           });     
-          axios.get('/api/getAgentAddresses/'+AppState.user.id)
-          .then(response=>{
-            setAddress(response.data);
-          });  
         }
       });
     }   
@@ -62,7 +64,7 @@ function ViewPdf({match}) {
                 <div className="col-sm-6">
                   <div className="invoicelogo">
                   {address.business_type == 'company' ? 
-                    <img src={'/uploads/users/'+user.id+'/business_logo/'+address.business_logo} alt="logo" />
+                    <img src={'/uploads/users/'+invoiceData.user_id+'/business_logo/'+address.business_logo} alt="logo" />
                      : <h1 style={{ fontWeight: 'bold' }}>{address.name}</h1> }
                   </div>
                 </div>

@@ -13,6 +13,7 @@ use App\Language;
 use App\Package;
 use App\Profile;
 use App\Notice;
+use App\Booking;
 use App\SiteManagement;
 use App\User;
 use Auth;
@@ -184,8 +185,11 @@ class InvoiceController extends Controller
             ->where('id', $data_return->id)
             ->update(['invoice_number' => $data_return->id]);
 
-        // $message = "<h5><a href='/profile/".$user_slug."'>".Auth::user()->first_name." ".Auth::user()->last_name."</a> Generated a <a href='/show/invoice/".$invoice_id."'>Invoice # ".$invoice_id." </a> for <a href='/job/". $jobs->slug."'>".$jobs->title."</a></h5>";
-        // Notice::create(['user_id' => $user_id, 'receiver_id' => $request->customer_id, 'data' => $message , 'type' => 'milestone']);
+        $user = User::where('id', $request->user_id)->first();
+        $booking = Booking::where('id', $request->booking_id)->first();
+
+        $message = "<a href='/profile/".$user->id."'>".$user->name."</a> Generated a <a href='/view-invoicepdf/".$data_return->id."'>Invoice # ".$data_return->id." </a> for Booking <a href='/booked/". $booking->booking_id."'>".$booking->booking_name."</a>";
+        Notice::create(['user_id' => $user->id, 'receiver_id' => $request->customer_id, 'data' => $message , 'type' => 'invoice']);
 
         return $data_return->id;
     }

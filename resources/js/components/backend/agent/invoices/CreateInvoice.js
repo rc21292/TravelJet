@@ -67,9 +67,9 @@ function CreateInvoice(props) {
             if (response.data) {
               setCustomer(response.data);
               axios.get('/api/getCustomerAddresses/'+result.data.user_id)
-              .then(response=>{
-                setAddress(response.data);
-                setInvoiceData({...invoiceData,'billing_address' : response.data.landmark+', '+response.data.locality+', '+response.data.address+', '+response.data.city+', '+response.data.state+' - '+response.data.pincode, 'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id,'sub_total' : sub_total, 'tax' : tax, 'total' : total});
+              .then(response1=>{
+                setAddress(response1.data);
+                setInvoiceData({...invoiceData,'billing_address' : response1.data.landmark+', '+response1.data.locality+', '+response1.data.address+', '+response1.data.city+', '+response1.data.state+' - '+response1.data.pincode, 'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id,'sub_total' : sub_total, 'tax' : tax, 'total' : total});
               });
             }
           });  
@@ -371,7 +371,7 @@ function CreateInvoice(props) {
             </div>
             <div className="placebidbtn movebtn">
               <a onClick={saveInvoice} className="btn btn-primary">Save</a>
-              <a onClick={saveSendInvoice} className="btn btn-primary">Save &amp; Send</a>
+              <a style={{display:'none'}} onClick={saveSendInvoice} className="btn btn-primary">Save &amp; Send</a>
             </div>
           </div></form>
       </div>
