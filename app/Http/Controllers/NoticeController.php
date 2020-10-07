@@ -44,8 +44,7 @@ class NoticeController extends Controller
     {
         $user_id = $request->id;
         $user_data = User::where('id',$user_id)->select('role')->first();
-        echo $user_created_at = User::where('id',$user_id)->value('created_at');
-        die;
+        $user_created_at = User::where('id',$user_id)->value('created_at');
         if ($user_data->role === 'agent') {
             return $notices = $this->notice::whereIn('type', ['job_post','award'])->where('created_at','>=',$user_created_at)->where('receiver_id',$user_id)->orderBy('created_at','DESC')->get();
         } elseif ($user_data->role === 'admin') {
