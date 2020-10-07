@@ -134,15 +134,15 @@ class QuotationController extends Controller
 
     public function awardBooking(Request $request, $id)
     {
-        /*DB::table('quotations')
+        DB::table('quotations')
         ->where('id', $id)
-        ->update(['status'=> 'awarded']);*/
+        ->update(['status'=> 'awarded']);
 
         $quotation =  Quotation::where('id',$id)->first();
 
-        /*DB::table('bookings')
+        DB::table('bookings')
         ->where('id', $quotation->booking_id)
-        ->update(['status'=> 'awarded']);*/
+        ->update(['status'=> 'awarded']);
 
         $user = User::where('id',$request->user_id)->first();
 
