@@ -36,6 +36,7 @@ function CreateInvoice(props) {
   const [address, setAddress] = useState({});   
   const [error, setError] = useState('');   
   const [errors, setErrors] = useState({});   
+  const [invoiceNo, setInvoiceNo] = useState(0);   
 
   const [invoiceDetail, setInvoiceDetail] = useState([]);
 
@@ -71,8 +72,12 @@ function CreateInvoice(props) {
                 setInvoiceData({...invoiceData,'billing_address' : response.data.landmark+', '+response.data.locality+', '+response.data.address+', '+response.data.city+', '+response.data.state+' - '+response.data.pincode, 'customer_name' : response.data.name,'customer_id' : response.data.id,'booking_id' : parseInt(booking_id), 'user_id':AppState.user.id,'sub_total' : sub_total, 'tax' : tax, 'total' : total});
               });
             }
-          });         
-          
+          });  
+
+          axios.get('/api/getNextInvoiceNo')
+              .then(response=>{
+                setInvoiceNo(response.data);
+              });     
         }); 
     }   
 
@@ -304,7 +309,7 @@ function CreateInvoice(props) {
                   <div className="col-sm-12">
                     <div className="form-group">
                       <label htmlFor="inputnmae3" className="col-form-label">Invoice Number</label>
-                      <input type="text" name="invoice_number" disabled className="form-control" placeholder="Automatically Generated......" />
+                      <input type="text" name="invoice_number" disabled className="form-control" value={invoiceNo} />
                     </div>
                   </div>
                 </div>

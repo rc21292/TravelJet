@@ -134,15 +134,15 @@ class QuotationController extends Controller
 
     public function awardBooking(Request $request, $id)
     {
-        DB::table('quotations')
+        /*DB::table('quotations')
         ->where('id', $id)
-        ->update(['status'=> 'awarded']);
+        ->update(['status'=> 'awarded']);*/
 
         $quotation =  Quotation::where('id',$id)->first();
 
-        DB::table('bookings')
+        /*DB::table('bookings')
         ->where('id', $quotation->booking_id)
-        ->update(['status'=> 'awarded']);
+        ->update(['status'=> 'awarded']);*/
 
         $user = User::where('id',$request->user_id)->first();
 
@@ -168,25 +168,24 @@ class QuotationController extends Controller
         /*end user transaction*/
 
         /*agent message*/
-        $user = User::where('id',$quotation->user_id)->first();
 
-        $user->deposit($request->total_amount);
+        $user_agent->deposit($request->total_amount);
 
-        $pay_message_agent = "Recived Rs. $request->total_amount from Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+        $pay_message_agent = "Recived Rs. $request->total_amount from <a href='/profile/".$user->id."'> ".$user->name." </a> for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
 
         UserTransaction::create(['user_id' => $booking->user_id, 'receiver_id' =>  $quotation->user_id, 'description' => $pay_message_agent , 'type' => 'deposit' , 'amount' => $request->total_amount]);
 
         /*agent to admin commission*/
         $admin_am = ((($quotation->total_payment)*10)/100);
-        $user = User::find(1)->first();
-        $user->deposit($admin_am);
+        $user_admin = User::find(1)->first();
+        $user_admin->deposit($admin_am);
         $pay_message_admin = "Recived Rs. $admin_am from  <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a> as commission";
 
         UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($request->total_amount)*10)/100)]);        
 
         /*commission from agent to admin*/
-        $user = User::where('id',$quotation->user_id)->first();
-        $user->withdraw(((($quotation->total_payment)*10)/100));
+        $user_agent->withdraw(((($quotation->total_payment)*10)/100));
+        
         $pay_message_agent_admin = "Paid Rs. $admin_am commision to Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
         UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($quotation->total_payment)*10)/100)]);   
 

@@ -155,7 +155,7 @@ function Booked({match}) {
                                   <div className="col-sm-6">
                                     <div className="headerbudget">
                                       <div className="budgetprice">
-                                        <b>Budget:</b> <i className="fa fa-inr" /> {bookingData.vehicle_budget}
+                                        <b>Total Amount of Trip:</b> <i className="fa fa-inr" /> {bookingData.total_payment}
                                       </div>
                                       <span>Booking ID:000000{bookingData.id}</span>
                                     </div>
@@ -166,13 +166,13 @@ function Booked({match}) {
                                 <ul className="list-unstyled">
                                     <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">Paid</div></span></li>
                                   <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
-                                  <li><span>Pickup Location: <b>{bookingData.from_places}</b></span></li>
-                                  <li><span>Stoppage During the trip :  <b>  {stopeges}</b></span></li>
-                                  <li><span>Depart : <b>{bookingData.to_places}</b></span></li>
-                                  <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
-                                  <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
-                                  <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
-                                  <li><span>Total Kilometers : <b>570</b></span></li>
+                                  <li><span>Pickup Location: <strong>{bookingData.from_places}</strong></span></li>
+                                  <li><span>Stoppage During the trip :  <strong>  {stopeges}</strong></span></li>
+                                  <li><span>Depart : <strong>{bookingData.to_places}</strong></span></li>
+                                  <li><span>Pickup Time : <strong>{bookingData.pickup}</strong></span></li>
+                                  <li><span>Number of Person : <strong>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</strong></span></li>
+                                  <li><span>Type of Vehicle : <strong>{bookingData.vehicle_type}</strong></span></li>
+                                  <li><span>Total Kilometers : <strong>{bookingData.distance}</strong></span></li>
                                   <li>                                
                                     <div className="row">
                                       <div className="col-sm-6">

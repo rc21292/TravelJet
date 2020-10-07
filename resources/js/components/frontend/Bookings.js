@@ -86,6 +86,7 @@ function Bookings({match}) {
   const [error, setError] = useState();  
 
   const [cancelReasons, setCancelReasons] = useState([]);  
+  const [drivers, setDrivers] = useState([]);  
 
   const [inputFields, setInputFields] = useState([{stopege:''}]);
   const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
@@ -102,15 +103,12 @@ function Bookings({match}) {
 
   const autoCompleteRef1 = useRef(null);
   const autoCompleteRef = useRef(null);
-
   useEffect(() => {  
 
      let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-
-
       const result2 = axios.get('/api/quotations/getQuotationByBookingId/'+match.params.id+'?status=awarded').then((result2) => {   
       setQuotationData(result2.data);  
       let pay = result2.data.payment;
@@ -121,8 +119,6 @@ function Bookings({match}) {
     const GetData = async () => { 
       axios.get('/api/queries/show/'+match.params.id+'?type=booking').then((result) => { 
         setBookingData(result.data); 
-
-
        axios.get('/api/users/getCancelReasons')
         .then(response=>{
           if (response.data) {
@@ -130,8 +126,6 @@ function Bookings({match}) {
           }else{
           }
         });
-
-
 
         axios.get('/api/quotations/getQuotationDetailById/'+result.data.id)
           .then(response=>{
@@ -156,11 +150,14 @@ function Bookings({match}) {
         });
       }); 
 
-
-
       const result1 = await axios('/api/queries/getStopages/'+match.params.id);  
       setStopages(result1.data.stopages);  
     };  
+
+    axios('/api/drivers/getDriverNames/'+AppState.user.id)
+    .then(response=>{ 
+      setDrivers(response.data);  
+    }); 
 
     GetData();  
   }
@@ -983,19 +980,27 @@ function Bookings({match}) {
                                     </div>
                                     <div className="form-group">
                                       <select className="custom-select form-control" value={quotationDetails.driver_name} id="inputGroupSelect01" disabled>
-                                        <option value="">Manoj Singh</option>
-                                        <option value={1}>One</option>
-                                        <option value={2}>Two</option>
-                                        <option value={3}>Three</option>
+                                        <option value="">Select Driver Name..</option>
+                                        {
+                                          drivers.map((x,i)=>{
+                                          return(
+                                            <option key={i} value={x}>{x}</option>
+                                            )
+                                          })
+                                        }    
                                       </select>
                                     </div>
                                     <div className="driveredit" style={(!editData.driver_name) ? {display:'none'} : {display:'block'} }>
                                       <div className="form-group">
                                         <select className="custom-select form-control" value={quotationDetails.driver_name} name="driver_name" onChange={handleInputsChanges} id="inputGroupSelect01">
                                           <option value="">Select Driver Name..</option>
-                                          <option value={1}>One</option>
-                                          <option value={2}>Two</option>
-                                          <option value={3}>Three</option>
+                                          {
+                                            drivers.map((x,i)=>{
+                                            return(
+                                              <option key={i} value={x}>{x}</option>
+                                              )
+                                            })
+                                          }    
                                         </select>
                                       </div>
                                     </div>
@@ -1066,7 +1071,7 @@ function Bookings({match}) {
                                               return( <tr key={i}>
                                               <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} {i==3 && 'Fifth'} Part</td>
                                               <td> <i className="fa fa-inr" />{payments_data.payment}</td>
-                                              <td><span>{payments_data.status}</span></td>
+                                              <td>{payments_data.status == 'paid' ? <b>Paid <a href="#"> <i className="fa fa-eye" /></a></b> : <b>Unpaid</b> }</td>
                                               </tr>
                                                 )
                                               })

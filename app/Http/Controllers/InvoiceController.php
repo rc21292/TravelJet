@@ -82,6 +82,12 @@ class InvoiceController extends Controller
         return $invoices;
     }
 
+    public function getNextInvoiceNo()
+    {
+        $invoice = Invoice::select('id')->latest()->first();
+        return $invoice->id+1;
+    }
+
 
     public function getInvoices(Request $request,$id)
     {

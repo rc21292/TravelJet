@@ -20,6 +20,12 @@ class DriverController extends Controller
         return Driver::where('user_id',$user_id)->get();
     }
 
+
+    public function getDriverNames($user_id)
+    {
+        return Driver::where('user_id',$user_id)->pluck('name');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

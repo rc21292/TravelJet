@@ -139,6 +139,7 @@ Route::get('getAgentNotifications/{id}', 'NoticeController@getAgentNotifications
 /*for agent*/
 Route::get('invoices/{id}', 'InvoiceController@index');
 Route::get('invoices/show/{id}','InvoiceController@show');
+Route::get('getNextInvoiceNo','InvoiceController@getNextInvoiceNo');
 Route::get('invoices/invoiceDetails/{id}','InvoiceController@invoiceDetails');
 Route::get('invoices/sendInvoice/{id}','InvoiceController@sendInvoice');
 Route::get('invoices/checkInvoice/{id}','InvoiceController@checkInvoice');
@@ -161,6 +162,9 @@ Route::get('invoices/getInvoices/{id}', 'InvoiceController@getInvoices');
 /*drivers*/
 Route::get('drivers/getDrivers/{id}','DriverController@index');
 Route::post('drivers/saveDriver/{id}','DriverController@store');
+
+
+Route::get('drivers/getDriverNames/{id}','DriverController@getDriverNames');
 
 /*vechicles*/
 

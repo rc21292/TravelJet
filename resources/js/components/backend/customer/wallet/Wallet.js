@@ -71,7 +71,7 @@ function Wallet(props) {
                       <thead className="thead-light">
                         <tr>
                           <th scope="col">TRANSACTION</th>
-                          <th scope="col">AMOUNT</th>
+                          <th scope="col" style={{width: '10%'}}>AMOUNT</th>
                           <th scope="col">STATUS</th>
                           <th scope="col">COMMENT</th>
                         </tr>
