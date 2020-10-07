@@ -46,14 +46,12 @@ class NoticeController extends Controller
         $user_data = User::where('id',$user_id)->select('role')->first();
         $user_created_at = User::where('id',$user_id)->value('created_at');
         if ($user_data->role === 'agent') {
-            $notices = $this->notice::where('type', 'job_post')->where('created_at','>=',$user_created_at)->orwhere('type','award')->whereIn('receiver_id',['0',$user_id])->orderBy('created_at','DESC');
-            return $notices->get();
+            return $notices = $this->notice::whereIn('type', ['job_post','award'])->where('created_at','>=',$user_created_at)->where('receiver_id',$user_id)->orderBy('created_at','DESC')->get();
         } elseif ($user_data->role === 'admin') {
-            $notices = $this->notice::orderBy('created_at','DESC');
+            $notices = $this->notice::->where('receiver_id',1)orderBy('created_at','DESC');
             return $notices->get();
         } else {
-            $notices = $this->notice::where('type', 'quotation')->where('created_at','>=',$user_created_at)->orwhere('type','booked')->orwhere('type','invoice')->where('receiver_id',$user_id)->orderBy('created_at','DESC');
-            return $notices->get();
+            return $notices = $this->notice::whereIn('type', ['quotation','booked','invoice'])->where('created_at','>=',$user_created_at)->where('receiver_id',$user_id)->orderBy('created_at','DESC')->get();
         }
     }
 
