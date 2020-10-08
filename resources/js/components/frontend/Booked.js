@@ -11,6 +11,7 @@ function Booked({match}) {
   const history = useHistory()
 
   const [bookingData, setBookingData] = useState({});  
+  const [quotationDetails, setQuotationDetails] = useState({});  
   const [customer, setCustomer] = useState({});  
   const [stopeges, setStopages] = useState(false);  
 
@@ -25,6 +26,10 @@ function Booked({match}) {
     const GetData = async () => { 
       axios.get('/api/queries/show/'+match.params.id+'?type=booked').then((result) => { 
       setBookingData(result.data); 
+
+      axios.get('/api/quotations/getQuotationDetailById/'+result.data.id).then((result) => { 
+        setQuotationDetails(result.data); 
+      });
 
       axios.get('/api/invoices/checkInvoice/'+match.params.id)
         .then(response=>{
@@ -167,12 +172,21 @@ function Booked({match}) {
                                     <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">Paid</div></span></li>
                                   <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
                                   <li><span>Pickup Location: <strong>{bookingData.from_places}</strong></span></li>
+                                  <li><span>Drop Location: <strong>{bookingData.to_places}</strong></span></li>
                                   <li><span>Stoppage During the trip :  <strong>  {stopeges}</strong></span></li>
                                   <li><span>Depart : <strong>{bookingData.to_places}</strong></span></li>
                                   <li><span>Pickup Time : <strong>{bookingData.pickup}</strong></span></li>
                                   <li><span>Number of Person : <strong>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</strong></span></li>
-                                  <li><span>Type of Vehicle : <strong>{bookingData.vehicle_type}</strong></span></li>
-                                  <li><span>Total Kilometers : <strong>{bookingData.distance}</strong></span></li>
+                                  <li><span>Cab Model : <strong>{bookingData.vehicle_type}</strong></span></li>
+                                  <li><span>Type of Vehicle : <strong>{quotationDetails.cab_type}</strong></span></li>
+                                  <li><span>Cab Model : <strong>{quotationDetails.cab_model}</strong></span></li>
+                                  <li><span>Cab Number : <strong>{quotationDetails.cab_number}</strong></span></li>
+                                  <li><span>Sitting Capacity : <strong>{quotationDetails.sitting_capacity}</strong></span></li>
+                                  <li><span>Luggage Space : <strong>{quotationDetails.luggage_space}</strong></span></li>
+                                  <li><span>Total Kilometers : <strong>{quotationDetails.total_kilometer}</strong></span></li>
+                                  <li><span>Driver Name : <strong>{quotationDetails.driver_name}</strong></span></li>
+                                  <li><span>Mobile Number : <strong>{quotationDetails.mobile_no}</strong></span></li>
+
                                   <li>                                
                                     <div className="row">
                                       <div className="col-sm-6">

@@ -61,6 +61,16 @@ class PayoutController extends Controller
     }
 
 
+    public function payoutTransactions(Request $request,$id)
+    {
+      $payouts =  Payout::latest()->paginate(10);
+      return response()->json([
+        'success' => true,
+        'payouts' => $payouts,
+      ], 200);
+    }
+
+
     public function generatePDF($year, $month, $id = array())
     {
         $slected_ids = array();
