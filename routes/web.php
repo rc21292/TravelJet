@@ -13,7 +13,16 @@ use Illuminate\Http\Response;
 |
 */
 
-
+// Cache clear route
+Route::get(
+    'cache-clear',
+    function () {
+        \Artisan::call('config:cache');
+        \Artisan::call('cache:clear');
+        \Artisan::call('config:clear');
+        return redirect()->back();
+    }
+);
 
 // Front End View Routes
 Route::get('/', function () { return view('welcome'); });

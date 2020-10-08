@@ -235,9 +235,17 @@ class QuotationController extends Controller
             ->where('id', $request->booking_id)
             ->update(['status' => 'bidded']);
 
-        /*cut 10 credits from agent for bidding*/
+        /*cut 1 credits from agent for bidding*/
 
-        UserCredit::where('user_id', $request->user_id)->update(['credits' => DB::raw('credits - 1')]);
+        UserCredit::where('user_id', $request->user_id)->first()
+
+        if (UserCredit::where('user_id', $request->user_id)->exists()) {
+            
+            UserCredit::where('user_id', $request->user_id)->update(['credits' => DB::raw('credits - 1')]);
+        }else{
+            UserCredit::create(['user_id' => $request->user_id, 'credits' => 4]);
+        }
+
 
         $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> bidded on booking </span> <a href='/customer/quotations/'>".$booking->booking_name."</a>";
 
