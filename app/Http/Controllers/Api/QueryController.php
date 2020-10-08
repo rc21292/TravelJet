@@ -257,7 +257,7 @@ class QueryController extends Controller
 
         $user = User::where('id',$request->user_id)->first();
 
-        $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <a href='/booking-detail/". $data_re->id."'>".$request->booking_name."</a>";
+        $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <a href='/booking-details/". $data_re->id."'>".$request->booking_name."</a>";
 
         Notice::create(['user_id' => $request->user_id, 'receiver_id' => 0, 'data' => $message , 'type' => 'job_post', 'created_at' => \Carbon\Carbon::now()]);
 
