@@ -177,7 +177,6 @@ function Booked({match}) {
                                   <li><span><p style={{ width:'25%'}}>Depart : </p><strong style={{ color: '#222' }}>{bookingData.to_places}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Pickup Time : </p><strong style={{ color: '#222' }}>{bookingData.pickup}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Number of Person : </p><strong style={{ color: '#222' }}>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Cab Model : </p><strong style={{ color: '#222' }}>{bookingData.vehicle_type}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Type of Vehicle : </p><strong style={{ color: '#222' }}>{quotationDetails.cab_type}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Cab Model : </p><strong style={{ color: '#222' }}>{quotationDetails.cab_model}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Cab Number : </p><strong style={{ color: '#222' }}>{quotationDetails.cab_number}</strong></span></li>
