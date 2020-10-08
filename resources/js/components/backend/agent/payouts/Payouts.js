@@ -82,7 +82,7 @@ function Payouts(props) {
   }; 
 
   const handlePageChange = (pageNumber) => {
-    axios.get('/api/payoutTransactions/'+user.id+'&page='+pageNumber)
+    axios.get('/api/payoutTransactions/'+user.id+'?page='+pageNumber)
     .then(result=>{
      setPayoutsData(result.data.payouts.data);
      setItemsCountPerPage(result.data.payouts.per_page);

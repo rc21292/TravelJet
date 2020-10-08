@@ -63,7 +63,7 @@ class PayoutController extends Controller
 
     public function payoutTransactions(Request $request,$id)
     {
-      $payouts =  Payout::latest()->paginate(10);
+      $payouts =  Payout::where('reciver_id',$id)->latest()->paginate(10);
       return response()->json([
         'success' => true,
         'payouts' => $payouts,
