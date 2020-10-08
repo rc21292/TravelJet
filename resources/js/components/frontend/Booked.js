@@ -171,21 +171,21 @@ function Booked({match}) {
                                 <ul className="list-unstyled">
                                     <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">Paid</div></span></li>
                                   <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Pickup Location: </p><strong>{bookingData.from_places}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Drop Location: </p><strong>{bookingData.to_places}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Stoppage During the trip :  </p><strong>  {stopeges}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Depart : </p><strong>{bookingData.to_places}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Pickup Time : </p><strong>{bookingData.pickup}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Number of Person : </p><strong>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Cab Model : </p><strong>{bookingData.vehicle_type}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Type of Vehicle : </p><strong>{quotationDetails.cab_type}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Cab Model : </p><strong>{quotationDetails.cab_model}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Cab Number : </p><strong>{quotationDetails.cab_number}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Sitting Capacity : </p><strong>{quotationDetails.sitting_capacity}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Luggage Space : </p><strong>{quotationDetails.luggage_space}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Total Kilometers : </p><strong>{quotationDetails.total_kilometer}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Driver Name : </p><strong>{quotationDetails.driver_name}</strong></span></li>
-                                  <li><span><p style={{ width:'25%'}}>Mobile Number : </p><strong>{quotationDetails.mobile_no}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Pickup Location: </p><strong style={{ color: '#222' }}>{bookingData.from_places}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Drop Location: </p><strong style={{ color: '#222' }}>{bookingData.to_places}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Stoppage During the trip :  </p><strong style={{ color: '#222' }}>  {stopeges}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Depart : </p><strong style={{ color: '#222' }}>{bookingData.to_places}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Pickup Time : </p><strong style={{ color: '#222' }}>{bookingData.pickup}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Number of Person : </p><strong style={{ color: '#222' }}>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Cab Model : </p><strong style={{ color: '#222' }}>{bookingData.vehicle_type}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Type of Vehicle : </p><strong style={{ color: '#222' }}>{quotationDetails.cab_type}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Cab Model : </p><strong style={{ color: '#222' }}>{quotationDetails.cab_model}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Cab Number : </p><strong style={{ color: '#222' }}>{quotationDetails.cab_number}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Sitting Capacity : </p><strong style={{ color: '#222' }}>{quotationDetails.sitting_capacity}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Luggage Space : </p><strong style={{ color: '#222' }}>{quotationDetails.luggage_space}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Total Kilometers : </p><strong style={{ color: '#222' }}>{quotationDetails.total_kilometer}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Driver Name : </p><strong style={{ color: '#222' }}>{quotationDetails.driver_name}</strong></span></li>
+                                  <li><span><p style={{ width:'25%'}}>Mobile Number : </p><strong style={{ color: '#222' }}>{quotationDetails.mobile_no}</strong></span></li>
 
                                   <li>                                
                                     <div className="row">
