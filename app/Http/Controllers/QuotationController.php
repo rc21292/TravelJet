@@ -237,7 +237,7 @@ class QuotationController extends Controller
 
         /*cut 1 credits from agent for bidding*/
 
-        UserCredit::where('user_id', $request->user_id)->first()
+        UserCredit::where('user_id', $request->user_id)->first();
 
         if (UserCredit::where('user_id', $request->user_id)->exists()) {
             
