@@ -127,7 +127,7 @@ function BookingDetails({match}) {
   const autoCompleteRef = useRef(null);
 
   const [inputFields, setInputFields] = useState([{stopege:''}]);
-  const [paymentFields, setPaymentFields] = useState([{payment:'',date:''}]);
+  const [paymentFields, setPaymentFields] = useState([{payment:0,date:''}]);
 
   useEffect(() => {  
     let stateqq = localStorage["appState"];
@@ -217,9 +217,18 @@ function BookingDetails({match}) {
 
   const handleAddPaymentFields = () => {
     const values = [...paymentFields];
-    values.push({ payment: '', date:'' });
+
+    let paymentsTotal = paymentFields.reduce((paymenttotal, meal) => paymenttotal + parseInt(meal.payment, 10), 0);
+
+    let rem_amount = quotations.total_payment - quotations.payment_first - paymentsTotal;
+
+    values.push({ payment: rem_amount, date:'' });
     setPaymentFields(values);
+    setQuotations({ ...quotations, payments: values });
   };
+
+
+  console.log(paymentFields);
 
 
   const handleRemovePaymentFields = (index, event) => {
@@ -398,12 +407,14 @@ function BookingDetails({match}) {
                               </div>
                               <div className="bookeddetail">
                                 <ul className="list-unstyled">
-                                   <li><span><div className="oneway"> {bookingData.booking_type}</div></span></li>
+                                  <li><span><div className="oneway"> {bookingData.booking_type}</div></span></li>
                                   <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
-                                  <li><span>Pickup Location: <b>{bookingData.from_places}</b></span></li>
+                                  <li><span>Pickup Location: <b> {bookingData.from_places}</b></span></li>
                                   <li><span>Stoppage During the trip :  <b>  {stopeges}</b></span></li>
-                                  <li><span>Depart : <b>{bookingData.to_places}</b></span></li>
-                                  <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
+                                  <li><span>Drop Location: <b> {bookingData.to_places}</b></span></li>
+                                  <li><span>Journey Date: <b> <Moment format="DD-MM-YYYY">{customer.depart}</Moment></b></span></li>
+                                  <li><span>Depart : <b> {bookingData.to_places}</b></span></li>
+                                  <li><span>Pickup Time : <b> {bookingData.pickup}</b></span></li>
                                   <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
                                   <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
                                   <li><span>Total Kilometers : <b>570</b></span></li>

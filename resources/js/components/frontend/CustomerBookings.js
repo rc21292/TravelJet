@@ -12,6 +12,7 @@ function CustomerBookings({match}) {
   const history = useHistory()
 
   const [user, setUser] = useState(false);
+  const [cancelActive, setCancelActive] = useState(true);
   const [bookingData, setBookingData] = useState({});  
   const [quotationData, setQuotationData] = useState({});  
   const [cancelReasons, setCancelReasons] = useState([]);  
@@ -31,6 +32,19 @@ function CustomerBookings({match}) {
     const GetData = async () => {  
       const result = await axios('/api/queries/show/'+match.params.id);  
       setBookingData(result.data); 
+
+      var myDate = new Date(result.data.depart);
+      var today = new Date();
+      console.log(myDate);
+      console.log(today);
+
+      if ( myDate > today ) { 
+        console.log('grater');
+        setCancelActive(false)
+      }else{
+        setCancelActive(true)
+        console.log('smaller');
+      }
 
       const script = document.createElement("script")
       script.async = true
@@ -244,8 +258,8 @@ function CustomerBookings({match}) {
                                   <li><span>Pickup Location: <b>{bookingData.from_places}</b></span></li>
                                   <li><span>Stoppage During the trip :  <b>  {stopeges}</b></span></li>
                                   <li><span>Depart : <b>{bookingData.to_places}</b></span></li>
+                                  <li><span>Journey Date: <b> <Moment format="DD-MM-YYYY">{bookingData.depart}</Moment></b></span></li>
                                   <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
-
                                   <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
                                   <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
                                   <li><span>Total Kilometers : <b>570</b></span></li>
@@ -322,8 +336,13 @@ function CustomerBookings({match}) {
                             </div>
                             <div className="placebidbtn movebtn">
                             { (bookingData.status == 'cancelled') ?
-                              <a className="btn btn-primary">This Booking Canceled</a> :
+                              <a className="btn btn-primary">This Booking Canceled</a> : [
+                               ((cancelActive === false) ?       
                               <a className="btn btn-primary"  data-toggle="modal" data-target="#myModal3">Cancel This Booking</a> 
+                              :
+                              <a className="btn btn-primary"  disabled>Cancel This Booking</a> 
+                              ),
+                            ]
                             }
                             </div>
                           </div>
@@ -331,7 +350,7 @@ function CustomerBookings({match}) {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>  
               </div>
             </div>
             {/* User Listing End*/}

@@ -331,12 +331,52 @@ const BookingTrip = (props) => {
 			setErrors(errors);
 			return;
 		}
+
+		if (bookings.depart) {
+			var myDate = new Date(bookings.depart);
+			var today = new Date();
+			if ( myDate < today ) { 
+				errors["depart"] = "*Date of Depart must be garter than today's date!";
+				setErrors(errors)
+				return;
+			}
+			errors["depart"] = "";
+			setErrors(errors)	
+		}
+
 		if ((bookings.arrival === '') || (!bookings.arrival)) {  
 			errors["arrival"] = "*Please Select Date to Arrival.";
 			setErrors(errors);
 			setIsErrors(1);
 			return
 		}
+
+
+		if (bookings.arrival) {
+			var myDate = new Date(bookings.arrival);
+			var today = new Date();
+			if ( myDate < today ) { 
+				errors["arrival"] = "*Date of Arrival must be garter than today's date!";
+				setErrors(errors)
+				return;
+			}
+			errors["arrival"] = "";
+			setErrors(errors)
+		}
+
+		if (bookings.arrival) {
+			var myDate = new Date(bookings.arrival);
+			var today = new Date(bookings.depart);
+			if ( myDate <= today ) { 
+				errors["arrival"] = "Arrival Date must be garter than Depart date!";
+				setErrors(errors)
+				return false;
+			}
+			errors["arrival"] = "";
+			setErrors(errors)
+		}
+
+		
 		if ((bookings.pickup_time === '') || (!bookings.pickup_time)) {  
 			errors["pickup_time"] = "*Please Select Pickup Time.";
 			setErrors(errors);
@@ -716,7 +756,7 @@ const BookingTrip = (props) => {
 	                            <option value="Uttarakhand">Uttarakhand</option>
 	                            <option value="West Bengal">West Bengal</option>
 	                          </select>
-	                          <input id="to_places" type="text" defaultValue={''} ref={autoCompleteRef1} onChange={event => setQuery1(event.target.value)} name="to_places" onTouchEnd={(event) => handleChange(event.target.value)} placeholder="Tell us your starting point.." className="startpoint form-control" />
+	                          <input id="to_places" type="text" defaultValue={''} ref={autoCompleteRef1} onChange={event => setQuery1(event.target.value)} name="to_places" onTouchEnd={(event) => handleChange(event.target.value)} placeholder="Tell us your Dropping point.." className="startpoint form-control" />
 	                        </div>
 	                        <div style={{color:'red',marginTop:'-15px'}}>{errors.destinationstate}{errors.to_places}</div>
 	                      </div>

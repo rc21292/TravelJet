@@ -383,12 +383,52 @@ const BookingRoundTrip = (props) => {
 			setErrors(errors);
 			return;
 		}
+
+		if (bookings.depart) {
+			var myDate = new Date(bookings.depart);
+			var today = new Date();
+			if ( myDate < today ) { 
+				errors["depart"] = "*Date of Depart must be garter than today's date!";
+				setErrors(errors)
+				return;
+			}
+			errors["depart"] = "";
+			setErrors(errors)	
+		}
+
 		if ((bookings.arrival === '') || (!bookings.arrival)) {  
 			errors["arrival"] = "*Please Select Date to Arrival.";
 			setErrors(errors);
 			setIsErrors(1);
 			return
 		}
+
+
+		if (bookings.arrival) {
+			var myDate = new Date(bookings.arrival);
+			var today = new Date();
+			if ( myDate < today ) { 
+				errors["arrival"] = "*Date of Arrival must be garter than today's date!";
+				setErrors(errors)
+				return;
+			}
+			errors["arrival"] = "";
+			setErrors(errors)
+		}
+
+		if (bookings.arrival) {
+			var myDate = new Date(bookings.arrival);
+			var today = new Date(bookings.depart);
+			if ( myDate <= today ) { 
+				errors["arrival"] = "Arrival Date must be garter than Depart date!";
+				setErrors(errors)
+				return false;
+			}
+			errors["arrival"] = "";
+			setErrors(errors)
+		}
+
+		
 		if ((bookings.pickup_time === '') || (!bookings.pickup_time)) {  
 			errors["pickup_time"] = "*Please Select Pickup Time.";
 			setErrors(errors);

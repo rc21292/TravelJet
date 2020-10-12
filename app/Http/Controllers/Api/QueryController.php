@@ -140,36 +140,38 @@ class QueryController extends Controller
     {
         DB::connection()->enableQueryLog();
 
-        $user_transaction_s = Booking::
+        $posted_bookings = Booking::
                 leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
                 ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"),'quotations.user_id as agent_id')
-                ->where('bookings.status',$request->status)->orWhere('bookings.status','bidded');
+                ->where('bookings.depart', '>=', date('Y-m-d'))
+                ->whereIn('bookings.status',[$request->status,'bidded']);
 
         if ($request->has('cab') && !empty($request->cab)) {
             $cab = $request->cab;
-            $user_transaction_s->whereIn('bookings.vehicle_type',explode(',', $request->cab));
+            $posted_bookings->whereIn('bookings.vehicle_type',explode(',', $request->cab));
         }
 
         if ($request->has('name') && !empty($request->name)) {
             $name = $request->name;
-            $user_transaction_s->where('bookings.booking_name', 'LIKE', "%$request->name%");
+            $posted_bookings->where('bookings.booking_name', 'LIKE', "%$request->name%");
         }
         if ($request->has('location') && !empty($request->location)) {
             $location = $request->location;
-            $user_transaction_s->whereIn('bookings.id',explode(',', $request->location));
+            $posted_bookings->whereIn('bookings.id',explode(',', $request->location));
         }
 
         if ($request->has('category') && !empty($request->category)) {
             $category = $request->category;
-            $user_transaction_s->whereIn('bookings.booking_type',explode(',', $request->category));
+            $posted_bookings->whereIn('bookings.booking_type',explode(',', $request->category));
         }
 
-        $result = $user_transaction_s->groupBy('bookings.id')
+        $result = $posted_bookings->groupBy('bookings.id')
         ->orderBy('bookings.id','DESC')
         ->paginate(6);
 
         $queries = DB::getQueryLog();
         $last_query = end($queries);
+        // echo "<pre>";print_r($last_query);"</pre>";exit;
         return $result;
     }
 
