@@ -143,9 +143,9 @@ class QueryController extends Controller
         $posted_bookings = Booking::
                 leftjoin('quotations', 'bookings.id' ,'quotations.booking_id')
                 ->select('bookings.*',DB::raw("count(quotations.booking_id) as count"),'quotations.user_id as agent_id')
-                ->where('bookings.depart', '>=', date('Y-m-d'))
                 ->whereIn('bookings.status',[$request->status,'bidded']);
 
+                // ->where('bookings.depart', '>=', date('Y-m-d'))
         if ($request->has('cab') && !empty($request->cab)) {
             $cab = $request->cab;
             $posted_bookings->whereIn('bookings.vehicle_type',explode(',', $request->cab));
