@@ -123,6 +123,16 @@ class QueryController extends Controller
                      ->paginate(5);
     }
 
+    public function getBookingsBooked()
+    {
+         return $result = Booking::
+                     join('quotations', 'bookings.id' ,'quotations.booking_id')
+                     ->select('bookings.*')
+                     ->where('quotations.status','booked')->where('bookings.status','booked')
+                     ->latest('bookings.created_at')
+                     ->paginate(5);
+    }
+
 
      public function getAgentBookedBookings($id)
     {

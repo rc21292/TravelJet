@@ -4,67 +4,54 @@ import Home from '../Home';
 
 function Sidebar() {
 return (
-  <div>{/* Sidebar Navigation Left */}
-<aside id="ms-side-nav" className="side-nav fixed ms-aside-scrollable ms-aside-left">
-  {/* Logo */}
-  <div className="logo-sn ms-d-block-lg">
-    <a className="pl-0 ml-0 text-center" href="/"> <img src="https://via.placeholder.com/216x62" alt="logo" /> </a>
-  </div>
-  {/* Navigation */}
-  <ul className="accordion ms-main-aside fs-14" id="side-nav-accordion">
-    {/* Dashboard */}
-    <li className="menu-item">
-      <a href="#" className="has-chevron" data-toggle="collapse" data-target="#dashboard" aria-expanded="false" aria-controls="dashboard">
-        <span><i className="material-icons fs-16">dashboard</i>Dashboard </span>
-      </a>
-      <ul id="dashboard" className="collapse" aria-labelledby="dashboard" data-parent="#side-nav-accordion">
-        <li> <a href="/admin">Dashboard</a> </li>
+ <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        {/* Nav Item - Pages Collapse Menu */}
+        <li className="nav-item">
+          <a className="nav-link" href="/admin">
+            <span>Dashboard</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link active" href="/admin/agents">
+            <span>Agents</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link active" href="/admin/customers">
+            <span>Customers</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/transaction-history">
+            <span>Transaction History</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/commissions">
+            <span>Commissions</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/credits">
+            <span>Manage Credits</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/payouts">
+            <span>Payout</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/informationpages">
+            <span>Information Pages</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/userprofiles">
+            <span>User Profile</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/admin/notifications">
+            <span>Notification</span></a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="/logout">
+            <span>Logout</span></a>
+        </li>
+        <hr className="sidebar-divider d-none d-md-block" />
       </ul>
-    </li>
-    {/* /Dashboard */}
-   
-    {/* Transaction */}
-    <li className="menu-item">
-    <a href={'/admin/bookings'}>
-        <span><i className="fa fa-ticket" aria-hidden="true"></i>Bookings</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/admin/users'}>
-        <span><i className="fa fa-user" aria-hidden="true"></i>Users</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/admin/transactions'}>
-        <span><i className="fas fa-dollar-sign" />Transaction History</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/admin/wallet'}>
-        <span><i className="fas fa-dollar-sign" />Wallet</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/admin/notifications'}>
-        <span><i className="fa fa-bell" aria-hidden="true"></i>Notifications</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href={'/admin/profile'}>
-        <span><i className="fa fa-user" aria-hidden="true"></i>Profile</span>
-      </a>
-    </li>
-    <li className="menu-item">
-    <a href="/logout">
-        <span><i className="flaticon-shut-down mr-2"></i>Logout</span>
-      </a>
-    </li>
-    {/* /Pricing */}
-    </ul>
-</aside>
-{/* Sidebar Right */}
-
-</div>
   );
 }
 

@@ -25,8 +25,7 @@ class Payout extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'amount', 'payment_method',
-        'currency', 'status','order_id',
+        'user_id','amount','reciver_id','transaction_id','payment_method','status'
     ];
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Quotation;
 use App\User;
 use App\Booking;
+use App\Commission;
 use App\Notice;
 use App\WalletTransaction;
 use App\UserTransaction;
@@ -181,7 +182,19 @@ class QuotationController extends Controller
         $user_admin->deposit($admin_am);
         $pay_message_admin = "Recived Rs. $admin_am from  <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a> as commission";
 
-        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($request->total_amount)*10)/100)]);        
+        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($request->total_amount)*10)/100)]);    
+
+        /*notice to admin for commission*/    
+        $total_cost = $request->total_amount;
+        $commision = ((($request->total_amount)*10)/100);
+
+        $message = "Commision Rs. $commision Recived from <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> <span> for booking </span> <a href='/bookings/".$quotation->booking_id."'>".$booking->booking_name."</a>";
+
+        Notice::create(['user_id' => $user_agent->id, 'receiver_id' => 1, 'data' => $message , 'type' => 'commission', 'created_at' => \Carbon\Carbon::now()]);
+
+        Commission::create(['user_id' => $user_agent->id, 'receiver_id' => '1', 'booking_id' => $quotation->booking_id , 'type' => 'commission', 'total_cost' => $total_cost, 'commision' => $commision, 'created_at' => \Carbon\Carbon::now()]);
+
+        /*end notice to admin for commission*/    
 
         /*commission from agent to admin*/
         $user_agent->withdraw(((($quotation->total_payment)*10)/100));

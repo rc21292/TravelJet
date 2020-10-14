@@ -65,6 +65,8 @@ Route::get('/customer/profile/edit', function () { return view('customer'); });
 
 Route::get('/admin/transactions', function () { return view('admin'); });
 Route::get('/admin/bookings', function () { return view('admin'); });
+Route::get('/admin/agents', function () { return view('admin'); });
+Route::get('/admin/customers', function () { return view('admin'); });
 Route::get('/admin/settings', function () { return view('admin'); });
 Route::get('/admin/users', function () { return view('admin'); });
 Route::get('/admin/user/{id}', function () { return view('admin'); });
@@ -76,12 +78,22 @@ Route::get('/admin/portfolio/edit', function () { return view('admin'); });
 
 
 Route::get('/agent/transactions', function () { return view('agent'); });
+Route::get('/admin/transaction-history', function () { return view('admin'); });
 Route::get('/agent/bookings', function () { return view('agent'); });
 Route::get('/agent/users', function () { return view('agent'); });
 Route::get('/agent/user/{id}', function () { return view('agent'); });
 Route::get('/agent/wallet', function () { return view('agent'); });
 Route::get('/agent/payouts', function () { return view('agent'); });
+
+Route::get('/admin/payouts', function () { return view('admin'); });
+Route::get('/admin/pending-payouts', function () { return view('admin'); });
+Route::get('/admin/payment-detail/{id}', function () { return view('admin'); });
+
 Route::get('/agent/credits', function () { return view('agent'); });
+Route::get('/admin/credits', function () { return view('admin'); });
+Route::get('/admin/commissions', function () { return view('admin'); });
+Route::get('/admin/userprofiles', function () { return view('admin'); });
+Route::get('/admin/informationpages', function () { return view('admin'); });
 Route::get('/agent/invoices', function () { return view('agent'); });
 Route::get('/customer/invoices', function () { return view('customer'); });
 Route::get('/agent/profile', function () { return view('agent'); });
@@ -89,6 +101,7 @@ Route::get('/agent/profile/{id}', function () { return view('agent'); });
 Route::get('/agent/drivers', function () { return view('agent'); });
 Route::get('/agent/vehicles', function () { return view('agent'); });
 Route::get('/agent/notifications', function () { return view('agent'); }	);
+Route::get('/admin/notifications', function () { return view('admin'); }	);
 Route::get('/agent/profile/edit', function () { return view('agent'); });
 Route::get('/agent/browse-bookings', function () { return view('agent'); });
 

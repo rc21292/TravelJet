@@ -3,6 +3,17 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Topbar from './layouts/Topbar'
 import Header from './layouts/Header'
+import Payouts from './payouts/Payouts'
+import Notifications from './notifications/Notifications'
+import Credits from './credits/Credits'
+import Agents from './agents/Agents'
+import Customers from './customers/Customers'
+import Commissions from './commissions/Commissions'
+import UserProfiles from './userprofiles/UserProfiles'
+import PendingPayouts from './payouts/PendingPayouts'
+import PaymentDetail from './payouts/PaymentDetail'
+import InformationPages from './informationpages/InformationPages'
+import TransactionHistory from './transactions/TransactionHistory'
 import Footer from './layouts/Footer'
 import Sidebar from './layouts/Sidebar'
 import RightSidebar from './layouts/RightSidebar'
@@ -62,19 +73,65 @@ class Index extends Component {
         </div>
         </div>
     {/* Overlays */}
-    <div className="ms-aside-overlay ms-overlay-left ms-toggler" data-target="#ms-side-nav" data-toggle="slideLeft" />
-    <div className="ms-aside-overlay ms-overlay-right ms-toggler" data-target="#ms-recent-activity" data-toggle="slideRight" />
     <Router>
     <Routes/>
-    <Sidebar/>
-  <main className="body-content">
+
+
 <Header/>
-<Route exact path="/admin">
-<Home/>
-    </Route>
-  </main>
-    <RightSidebar/>
-  <Footer/>
+<div id="wrapper">
+    <Sidebar/>
+<Switch>
+        <Route exact path="/admin">
+        <Home user_id={user_id}/>
+        </Route>
+
+        <Route exact path="/admin/payouts">
+        <Payouts/>
+        </Route>
+
+        <Route exact path="/admin/notifications">
+        <Notifications/>
+        </Route>
+
+        <Route exact path="/admin/credits">
+        <Credits/>
+        </Route>
+
+        <Route exact path="/admin/agents">
+        <Agents/>
+        </Route>
+
+        <Route exact path="/admin/customers">
+        <Customers/>
+        </Route>
+
+        <Route exact path="/admin/commissions">
+        <Commissions/>
+        </Route>
+
+        <Route exact path="/admin/userprofiles">
+        <UserProfiles/>
+        </Route>
+
+        <Route exact path="/admin/pending-payouts">
+        <PendingPayouts/>
+        </Route>
+
+        <Route exact path="/admin/payment-detail/:id">
+        <PaymentDetail/>
+        </Route>
+
+        <Route exact path="/admin/informationpages">
+        <InformationPages/>
+        </Route>
+
+        <Route exact path="/admin/transaction-history">
+        <TransactionHistory/>
+        </Route>
+
+        </Switch>
+<Footer/>
+  </div>
   </Router>
     </div>
     );

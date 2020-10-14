@@ -261,6 +261,38 @@ class PayoutController extends Controller
       return 'success';
     }
 
+    public function getPayoutRequested(Request $request)
+    {
+      return $payouts = DB::table('payout_requests')->join('users','users.id','payout_requests.user_id')->leftjoin('agent_profiles','agent_profiles.user_id','payout_requests.user_id')->select('payout_requests.*','users.name','agent_profiles.company')->where('status','requested')->latest('payout_requests.created_at')->paginate(8);
+    }
+
+    public function getRequestedPayoutById($id)
+    {
+      $payouts = DB::table('payout_requests')->where('id',$id)->first();
+
+      return response()->json([
+            'success' => true,
+            'payouts' => $payouts,
+        ], 200);
+
+    }
+
+    public function updatePayout(Request $request)
+    {
+      Payout::create(['user_id' => 1, 'reciver_id' => $request->user_id, 'status' => 'completed', 'amount' => $request->amount,'payment_method' => $request->payment_method, 'transaction_id' => $request->transaction_id]);
+
+      $query = DB::table('payout_requests')
+            ->where('id',$request->id)
+            ->update(['status' => 'paid'
+            ]);
+
+
+          return response()->json([
+            'success' => true,
+            'message' => 'updated',
+        ], 200);  
+    }
+
     public function getRequestedPayouts(Request $request,$id)
     {
       $payout_amount = DB::table('payout_requests')->where('status','requested')->where('user_id',$id)->sum('amount');

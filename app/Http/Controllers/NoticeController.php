@@ -55,6 +55,14 @@ class NoticeController extends Controller
         }
     }
 
+    public function getAdminNotifications(Request $request)
+    {
+        $user_id = 1;
+        $user_data = User::where('id',$user_id)->select('role')->first();
+        $user_created_at = User::where('id',$user_id)->value('created_at');
+            return $notices = $this->notice::whereIn('type', ['commission'])->where('receiver_id',$user_id)->orderBy('created_at','DESC')->paginate(3);
+    }
+
      public function getAgentNotifications($id)
     {
         $user_id = $id;

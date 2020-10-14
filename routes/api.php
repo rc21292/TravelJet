@@ -37,6 +37,9 @@ Route::get('queries/{id}','Api\QueryController@index');
 Route::get('queries/getUpcommingBookings/{id}','Api\QueryController@getUpcommingBookings');
 Route::get('queries/getCancelledBookings/{id}','Api\QueryController@getCancelledBookings');
 Route::get('queries/getBookedBookings/{id}','Api\QueryController@getBookedBookings');
+/*admin*/
+Route::get('getBookingsBooked','Api\QueryController@getBookingsBooked');
+
 Route::get('queries/getAgentBookedBookings/{id}','Api\QueryController@getAgentBookedBookings');
 Route::get('queries','Api\QueryController@getQueries');
 Route::post('queries/store','Api\QueryController@store');
@@ -107,8 +110,13 @@ Route::get('wallet_transactions/{id}', 'WalletTransactionController@index');
 
 Route::get('payouts/{id}', 'PayoutController@index');
 Route::get('payoutTransactions/{id}', 'PayoutController@payoutTransactions');
-Route::get('payouts/getRequestedPayouts/{id}', 'PayoutController@getRequestedPayouts');
 Route::post('payouts/savePayoutRequest','PayoutController@savePayoutRequest');
+/*for agent*/
+Route::get('payouts/getRequestedPayouts/{id}', 'PayoutController@getRequestedPayouts');
+/*for admin*/
+Route::get('getPayoutRequested', 'PayoutController@getPayoutRequested');
+Route::post('payouts/updatePayout', 'PayoutController@updatePayout');
+Route::get('getRequestedPayoutById/{id}', 'PayoutController@getRequestedPayoutById');
 
 /*agent credits apis*/
 Route::post('credits/save_user_credits','CreditsController@save_user_credits');
@@ -123,6 +131,7 @@ Route::get('settings/getCommissionSettings','SiteManagementController@getCommiss
 
 
 Route::get('getdashboardData/{id}','HomeController@index');
+Route::get('getAdminDashboardData','HomeController@getAdminDashboardData');
 
 /*reviews apis*/
 Route::get('getAgenReviews/{id}','ReviewController@getAgenReviews');
@@ -131,6 +140,7 @@ Route::get('getAgentTestimonials/{id}','ReviewController@getAgentTestimonials');
 
 /*notification apis*/
 Route::get('notifications/{id}', 'NoticeController@index');
+Route::get('getAdminNotifications', 'NoticeController@getAdminNotifications');
 Route::get('getCustomerNotificattions/{id}', 'NoticeController@getCustomerNotificattions');
 Route::get('getAgentNotifications/{id}', 'NoticeController@getAgentNotifications');
 

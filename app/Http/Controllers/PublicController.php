@@ -1,563 +1,206 @@
 <?php
- 
-/**
- * Class PublicController
- *
- * @category Workman Supermarket
- *
- * @package Workman Supermarket
- * @author  N2R Technologies <info@n2rtechnologies.com>
- * @license https://www.n2rtechnologies.com N2R Technologies
- * @link    https://www.n2rtechnologies.com */
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\User;
-use App\Language;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailVerificationMailable;
-use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Support\Facades\Redirect;
-use Hash;
-use Auth;
-use DB;
-use App\Helper;
-use App\Profile;
-use App\Category;
-use App\Location;
-use App\Skill;
-use Session;
-use Storage;
-use App\Report;
-use App\Job;
-use App\Proposal;
-use App\EmailTemplate;
-use App\Mail\GeneralEmailMailable;
-use App\Mail\AdminEmailMailable;
-use App\SiteManagement;
-use App\Review;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Payout;
-use Exception;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\Debug\Exception\FlattenException;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
-use App\Service;
-use App\DeliveryTime;
-use App\ResponseTime;
-use App\Article;
-use App\Package;
+use App\User;
+use App\Helper;
+use DB;
+use Illuminate\Support\Facades\Input;
 
-/**
- * Class PublicController
- *
- */
-class PublicController extends Controller
+class PayoutController extends Controller
 {
 
+     protected $payouts;
     /**
-     * User Login Function
-     *
-     * @param \Illuminate\Http\Request $request request attributes
-     *
-     * @access public
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function loginUser(Request $request)
+
+
+    public function __construct(Payout $payouts)
     {
-        $json = array();
-        if (Session::has('user_id')) {
-            $id = Session::get('user_id');
-            $user = User::find($id);
-            Auth::login($user);
-            $json['type'] = 'success';
-            $json['role'] = $user->getRoleNames()->first();
-            session()->forget('user_id');
-            return $json;
+        $this->payouts = $payouts;
+
+    }
+
+    public function index(Request $request,$id)
+    {
+          if (!empty($_GET['year']) && !empty($_GET['month'])) {
+            $year = $_GET['year'];
+            $month = $_GET['month'];
+            $payouts =  DB::table('payouts')
+                ->select('*')
+                ->whereYear('created_at', '=', $year)
+                ->whereMonth('created_at', '=', $month)
+                ->latest()->paginate(10)->setPath('');
+            $pagination = $payouts->appends(
+                array(
+                    'year' => request('year'),
+                    'month' => request('month')
+                )
+            );
         } else {
-            $json['type'] = 'error';
-            $json['message'] = trans('lang.something_wrong');
-            return $json;
+            $payouts =  Payout::latest()->paginate(10);
         }
+        $selected_year = !empty($_GET['year']) ? $_GET['year'] : date('Y');
+        $selected_month = !empty($_GET['month']) ? $_GET['month'] : '';
+        $months = Helper::getMonthList();
+        $years = range(date("Y"), 1970);
+        return response()->json([
+            'success' => true,
+            'payouts' => $payouts,
+            'selected_year' => $selected_year,
+            'years' => $years,
+            'selected_month' => $selected_month,
+            'months' => array_values($months),
+        ], 200);
+    }
+
+
+    public function payoutTransactions(Request $request,$id)
+    {
+      $payouts =  Payout::where('reciver_id',$id)->latest()->paginate(10);
+      return response()->json([
+        'success' => true,
+        'payouts' => $payouts,
+      ], 200);
+    }
+
+
+    public function generatePDF($year, $month, $id = array())
+    {
+        $slected_ids = array();
+        if (!empty($id)) {
+            $slected_ids = explode(',', $id);
+        }
+        $payouts =  DB::table('payouts')
+            ->select('*')
+            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->whereIn('id', $slected_ids)
+            ->get();
+        $pdf = PDF::loadView('back-end.admin.payouts-pdf', compact('payouts', 'year', 'month'));
+        return $pdf->download('payout-' . $month . '-' . $year . '.pdf');
     }
 
     /**
-     * Step1 Registeration Validation
-     *
-     * @param \Illuminate\Http\Request $request request attributes
-     *
-     * @access public
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function registerStep1Validation(Request $request)
+    public function create()
     {
-        $this->validate(
-            $request,
-            [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email|unique:users',
-            ]
-        );
+        //
     }
 
     /**
-     * Step2 Registeration Validation
+     * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request request attributes
-     *
-     * @access public
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function registerStep2Validation(Request $request)
+    public function store(Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'password' => 'required|string|min:6|confirmed',
-                'password_confirmation' => 'required',
-                'termsconditions' => 'required',
-            ]
-        );
+        //
     }
 
     /**
-     * Set slug before saving in DB
+     * Display the specified resource.
      *
-     * @param \Illuminate\Http\Request $request request attributes
-     *
-     * @access public
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function verifyUserCode(Request $request)
+    public function show($id)
     {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+
+     public function submitUserRefund(Request $request)
+    {
+        $server_verification = Helper::worketicIsDemoSite();
+        if (!empty($server_verification)) {
+            Session::flash('error', $server_verification);
+            return Redirect::back();
+        }
         $json = array();
-        if (Session::has('user_id')) {
-            $id = Session::get('user_id');
-            $email = Session::get('email');
-            $password = Session::get('password');
-            $user = User::find($id);
-            $role = DB::table('model_has_roles')->where('model_id',$id)->value('role_id');
-            if (!empty($request['code'])) {
-                if ($request['code'] === $user->verification_code) {
-                    $user->user_verified = 1;
-                    $user->verification_code = null;
-                    $user->save();
+        if (!empty($request)) {
+            $this->validate(
+                $request,
+                [
+                    'refundable_user_id' => 'required',
+                ]
+            );
+            $role = $this->user::getUserRoleType($request['refundable_user_id']);
+            if ($role->role_type == 'freelancer') {
+                $update_status = '';
+                if ($request['type'] == 'job') {
+                    $update_status = $this->user->updateCancelProject($request);
+                } elseif ($request['type'] == 'service') {
+                    $update_status = $this->user->updateCancelService($request);
+                }
+                if ($update_status = 'success') {
                     $json['type'] = 'success';
-                    //send mail
-                    if (!empty(config('mail.username')) && !empty(config('mail.password'))) {
-                        $email_params = array();
-                        $template = DB::table('email_types')->select('id')->where('email_type', 'new_user')->get()->first();
-                        if (!empty($template->id)) {
-                            $template_data = EmailTemplate::getEmailTemplateByID($template->id);
-                            $email_params['name'] = Helper::getUserName($id);
-                            $email_params['email'] = $email;
-                            $email_params['password'] = $password;
-                            Mail::to($email)
-                            ->send(
-                                new GeneralEmailMailable(
-                                    'new_user',
-                                    $template_data,
-                                    $email_params
-                                )
-                            );
-                        }
-                        $admin_template = DB::table('email_types')->select('id')->where('email_type', 'admin_email_registration')->get()->first();
-                        if (!empty($template->id)) {
-                            $template_data = EmailTemplate::getEmailTemplateByID($admin_template->id);
-                            $email_params['name'] = Helper::getUserName($id);
-                            $email_params['email'] = $email;
-                            $email_params['link'] = url('profile/' . $user->slug);
-                            Mail::to(config('mail.username'))
-                            ->send(
-                                new AdminEmailMailable(
-                                    'admin_email_registration',
-                                    $template_data,
-                                    $email_params
-                                )
-                            );
-                        }
-                    }
-                    session()->forget('password');
-                    session()->forget('email');
-                    if($role == 3){
-                        $verifyCode = 2;
-                    }else{
-                        $verifyCode = 7;
-                    }
-                    return view('auth.register' , compact('verifyCode','json'));
+                    $json['message'] = trans('lang.status_updated');
                     return $json;
                 } else {
                     $json['type'] = 'error';
-                    $json['message'] = trans('lang.invalid_verify_code');
-                    $verifyCode = 1;
-                    return view('auth.register' , compact('verifyCode','json'));
+                    $json['message'] = trans('lang.something_wrong');
                     return $json;
                 }
-            } else {
-                $json['type'] = 'error';
-                $json['message'] = trans('lang.verify_code');
-                $verifyCode = 1;
-                return view('auth.register' , compact('verifyCode','json'));
-                return $json;
-            }
-        } else {
-            $json['type'] = 'error';
-            $json['message'] = trans('lang.session_expire');
-            $verifyCode = 1;
-            return view('auth.register' , compact('verifyCode','json'));
-            return $json;
-        }
-    }
-    public function stripeverify(){
-        $verifyCode = 3;
-        $json['type'] = 'success';
-        return view('auth.register' , compact('verifyCode','json'));
-        return $json;
-    }
-    public function stripesave(Request $request){
-        $card = $request->card;
-        $cardno = preg_replace('/[^0-9]/', '', $card);
-        $id = Session::get('user_id');
-        DB::table('user_payment_details')->insert([
-          "user_id" => $id,
-          "payment_method" => 'stripe',
-          "card_no" => $cardno,
-          "expiry" => $request->expdate,
-          "cvv" => $request->cvv,
-      ]);
-        $verifyCode = 5;
-        $json['type'] = 'success';
-        return view('auth.register' , compact('verifyCode','json'));
-        return $json;
-
-    }
-    public function paypalverify(){
-        $verifyCode = 4;
-        $json['type'] = 'success';
-        return view('auth.register' , compact('verifyCode','json'));
-        return $json;
-    }
-    public function paypalsave(Request $request){
-        $id = Session::get('user_id');
-        DB::table('user_payment_details')->insert([
-          "user_id" => $id,
-          "payment_method" => 'paypal',
-          "username" => $request->paypalusername,
-          "password" => $request->paypalpassword,
-      ]);
-        $verifyCode = 5;
-        $json['type'] = 'success';
-        return view('auth.register' , compact('verifyCode','json'));
-        return $json;
-
-    }
-
-    public function skipverification(){
-        $verifyCode = 5;
-        $json['type'] = 'success';
-        return view('auth.register' , compact('verifyCode','json'));
-        return $json;
-    }
-
-    public function selectpaymentmethod($id){
-        $selected_package = Package::where('id',$id)->first();
-        $options = unserialize($selected_package->options);
-        $credits = !empty($options['no_of_connects']) ? $options['no_of_connects'] : null; 
-        $verifyCode = 6;
-        $json['type'] = 'success';
-        return view('auth.register' , compact('verifyCode','json','selected_package','credits'));
-        return $json;
-        
-    }
-
-    /**
-     * Download file.
-     *
-     * @param type    $type     file type
-     * @param string  $filename file typname
-     * @param integer $id       id
-     *
-     * @access public
-     *
-     * @return \Illuminate\Http\Response
-     */
-    function getFile($type, $filename, $id)
-    {
-        if (!empty($type) && !empty($filename) && !empty($id)) {
-            if (Storage::disk('local')->exists('uploads/' . $type . '/' . $id . '/' . $filename)) {
-                return Storage::download('uploads/' . $type . '/' . $id . '/' . $filename);
-            } else {
-                Session::flash('error', trans('lang.file_not_found'));
-                return Redirect::back();
-            }
-        } else {
-            abort(404);
-        }
-    }
-
-    /**
-     * Show user profile.
-     *
-     * @param string $slug slug
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showUserProfile($slug)
-    {
-        $user = User::select('id')->where('slug', $slug)->first();
-        if (!empty($user)) {
-            $user = User::find($user->id);
-            if ($user->is_disabled == 'true') {
-                abort(404);
-            }
-            $id=$user->id;
-            $skills = $user->skills()->get();
-            $job = Job::where('user_id', $user->id)->get();
-            $profile = Profile::all()->where('user_id', $user->id)->first();
-            $reasons = Helper::getReportReasons();
-            $avatar = !empty($profile->avater) ? '/uploads/users/' . $profile->user_id . '/' . $profile->avater : '/images/user.jpg';
-            $banner = !empty($profile->banner) ? '/uploads/users/' . $profile->user_id . '/' . $profile->banner : Helper::getUserProfileBanner($user->id);
-            $auth_user = Auth::user() ? true : false;
-            $user_name = Helper::getUserName($profile->user_id);
-            $current_date = Carbon::now()->format('M d, Y');
-            $tagline = !empty($profile) ? $profile->tagline : '';
-            $desc = !empty($profile) ? $profile->description : '';
-            if ($user->getRoleNames()->first() === 'freelancer') {
-                $services = array();
-                if (Schema::hasTable('services') && Schema::hasTable('service_user')) {
-                    $services = $user->services;
-                }
-                $reviews = Review::where('receiver_id', $user->id)->latest()->get();
-                $awards = !empty($profile->awards) ? unserialize(preg_replace_callback('!s:\d+:"(.*?)";!s', function($m) { return "s:" . strlen($m[1]) . ':"'.$m[1].'";'; }, $profile->awards)) : array();
-                $projects = DB::table('profile_projects')->where('user_id',$user->id)->get();
-                $images = DB::table('profile_project_images')->where('user_id',$user->id)->get();
-                // echo "<hr />DEBUG<pre>";
-                // print_r($projects);
-                // echo "</pre>";
-                // die();
-                
-                $experiences = !empty($profile->experience) ? unserialize(preg_replace_callback('!s:\d+:"(.*?)";!s', function($m) { return "s:" . strlen($m[1]) . ':"'.$m[1].'";'; }, $profile->experience)) : array();
-                $education = !empty($profile->education) ? unserialize(preg_replace_callback('!s:\d+:"(.*?)";!s', function($m) { return "s:" . strlen($m[1]) . ':"'.$m[1].'";'; }, $profile->education)) : array();
-                $freelancer_rating  = !empty($user->profile->ratings) ? Helper::getUnserializeData($user->profile->ratings) : 0;
-                $rating = !empty($freelancer_rating) ? $freelancer_rating[0] : 0;
-                $joining_date = !empty($profile->created_at) ? Carbon::parse($profile->created_at)->format('M d, Y') : '';
-                $jobs = Job::select('title', 'id')->get()->pluck('title', 'id');
-                $save_freelancer = !empty(auth()->user()->profile->saved_freelancer) ? unserialize(auth()->user()->profile->saved_freelancer) : array();
-                $badge = Helper::getUserBadge($user->id);
-                $feature_class = !empty($badge) ? 'wt-featured' : '';
-                $badge_color = !empty($badge) ? $badge->color : '';
-                $badge_img  = !empty($badge) ? $badge->image : '';
-                $amount = Payout::where('user_id', $user->id)->select('amount')->pluck('amount')->first();
-                $employer_projects = Auth::user() ? Helper::getEmployerJobs(Auth::user()->id) : array();
-                $payment_settings = SiteManagement::getMetaValue('commision');
-                $currency_symbol  = !empty($payment_settings) && !empty($payment_settings[0]['currency']) ? Helper::currencyList($payment_settings[0]['currency']) : array();
-                $symbol = !empty($currency_symbol['symbol']) ? $currency_symbol['symbol'] : '$';
-                $settings = !empty(SiteManagement::getMetaValue('settings')) ? SiteManagement::getMetaValue('settings') : array();
-                $display_chat = !empty($settings[0]['chat_display']) ? $settings[0]['chat_display'] : false;
-                $enable_package = !empty($payment_settings) && !empty($payment_settings[0]['enable_packages']) ? $payment_settings[0]['enable_packages'] : 'true';
-                $videos = !empty($profile->videos) ? Helper::getUnserializeData($profile->videos) : '';
-                $feedbacks = Review::select('feedback')->where('receiver_id', $user->id)->count(); 
-                $average_rating_count = !empty($feedbacks) ? $reviews->sum('avg_rating')/$feedbacks : 0;
-                if (file_exists(resource_path('views/extend/front-end/users/freelancer-show.blade.php'))) {
-                    return View(
-                        'extend.front-end.users.freelancer-show',
-                        compact(
-                            'average_rating_count',
-                            'videos',
-                            'services',
-                            'profile',
-                            'amount',
-                            'skills',
-                            'user',
-                            'job',
-                            'reasons',
-                            'reviews',
-                            'avatar',
-                            'banner',
-                            'user_name',
-                            'jobs',
-                            'rating',
-                            'education',
-                            'experiences',
-                            'projects',
-                            'awards',
-                            'joining_date',
-                            'save_freelancer',
-                            'auth_user',
-                            'badge',
-                            'feature_class',
-                            'badge_color',
-                            'badge_img',
-                            'employer_projects',
-                            'currency_symbol',
-                            'current_date',
-                            'symbol',
-                            'tagline',
-                            'desc',
-                            'display_chat',
-                            'enable_package',
-                            'images',
-                            'id'
-                        )
-                    );
+            } elseif ($role->role_type == 'employer') {
+                $refound = $this->user->transferRefund($request);
+                if ($refound == 'payout_not_available') {
+                    $json['type'] = 'error';
+                    $json['message'] = trans('lang.user_payout_not_set');
+                    return $json;
+                } else if ($refound == 'success') {
+                    $json['type'] = 'success';
+                    $json['message'] = trans('lang.refund_transfer');
+                    return $json;
                 } else {
-                    return View(
-                        'front-end.users.freelancer-show',
-                        compact(
-                            'average_rating_count',
-                            'videos',
-                            'services',
-                            'profile',
-                            'amount',
-                            'skills',
-                            'user',
-                            'job',
-                            'reasons',
-                            'reviews',
-                            'avatar',
-                            'banner',
-                            'user_name',
-                            'jobs',
-                            'rating',
-                            'education',
-                            'experiences',
-                            'projects',
-                            'awards',
-                            'joining_date',
-                            'save_freelancer',
-                            'auth_user',
-                            'badge',
-                            'feature_class',
-                            'badge_color',
-                            'badge_img',
-                            'employer_projects',
-                            'currency_symbol',
-                            'current_date',
-                            'symbol',
-                            'tagline',
-                            'desc',
-                            'display_chat',
-                            'enable_package',
-                            'images',
-                            'id'
-                        )
-                    );
+                    $json['type'] = 'error';
+                    $json['message'] = trans('lang.all_required');
+                    return $json;
                 }
-            } elseif ($user->getRoleNames()->first() === 'employer') {
-                $jobs = Job::where('user_id', $profile->user_id)->where('status','completed')->latest()->paginate(7);
-                $followers = DB::table('followers')->where('following', $profile->user_id)->get();
-                $save_employer = !empty(auth()->user()->profile->saved_employers) ? unserialize(auth()->user()->profile->saved_employers) : array();
-                $save_jobs = !empty(auth()->user()->profile->saved_jobs) ? unserialize(auth()->user()->profile->saved_jobs) : array();
-                $currency = SiteManagement::getMetaValue('commision');
-                $symbol   = !empty($currency) && !empty($currency[0]['currency']) ? Helper::currencyList($currency[0]['currency']) : array();
-                $breadcrumbs_settings = SiteManagement::getMetaValue('show_breadcrumb');
-                $show_breadcrumbs = !empty($breadcrumbs_settings) ? $breadcrumbs_settings : 'true';
-                if (file_exists(resource_path('views/extend/front-end/users/employer-show.blade.php'))) {
-                    return View(
-                        'extend.front-end.users.employer-show',
-                        compact(
-                            'profile',
-                            'skills',
-                            'user',
-                            'job',
-                            'reasons',
-                            'avatar',
-                            'banner',
-                            'user_name',
-                            'jobs',
-                            'followers',
-                            'save_employer',
-                            'save_jobs',
-                            'auth_user',
-                            'current_date',
-                            'symbol',
-                            'tagline',
-                            'desc',
-                            'show_breadcrumbs'
-                        )
-                    );
-                } else {
-                    return View(
-                        'front-end.users.employer-show',
-                        compact(
-                            'profile',
-                            'skills',
-                            'user',
-                            'job',
-                            'reasons',
-                            'avatar',
-                            'banner',
-                            'user_name',
-                            'jobs',
-                            'followers',
-                            'save_employer',
-                            'save_jobs',
-                            'auth_user',
-                            'current_date',
-                            'symbol',
-                            'tagline',
-                            'desc',
-                            'show_breadcrumbs'
-                        )
-                    );
-                }
-            }
-        } else {
-            abort(404);
-        }
-    }
-
-    /**
-     * Get filtered list.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getFilterlist()
-    {
-        $json = array();
-        $filters = Helper::getSearchFilterList();
-        if (!empty($filters)) {
-            $json['type'] = 'success';
-            $json['result'] = $filters;
-            return $json;
-        } else {
-            $json['type'] = 'error';
-            $json['message'] = trans('lang.something_wrong');
-            return $json;
-        }
-    }
-
-    /**
-     * Get searchable data.
-     *
-     * @param mixed $request request->attributes
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getSearchableData(Request $request)
-    {
-        $json = array();
-        if (!empty($request['type'])) {
-            $searchables = Helper::getSearchableList($request['type']);
-            if (!empty($searchables)) {
-                $json['type'] = 'success';
-                $json['searchables'] = $searchables;
-                return $json;
-            } else {
-                $json['type'] = 'error';
-                $json['message'] = trans('lang.something_wrong');
-                return $json;
             }
         } else {
             $json['type'] = 'error';
@@ -567,563 +210,116 @@ class PublicController extends Controller
     }
 
     /**
-     * Get search result.
-     *
-     * @param string $search_type search type
-     *
-     * @access public
+     * Verify Code
      *
      * @return \Illuminate\Http\Response
      */
-    public function getSearchResult($search_type = "")
+    public function updatePayoutDetail(Request $request)
     {
-        $categories = array();
-        $locations  = array();
-        $languages  = array();
-        $categories = Category::all();
-        $locations  = Location::all();
-        $languages  = Language::all();
-        $skills     = Skill::all();
-        $currency   = SiteManagement::getMetaValue('commision');
-        $symbol     = !empty($currency) && !empty($currency[0]['currency']) ? Helper::currencyList($currency[0]['currency']) : array();
-        $freelancer_skills = Helper::getFreelancerLevelList();
-        $project_length = Helper::getJobDurationList();
-        $keyword = !empty($_GET['s']) ? $_GET['s'] : '';
-        $type = !empty($_GET['type']) ? $_GET['type'] : $search_type;
-        $search_categories = !empty($_GET['category']) ? $_GET['category'] : array();
-        $search_locations = !empty($_GET['locations']) ? $_GET['locations'] : array();
-        $search_skills = !empty($_GET['skills']) ? $_GET['skills'] : array();
-        $search_project_lengths = !empty($_GET['project_lengths']) ? $_GET['project_lengths'] : array();
-        $search_languages = !empty($_GET['languages']) ? $_GET['languages'] : array();
-        $search_employees = !empty($_GET['employees']) ? $_GET['employees'] : array();
-        $search_hourly_rates = !empty($_GET['hourly_rate']) ? $_GET['hourly_rate'] : array();
-        $search_freelaner_types = !empty($_GET['freelaner_type']) ? $_GET['freelaner_type'] : array();
-        $search_english_levels = !empty($_GET['english_level']) ? $_GET['english_level'] : array();
-        $search_delivery_time = !empty($_GET['delivery_time']) ? $_GET['delivery_time'] : array();
-        $search_response_time = !empty($_GET['response_time']) ? $_GET['response_time'] : array();
-        $current_date = Carbon::now()->toDateTimeString();
-        $currency = SiteManagement::getMetaValue('commision');
-        $symbol   = !empty($currency) && !empty($currency[0]['currency']) ? Helper::currencyList($currency[0]['currency']) : array();
-        $inner_page  = SiteManagement::getMetaValue('inner_page_data');
-        $payment_settings = SiteManagement::getMetaValue('commision');
-        $enable_package = !empty($payment_settings) && !empty($payment_settings[0]['enable_packages']) ? $payment_settings[0]['enable_packages'] : 'true';
-        $breadcrumbs_settings = SiteManagement::getMetaValue('show_breadcrumb');
-        $show_breadcrumbs = !empty($breadcrumbs_settings) ? $breadcrumbs_settings : 'true';
-        if (!empty($_GET['type'])) {
-            if ($type == 'employer' || $type == 'freelancer') {
-                $users_total_records = User::count();
-                $search =  User::getSearchResult(
-                    $type,
-                    $keyword,
-                    $search_locations,
-                    $search_employees,
-                    $search_skills,
-                    $search_hourly_rates,
-                    $search_freelaner_types,
-                    $search_english_levels,
-                    $search_languages
-                );
-                $users = count($search['users']) > 0 ? $search['users'] : '';
-                $save_freelancer = !empty(auth()->user()->profile->saved_freelancer) ?
-                unserialize(auth()->user()->profile->saved_freelancer) : array();
-                $save_employer = !empty(auth()->user()->profile->saved_employers) ?
-                unserialize(auth()->user()->profile->saved_employers) : array();
-                if ($type === 'employer') {
-                    $emp_list_meta_title = !empty($inner_page) && !empty($inner_page[0]['emp_list_meta_title']) ? $inner_page[0]['emp_list_meta_title'] : trans('lang.emp_listing');
-                    $emp_list_meta_desc = !empty($inner_page) && !empty($inner_page[0]['emp_list_meta_desc']) ? $inner_page[0]['emp_list_meta_desc'] : trans('lang.emp_meta_desc');
-                    $show_emp_banner = !empty($inner_page) && !empty($inner_page[0]['show_emp_banner']) ? $inner_page[0]['show_emp_banner'] : 'true';
-                    $e_inner_banner = !empty($inner_page) && !empty($inner_page[0]['e_inner_banner']) ? $inner_page[0]['e_inner_banner'] : null;
-                    if (file_exists(resource_path('views/extend/front-end/employers/index.blade.php'))) {
-                        return view(
-                            'extend.front-end.employers.index',
-                            compact(
-                                'users',
-                                'locations',
-                                'languages',
-                                'freelancer_skills',
-                                'project_length',
-                                'keyword',
-                                'type',
-                                'users_total_records',
-                                'save_employer',
-                                'current_date',
-                                'emp_list_meta_title',
-                                'emp_list_meta_desc',
-                                'show_emp_banner',
-                                'e_inner_banner',
-                                'enable_package',
-                                'show_breadcrumbs'
-                            )
-                        );
-                    } else {
-                        return view(
-                            'front-end.employers.index',
-                            compact(
-                                'users',
-                                'locations',
-                                'languages',
-                                'freelancer_skills',
-                                'project_length',
-                                'keyword',
-                                'type',
-                                'users_total_records',
-                                'save_employer',
-                                'current_date',
-                                'emp_list_meta_title',
-                                'emp_list_meta_desc',
-                                'show_emp_banner',
-                                'e_inner_banner',
-                                'enable_package',
-                                'show_breadcrumbs'
-                            )
-                        );
-                    }
-                } elseif ($type === 'freelancer') {
-                    $f_list_meta_title = !empty($inner_page) && !empty($inner_page[0]['f_list_meta_title']) ? $inner_page[0]['f_list_meta_title'] : trans('lang.freelancer_listing');
-                    $f_list_meta_desc = !empty($inner_page) && !empty($inner_page[0]['f_list_meta_desc']) ? $inner_page[0]['f_list_meta_desc'] : trans('lang.freelancer_meta_desc');
-                    $show_f_banner = !empty($inner_page) && !empty($inner_page[0]['show_f_banner']) ? $inner_page[0]['show_f_banner'] : 'true';
-                    $f_inner_banner = !empty($inner_page) && !empty($inner_page[0]['f_inner_banner']) ? $inner_page[0]['f_inner_banner'] : null;
-                    if (file_exists(resource_path('views/extend/front-end/freelancers/index.blade.php'))) {
-                        return view(
-                            'extend.front-end.freelancers.index',
-                            compact(
-                                'type',
-                                'users',
-                                'categories',
-                                'locations',
-                                'languages',
-                                'skills',
-                                'project_length',
-                                'keyword',
-                                'users_total_records',
-                                'save_freelancer',
-                                'symbol',
-                                'current_date',
-                                'f_list_meta_title',
-                                'f_list_meta_desc',
-                                'show_f_banner',
-                                'f_inner_banner',
-                                'enable_package',
-                                'show_breadcrumbs'
-                            )
-                        );
-                    } else {
-                        return view(
-                            'front-end.freelancers.index',
-                            compact(
-                                'type',
-                                'users',
-                                'categories',
-                                'locations',
-                                'languages',
-                                'skills',
-                                'project_length',
-                                'keyword',
-                                'users_total_records',
-                                'save_freelancer',
-                                'symbol',
-                                'current_date',
-                                'f_list_meta_title',
-                                'f_list_meta_desc',
-                                'show_f_banner',
-                                'f_inner_banner',
-                                'enable_package',
-                                'show_breadcrumbs'
-                            )
-                        );
-                    }
-                } else {
-                    abort(404);
-                }
-            } elseif ($type == 'service') {
-                $service_list_meta_title = !empty($inner_page) && !empty($inner_page[0]['service_list_meta_title']) ? $inner_page[0]['service_list_meta_title'] : trans('lang.service_listing');
-                $service_list_meta_desc = !empty($inner_page) && !empty($inner_page[0]['service_list_meta_desc']) ? $inner_page[0]['service_list_meta_desc'] : trans('lang.service_meta_desc');
-                $show_service_banner = !empty($inner_page) && !empty($inner_page[0]['show_service_banner']) ? $inner_page[0]['show_service_banner'] : 'true';
-                $service_inner_banner = !empty($inner_page) && !empty($inner_page[0]['service_inner_banner']) ? $inner_page[0]['service_inner_banner'] : null;
-                // $services= Service::all();
-                $delivery_time = DeliveryTime::all();
-                $response_time = ResponseTime::all();
-                $services_total_records = Service::count();
-                $results = Service::getSearchResult(
-                    $keyword,
-                    $search_categories,
-                    $search_locations,
-                    $search_languages,
-                    $search_delivery_time,
-                    $search_response_time
-                );
-                $services = $results['services'];
-                if (file_exists(resource_path('views/extend/front-end/services/index.blade.php'))) {
-                    return view(
-                        'extend.front-end.services.index',
-                        compact(
-                            'services_total_records',
-                            'type',
-                            'services',
-                            'symbol',
-                            'keyword',
-                            'categories',
-                            'locations',
-                            'languages',
-                            'delivery_time',
-                            'response_time',
-                            'service_list_meta_title',
-                            'service_list_meta_desc',
-                            'show_service_banner',
-                            'service_inner_banner',
-                            'show_breadcrumbs'
-                        )
-                    );
-                } else {
-                    return view(
-                        'front-end.services.index',
-                        compact(
-                            'services_total_records',
-                            'type',
-                            'services',
-                            'symbol',
-                            'keyword',
-                            'categories',
-                            'locations',
-                            'languages',
-                            'delivery_time',
-                            'response_time',
-                            'service_list_meta_title',
-                            'service_list_meta_desc',
-                            'show_service_banner',
-                            'service_inner_banner',
-                            'show_breadcrumbs'
-                        )
-                    );
-                }
-            } else {
-                $Jobs_total_records = Job::count();
-                $job_list_meta_title = !empty($inner_page) && !empty($inner_page[0]['job_list_meta_title']) ? $inner_page[0]['job_list_meta_title'] : trans('lang.job_listing');
-                $job_list_meta_desc = !empty($inner_page) && !empty($inner_page[0]['job_list_meta_desc']) ? $inner_page[0]['job_list_meta_desc'] : trans('lang.job_meta_desc');
-                $show_job_banner = !empty($inner_page) && !empty($inner_page[0]['show_job_banner']) ? $inner_page[0]['show_job_banner'] : 'true';
-                $job_inner_banner = !empty($inner_page) && !empty($inner_page[0]['job_inner_banner']) ? $inner_page[0]['job_inner_banner'] : null;
-                $project_settings = !empty(SiteManagement::getMetaValue('project_settings')) ? SiteManagement::getMetaValue('project_settings') : array();
-                $completed_project_setting = !empty($project_settings) && !empty($project_settings['enable_completed_projects']) ? $project_settings['enable_completed_projects'] : 'true';
-                $results = Job::getSearchResult(
-                    $keyword,
-                    $search_categories,
-                    $search_locations,
-                    $search_skills,
-                    $search_project_lengths,
-                    $search_languages,
-                    $completed_project_setting
-                );
-                $jobs = $results['jobs'];
-                if (!empty($jobs)) {
-                    if (file_exists(resource_path('views/extend/front-end/jobs/index.blade.php'))) {
-                        return view(
-                            'extend.front-end.jobs.index',
-                            compact(
-                                'jobs',
-                                'categories',
-                                'locations',
-                                'languages',
-                                'freelancer_skills',
-                                'project_length',
-                                'Jobs_total_records',
-                                'keyword',
-                                'skills',
-                                'type',
-                                'current_date',
-                                'symbol',
-                                'job_list_meta_title',
-                                'job_list_meta_desc',
-                                'show_job_banner',
-                                'job_inner_banner',
-                                'show_breadcrumbs'
-                            )
-                        );
-                    } else {
-                        return view(
-                            'front-end.jobs.index',
-                            compact(
-                                'jobs',
-                                'categories',
-                                'locations',
-                                'languages',
-                                'freelancer_skills',
-                                'project_length',
-                                'Jobs_total_records',
-                                'keyword',
-                                'skills',
-                                'type',
-                                'current_date',
-                                'symbol',
-                                'job_list_meta_title',
-                                'job_list_meta_desc',
-                                'show_job_banner',
-                                'job_inner_banner',
-                                'show_breadcrumbs'
-                            )
-                        );
-                    }
-                }
-            }
-        } else {
-            abort(404);
-        }
-    }
+        $user_id = $request['id'];
+        if (!empty($user_id)) {
 
-    /**
-     * Get Pass Reset Form
-     *
-     * @param mixed $verification_code verification_code
-     *
-     * @access public
-     *
-     * @return View
-     */
-    public function resetPasswordView($verification_code)
-    {
-        dd($verification_code);
-        if (!empty($verification_code)) {
-            session()->put(['verification_code' => $verification_code]);
-            if (file_exists(resource_path('views/extend/front-end/reset-password.blade.php'))) {
-                return View('extend.front-end.reset-password');
-            } else {
-                return View('front-end.reset-password');
-            }
-        } else {
-            abort(404);
-        }
-    }
-
-    /**
-     * Reset user password.
-     *
-     * @param mixed $request req->attr
-     *
-     * @access public
-     *
-     * @return View
-     */
-    public function resetUserPassword(Request $request)
-    {
-        if (Session::has('verification_code')) {
-            $verification_code = Session::get('verification_code');
-            if (!empty($request)) {
-                $this->validate(
-                    $request,
-                    [
-                        'new_password' => 'required',
-                        'confirm_password' => 'required',
-                    ]
-                );
-                $user_id = User::select('verification_code', 'id')
-                ->where('verification_code', $verification_code)
-                ->pluck('id')->first();
-                $user = User::find($user_id);
-                if ($request->new_password === $request->confirm_password) {
-                    if ($verification_code === $user->verification_code) {
-                        $user->password = Hash::make($request->confirm_password);
-                        $user->verification_code = null;
-                        $user->save();
-                        Auth::logout();
-                        session()->forget('verification_code');
-                        return Redirect::to('/');
-                    } else {
-                        Session::flash('error', trans('lang.invalid_verify_code'));
-                        return Redirect::back();
-                    }
-                } else {
-                    Session::flash('error', trans('lang.pass_mismatched'));
-                    return Redirect::back();
-                }
-            } else {
-                Session::flash('error', trans('lang.something_wrong'));
-                return Redirect::back();
-            }
-        } else {
-            Session::flash('error', trans('lang.invalid_verify_code'));
-            return Redirect::back();
-        }
-    }
-
-    /**
-     * Check user authorization.
-     *
-     * @access public
-     *
-     * @return View
-     */
-    public function checkProposalAuth()
-    {
-        $json = array();
-        if (Auth::user() && Auth::user()->getRoleNames()->first() === 'freelancer') {
-            $json['auth'] = true;
-            return $json;
-        } else {
-            $json['auth'] = false;
-            $json['message'] = trans('lang.not_authorize');
-            return $json;
-        }
-    }
-
-    /**
-     * Check user authorization.
-     *
-     * @access public
-     *
-     * @return View
-     */
-    public function checkServiceAuth()
-    {
-        $json = array();
-        if (Auth::user() && Auth::user()->getRoleNames()->first() === 'employer') {
-            $json['auth'] = true;
-            return $json;
-        } else {
-            $json['auth'] = false;
-            $json['message'] = trans('lang.not_authorize');
-            return $json;
-        }
-    }
-
-    /**
-     * Check user authorization.
-     *
-     * @access public
-     *
-     * @return unserialize array
-     */
-    public function getFreelancerExperience(Request $request)
-    {
-        $json = array();
-        $id = $request['id'];
-        $freelancer = User::find($id);
-        if (!empty($freelancer)) {
+            $payout_setting = $this->profile->savePayoutDetail($request, $user_id);
             $json['type'] = 'success';
-            $json['experience'] = unserialize($freelancer->profile->experience);
+            $json['message'] = 'payout update successfully';
             return $json;
         } else {
             $json['type'] = 'error';
+            $json['message'] = trans('lang.verify_code');
             return $json;
         }
     }
 
     /**
-     * Check user authorization.
+     * Get payout detail
      *
-     * @access public
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function getFreelancerEducation(Request $request)
+    public function getPayoutDetail()
     {
         $json = array();
-        $id = $request['id'];
-        $freelancer = User::find($id);
-        if (!empty($freelancer)) {
+        if (Auth::user()) {
+            $user = User::find(Auth::user()->id);
+            $payout_detail = !empty($user->profile) ? Helper::getUnserializeData($user->profile->payout_settings) : array();
             $json['type'] = 'success';
-            $json['education'] = unserialize($freelancer->profile->education);
+            $json['payouts'] = $payout_detail;
             return $json;
         } else {
             $json['type'] = 'error';
+            $json['message'] = trans('lang.verify_code');
             return $json;
         }
     }
 
-    /**
-     * Check user authorization.
-     *
-     * @access public
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getFreelancerService(Request $request)
+    public function savePayoutRequest(Request $request)
+    {
+      $check = DB::table('payout_requests')
+                  ->insert(array(
+                    'amount'      => $request->amount,
+                    'user_id'     => $request->user_id,
+                    'created_at' => Now()
+                  ));
+      return 'success';
+    }
+
+    public function getPayoutRequested(Request $request)
+    {
+      return $payouts = DB::table('payout_requests')->join('users','users.id','payout_requests.user_id')->leftjoin('agent_profiles','agent_profiles.user_id','payout_requests.user_id')->select('payout_requests.*','users.name','agent_profiles.company')->where('status','requested')->latest('payout_requests.created_at')->paginate(8);
+    }
+
+    public function getRequestedPayoutById($id)
+    {
+      $payouts = DB::table('payout_requests')->where('id',$id)->first();
+
+      return response()->json([
+            'success' => true,
+            'payouts' => $payouts,
+        ], 200);
+
+    }
+
+    public function updatePayout(Request $request)
+    {
+      Payout::create(['user_id' => 1, 'reciver_id' => $request->user_id, 'status' => 'completed', 'amount' => $request->amount,'payment_method' => $request->payment_method, 'transaction_id' => $request->transaction_id]);
+
+      $query = DB::table('payout_requests')
+            ->where('id',$request->id)
+            ->update(['status' => 'paid'
+            ]);
+
+
+          return response()->json([
+            'success' => true,
+            'message' => 'updated',
+        ], 200);  
+    }
+
+    public function getRequestedPayouts(Request $request,$id)
+    {
+      $payout_amount = DB::table('payout_requests')->where('status','requested')->where('user_id',$id)->sum('amount');
+      $wallet_amount = User::where('id',$id)->first()->balance;
+      $total_requsted_amount = $payout_amount;
+      $pending_requsted_amount = $wallet_amount - $payout_amount;
+
+      return response()->json([
+            'total_requsted_amount' => $total_requsted_amount,
+            'pending_requsted_amount' => $pending_requsted_amount,
+            'wallet_amount' => $wallet_amount,
+        ], 200);
+    }
+
+     public function getRequestedPayoutDetails(Request $request)
     {
         $json = array();
-        $id = $request['id'];
-        $freelancer = User::find($id);
-        if (!empty($freelancer)) {
+        if ($request->id) {
+            $user = User::find($request->id);
+            $payout_detail = !empty($user->profile) ? Helper::getUnserializeData($user->profile->payout_settings) : array();
             $json['type'] = 'success';
-            $json['user'] = $freelancer;
-            $json['services'] = Helper::getUnserializeData($freelancer->services);
+            $json['payouts'] = $payout_detail;
             return $json;
         } else {
             $json['type'] = 'error';
+            $json['message'] = trans('lang.verify_code');
             return $json;
         }
-    }
-
-    /**
-     * get video
-     *
-     * @access public
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getVideo($video)
-    {
-        $json = array();
-        if (!empty($video)) {
-            $width 	= 367;
-            $height = 206;
-            $url = parse_url($video);
-            if (isset($url['host']) && ($url['host'] == 'vimeo.com' || $url['host'] == 'player.vimeo.com')) {
-                $content_exp = explode("/", $url);
-                $content_vimo = array_pop($content_exp);
-                $json['video_content'] = '<iframe width="' . intval($width) . '" height="' . intval($height) . '" src="https://player.vimeo.com/video/' . $content_vimo . '" 
-                ></iframe>';
-            } else {
-                $json['video'] = '<iframe width="'.$width.'" height="'.$height.'" src="https://www.youtube.com/embed/'.str_replace("v=", '', $url['query']).'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-            }
-            $json['type'] = 'success';
-            return $json;
-        } else {
-            $json['type'] = 'error';
-            return $json;
-        }
-    }
-
-    /**
-     * Get article data
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getArticles()
-    {
-        $json = array();
-        $articles = Article::get()->toArray();
-        $aticle_list = array();
-        if (!empty($articles)) {
-            foreach ($articles as $key => $article) {
-                $article_obj = Article::find($article['id']);
-                $aticle_list[$key]['id'] = $article['id'];
-                $aticle_list[$key]['title'] = $article['title'];
-                $aticle_list[$key]['slug'] = $article['slug'];
-                $aticle_list[$key]['banner'] = asset(Helper::getImage('uploads/articles', $article['banner'], 'small-', 'small-default-article.png'));
-                $aticle_list[$key]['published_date'] = $article['created_at'];
-                $aticle_list[$key]['description'] = $article['description'];
-                $aticle_list[$key]['name'] = Helper::getUserName($article['user_id']);
-                $aticle_list[$key]['image'] = asset(Helper::getProfileImage($article['user_id']));
-                if (!empty($article_obj->categories) && $article_obj->categories->count() > 0) {
-                    foreach ($article_obj->categories as $cat_key => $category) {
-                        $aticle_list[$key]['cat'][$cat_key]['title'] = $category->title;
-                        $aticle_list[$key]['cat'][$cat_key]['slug'] = $category->slug;
-                    }
-                }
-            }
-            if (!empty($aticle_list)) {
-                $json['type'] = 'success';
-                $json['articles'] = $aticle_list;
-                return $json;
-            } else {
-                $json['type'] = 'error';
-                return $json;
-            }
-        } else {
-            $json['type'] = 'error';
-            return $json;
-        }
-    }
-    public function getPortfolioImages(Request $request){
-       $images = DB::table('profile_project_images')->where('project_id',$request->projectid)->pluck('image');
-       return response()->json($images);
     }
 }
