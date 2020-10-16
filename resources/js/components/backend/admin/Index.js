@@ -12,6 +12,8 @@ import Commissions from './commissions/Commissions'
 import UserProfiles from './userprofiles/UserProfiles'
 import PendingPayouts from './payouts/PendingPayouts'
 import PaymentDetail from './payouts/PaymentDetail'
+import CustomerDetails from './customers/CustomerDetails'
+import AgentDetails from './agents/AgentDetails'
 import InformationPages from './informationpages/InformationPages'
 import TransactionHistory from './transactions/TransactionHistory'
 import Footer from './layouts/Footer'
@@ -119,6 +121,14 @@ class Index extends Component {
 
         <Route exact path="/admin/payment-detail/:id">
         <PaymentDetail/>
+        </Route>
+
+        <Route exact path="/admin/customer/:id">
+        <CustomerDetails/>
+        </Route>
+
+        <Route exact path="/admin/agent/:id">
+        <AgentDetails/>
         </Route>
 
         <Route exact path="/admin/informationpages">

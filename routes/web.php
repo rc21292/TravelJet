@@ -65,8 +65,16 @@ Route::get('/customer/profile/edit', function () { return view('customer'); });
 
 Route::get('/admin/transactions', function () { return view('admin'); });
 Route::get('/admin/bookings', function () { return view('admin'); });
+
+
 Route::get('/admin/agents', function () { return view('admin'); });
+Route::get('/admin/agent/{id}', function () { return view('admin'); });
+
+
 Route::get('/admin/customers', function () { return view('admin'); });
+Route::get('/admin/customer/{id}', function () { return view('admin'); });
+
+
 Route::get('/admin/settings', function () { return view('admin'); });
 Route::get('/admin/users', function () { return view('admin'); });
 Route::get('/admin/user/{id}', function () { return view('admin'); });

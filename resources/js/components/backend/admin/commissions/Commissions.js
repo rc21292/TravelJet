@@ -1,95 +1,126 @@
 import React from 'react'  
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
-import FlashMessage from 'react-flash-message'
+import { CSVLink } from "react-csv";
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
+import Moment from 'react-moment';
+
 
 function Commissions(props) { 
 
   const history = useHistory()
-  const location = useLocation()
 
    const [user, setUser] = useState(false);
 
+  const [commissionData, setCommissionData] = useState([]);  
+  const [activePage, setActivePage] = useState(1);  
+  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
+  const [totalItemsCount, setTotalItemsCount] = useState(1);  
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3); 
 
-  const [success, setSuccess] = useState('');
+  const [searchBookingType, setSearchBookingType] = useState("");
+  const [searchAgentName, setSearchAgentName] = useState("");
+  const [searchSource, setSearchSource] = useState("");
+  const [searchDestination, setSearchDestination] = useState("");
 
-  const [credits, setCredits] = useState([]);
-  const [creditsData, setCreditsData] = useState([]);
-  useEffect(() => {  
+  const [fromCount, setFromCount] = useState(1);  
+  const [toCount, setToCount] = useState(1);  
+  const [totalPages, setTotalPages] = useState(1);  
+
+  useEffect(() => {
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
-      console.log(AppState.user);
       setUser(AppState.user);
-
-      const script = document.createElement("script")
-    script.async = true
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-    document.body.appendChild(script)       
-
-    axios('/api/credits').then(result=>{
-        setCreditsData(result.data);
-      });
-
-      axios('/api/credits/getCredits/'+AppState.user.id).then(result=>{
-        setCredits(result.data);
+      axios('/api/getAdminCommissions/').then(result=>{        
+        setCommissionData(result.data.commissions.data);  
+        setItemsCountPerPage(result.data.commissions.per_page);  
+        setTotalItemsCount(result.data.commissions.total);  
+        setActivePage(result.data.commissions.current_page);
+        setFromCount(result.data.commissions.from);  
+        setToCount(result.data.commissions.to);  
+        setTotalPages(result.data.commissions.last_page);
       });
     }   
 
   }, []);  
 
-   const openCheckout = (event) => {
 
-   let amount = event.currentTarget.dataset.amount;
-    let new_amount = amount;
-    let user_id = user.id;
-    let options = {
-      "key": "rzp_test_FvMwf7j3FOOnh8",
-      "amount": amount*100,
-      "name": "TravelJet",
-      "description": "Pay to Add Balance",
-      "image": "http://127.0.0.1:8000/frontend/image/logo.png",
-      "handler": function (response){
-        console.log(response);
-        try {
-         const paymentId = response.razorpay_payment_id;
-         const query = {
-          payment_id:paymentId,
-          user_id:user_id,
-          amount:(new_amount),
-        }
-        axios.post('/api/credits/save_user_credits',query)
-        .then(response=>{
-          setCredits(response.data.credits);
-          setSuccess(' '+(response.data.added_credits)+' Credits Added Successfully!');
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    "prefill": {
-      "name": user.name,
-      "email": user.email,
-      "contact": user.phone,
-    },
-    "modal": {
-        "ondismiss": function () {
-            return false;
-            // window.location.href ='/';
-        },
-    },
-    "theme": {
-      "color": "#F37254"
-    }
+  const handlePageChange = (pageNumber) => {
+ axios.get('/api/getAdminCommissions/?agent='+searchAgentName+'&source='+searchSource+'&destination='+searchDestination+'&booking_type='+searchBookingType+'&page='+pageNumber)
+  .then(result=>{
+     setCommissionData(result.data.commissions.data);  
+      setItemsCountPerPage(result.data.commissions.per_page);  
+      setTotalItemsCount(result.data.commissions.total);  
+      setActivePage(result.data.commissions.current_page);
+      setFromCount(result.data.commissions.from);  
+      setToCount(result.data.commissions.to);  
+      setTotalPages(result.data.commissions.last_page);
+  });
+}
+
+  const onChangeSearchSource = e => {
+    const searchSource = e.target.value;
+    setSearchSource(searchSource);
   };
-    
-    let rzp = new Razorpay(options);
-    rzp.open();
+
+
+const onChangeSearchDestination = e => {
+    const searchDestination = e.target.value;
+    setSearchDestination(searchDestination);
+  };
+
+const onChangeSearchBookingType = e => {
+    const searchBookingType = e.target.value;
+    setSearchBookingType(searchBookingType);
+  };
+
+const onChangeSearchAgentName = e => {
+    const searchAgentName = e.target.value;
+    setSearchAgentName(searchAgentName);
+  };  
+
+  const resetFilter = () => {
+    setSearchAgentName("");
+    setSearchBookingType("");
+    setSearchSource("");
+    setSearchDestination("");
+    axios.get('/api/getAdminCommissions/')
+    .then(result=>{
+      setCommissionData(result.data.commissions.data);  
+      setItemsCountPerPage(result.data.commissions.per_page);  
+      setTotalItemsCount(result.data.commissions.total);  
+      setActivePage(result.data.commissions.current_page);
+      setFromCount(result.data.commissions.from);  
+      setToCount(result.data.commissions.to);  
+      setTotalPages(result.data.commissions.last_page);
+    });
   }
 
+  const findByFilter = () => {
+    axios('/api/getAdminCommissions/?agent='+searchAgentName+'&source='+searchSource+'&destination='+searchDestination+'&booking_type='+searchBookingType)
+    .then(result => {
+      setCommissionData(result.data.commissions.data);  
+      setItemsCountPerPage(result.data.commissions.per_page);  
+      setTotalItemsCount(result.data.commissions.total);  
+      setActivePage(result.data.commissions.current_page);
+      setFromCount(result.data.commissions.from);  
+      setToCount(result.data.commissions.to);  
+      setTotalPages(result.data.commissions.last_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const viewBooking = (id) => {  
+    history.push({  
+      pathname: '/booking/' + id  
+    });  
+  };  
+  
   return (  
     <div id="content-wrapper">
         {/* Main Content */}
@@ -130,128 +161,37 @@ function Commissions(props) {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
-                            <tr>
-                              <td>0000000</td>
-                              <td>Rahul Kumar</td>
-                              <td>One Way</td>
-                              <td>14-Jul-20</td>
-                              <td>Delhi</td>
-                              <td>Manali</td>
-                              <td><i className="fa fa-inr" /> 10000</td>
-                              <td><i className="fa fa-inr" /> 1000</td>
-                            </tr>
+                             {commissionData.map((query,i)=>{
+                               return(
+                               <tr key={i}>
+                               <td>{'000000'+query.booking_id}</td>
+                              <td>{query.agent}</td>
+                              <td>{query.booking_type}</td>
+                              <td>{query.depart}</td>
+                              <td>{query.from_places}</td>
+                              <td>{query.to_places}</td>
+                              <td><i className="fa fa-inr" /> {query.total_cost}</td>
+                              <td><i className="fa fa-inr" /> {query.commision}</td>
+                               </tr>
+                           )
+                           })
+                           }
+                            
                             <tr>
                               <td colSpan={8}>
                                 <div className="col-sm-6">
-                                  <nav aria-label="Page navigation">
-                                    <ul className="pagination">
-                                      <li className="page-item">
-                                        <a href="#" aria-label="Previous">
-                                          <i className="fa fa-angle-left" />
-                                        </a>
-                                      </li>
-                                      <li className="active"><a className="page-link" href="#">1</a></li>
-                                      <li><a className="page-link" href="#">2</a></li>
-                                      <li>
-                                        <a href="#" aria-label="Next">
-                                          <i className="fa fa-angle-right" />
-                                        </a>
-                                      </li>
-                                    </ul>
-                                  </nav>
+                                  <Pagination 
+                                    activePage={activePage}
+                                    itemsCountPerPage={itemsCountPerPage}
+                                    totalItemsCount={totalItemsCount}
+                                    pageRangeDisplayed={pageRangeDisplayed}
+                                    onChange={handlePageChange}
+                                    itemClass="page-item"
+                                    linkClass="page-link"
+                                    />
                                 </div>
                                 <div className="col-sm-6">
-                                  <div className="showpage">Showing 1 to 13 of 20 (2 Pages)</div>
+                                  <div className="showpage">Showing {fromCount} to {toCount} of {totalItemsCount} ({totalPages} Pages)</div>
                                 </div>
                               </td>
                             </tr>
@@ -271,23 +211,28 @@ function Commissions(props) {
                         <div className="form-row">
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Agent Name</label>
-                            <input type="text" className="form-control" placeholder="Agent Name" />
+                            <input type="text" className="form-control" name="agent" value={searchAgentName} onChange={onChangeSearchAgentName} placeholder="Agent Name" />
                           </div>
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Booking Type</label>
-                            <input type="text" className="form-control" placeholder="Booking Type" />
+                            <select className="form-control" name="booking_type" value={searchBookingType} onChange={onChangeSearchBookingType}>
+                            <option value="">Please select Type of Booking</option>
+                            <option value="Round Trip with Sightseeing">Round Trip with Sightseeing</option>
+                            <option value="One Way Trip">One Way Trip</option>
+                            </select>
                           </div>
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Source</label>
-                            <input type="text" className="form-control" placeholder="Source" />
+                            <input type="text" className="form-control" name="source" value={searchSource} onChange={onChangeSearchSource} placeholder="Source" />
                           </div>
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Destination</label>
-                            <input type="text" className="form-control" placeholder="Destination" />
+                            <input type="text" className="form-control" name="destination" value={searchDestination} onChange={onChangeSearchDestination} placeholder="Destination" />
                           </div>
                         </div>
                         <div className="placebidbtn filterbtn">
-                          <a href="#" className="btn btn-primary">Filter</a>
+                          <a onClick={findByFilter} className="btn btn-primary">Filter</a>
+                          <a onClick={resetFilter} className="btn btn-primary">Reset Filter</a>
                         </div>
                       </form>
                     </div>

@@ -202,6 +202,40 @@ class QueryController extends Controller
     }
 
 
+    public function getBookingsByUserId(Request $request, $id)
+    {
+        $result = Booking::
+         select('bookings.id','bookings.from_places','bookings.to_places','bookings.created_at','bookings.depart','bookings.arrival','bookings.booking_type','bookings.no_of_adults','bookings.no_of_childrens','bookings.no_of_infants')
+         ->where('bookings.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','cancelled')
+         ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
+         ->paginate(4);
+         return $result;
+    }
+
+    public function getBookedBookingsByUserId(Request $request, $id)
+    {
+        $result = Booking::
+         select('bookings.id','bookings.from_places','bookings.to_places','bookings.created_at','bookings.depart','bookings.arrival','bookings.booking_type','bookings.no_of_adults','bookings.no_of_childrens','bookings.no_of_infants')
+         ->where('bookings.user_id',$id)->where('bookings.status','booked')
+         ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
+         ->paginate(4);
+         return $result;
+    }
+
+    public function getCnceledBookingsByUserId(Request $request, $id)
+    {
+        $result = Booking::
+         select('bookings.id','bookings.from_places','bookings.to_places','bookings.created_at','bookings.depart','bookings.arrival','bookings.booking_type','bookings.no_of_adults','bookings.no_of_childrens','bookings.no_of_infants')
+         ->where('bookings.user_id',$id)->where('bookings.status','cancelled')
+         ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
+         ->paginate(4);
+         return $result;
+    }
+
+
     public function getBookedQueriesByUserId(Request $request,$id)
     {
         DB::connection()->enableQueryLog();

@@ -41,6 +41,95 @@ class UserController extends Controller
         ], 201);    
     }
 
+    public function getAgents(Request $request)
+    {
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $mobile = $request->input('mobile');
+        $company = $request->input('company');
+
+        DB::connection()->enableQueryLog();
+        $user_s = User::leftjoin('agent_profiles','agent_profiles.user_id','users.id')->where('role', 'agent')->latest();
+
+        if ($request->has('name') && !empty($request->name)) {
+            $name = $request->name;
+            $user_s->where('users.name','LIKE', '%'.$name.'%');
+        }
+
+        if ($request->has('email') && !empty($request->email)) {
+            $email = $request->email;
+            $user_s->where('users.email','LIKE', '%'.$email.'%');
+        } 
+        if ($request->has('mobile') && !empty($request->mobile)) {
+            $mobile = $request->mobile;
+            $user_s->where('users.phone','LIKE', '%'.$mobile.'%');
+        } 
+
+        if ($request->has('company') && !empty($request->company)) {
+            $company = $request->company;
+            $user_s->where('company','LIKE', '%'.$company.'%');
+        } 
+
+        $agents = $user_s->select('users.*','agent_profiles.company')->paginate(10);
+
+        $queries = DB::getQueryLog();
+        $last_query = end($queries);
+
+        return response()->json([
+            'success' => true,
+            'agents' => $agents,
+            'name' => $name,
+            'email' => $email,
+            'mobile' => $mobile,
+            'company' => $company,
+        ], 200);
+    }
+
+    public function getCustomers(Request $request)
+    {
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $mobile = $request->input('mobile');
+        $source = $request->input('source');
+
+        DB::connection()->enableQueryLog();
+        $user_s = User::where('role', 'customer')->latest();
+
+         if ($request->has('name') && !empty($request->name)) {
+            $name = $request->name;
+            $user_s->where('name','LIKE', '%'.$name.'%');
+        }
+
+        if ($request->has('email') && !empty($request->email)) {
+            $email = $request->email;
+            $user_s->where('email','LIKE', '%'.$email.'%');
+        } 
+        if ($request->has('mobile') && !empty($request->mobile)) {
+            $mobile = $request->mobile;
+            $user_s->where('phone','LIKE', '%'.$mobile.'%');
+        } 
+
+        $customers = $user_s->paginate(10);
+
+        $customer_ids = $user_s->select('id')->paginate(10);
+
+        foreach ($customers as $key => $value) {
+            $customers[$key]['isChecked'] = 0;
+        }
+
+        $queries = DB::getQueryLog();
+        $last_query = end($queries);
+
+        return response()->json([
+            'success' => true,
+            'customers' => $customers,
+            'customer_ids' => $customer_ids,
+            'name' => $name,
+            'email' => $email,
+            'mobile' => $mobile,
+        ], 200);
+    }
+
     function getProfile($id)
     {
         $profile = Profile::all()->where('user_id', $id)->first();
@@ -464,6 +553,13 @@ class UserController extends Controller
           $project = User::find($id);
 
         return $project->toJson();
+    }
+
+    public function getCustomerDetails($id)
+    {
+        return $user = User::leftjoin('user_profiles','user_profiles.user_id','users.id')->where('users.id',$id)->select('users.*','user_profiles.address','user_profiles.pincode','user_profiles.city','user_profiles.state')->first();
+
+        return $user->toJson();
     }
 
 

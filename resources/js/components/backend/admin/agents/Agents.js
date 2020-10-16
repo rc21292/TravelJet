@@ -1,94 +1,181 @@
 import React from 'react'  
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
-import FlashMessage from 'react-flash-message'
+import { CSVLink } from "react-csv";
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
+import Moment from 'react-moment';
 
-function Credits(props) { 
+
+function Agents(props) { 
 
   const history = useHistory()
-  const location = useLocation()
 
    const [user, setUser] = useState(false);
+   const [checkedBoxes, setCheckedBoxes] = useState([]);
+   const [checkedIds, setCheckedIds] = useState([]);
+   const [allChecked, setAllChecked] = useState([]);
 
+  const [agentData, setAgentData] = useState([]);  
+  const [activePage, setActivePage] = useState(1);  
+  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
+  const [totalItemsCount, setTotalItemsCount] = useState(1);  
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3); 
 
-  const [success, setSuccess] = useState('');
+  const [searchName, setSearchName] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchMobile, setSearchMobile] = useState("");
+  const [searchCompany, setSearchCompany] = useState("");
 
-  const [credits, setCredits] = useState([]);
-  const [creditsData, setCreditsData] = useState([]);
-  useEffect(() => {  
+  const [fromCount, setFromCount] = useState(1);  
+  const [toCount, setToCount] = useState(1);  
+  const [totalPages, setTotalPages] = useState(1);  
+
+  useEffect(() => {
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
-      console.log(AppState.user);
       setUser(AppState.user);
-
-      const script = document.createElement("script")
-    script.async = true
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-    document.body.appendChild(script)       
-
-    axios('/api/credits').then(result=>{
-        setCreditsData(result.data);
-      });
-
-      axios('/api/credits/getCredits/'+AppState.user.id).then(result=>{
-        setCredits(result.data);
+      axios('/api/getAgents/').then(result=>{        
+        setAgentData(result.data.agents.data);  
+        setCheckedIds(result.data.customer_ids.data);  
+        setItemsCountPerPage(result.data.agents.per_page);  
+        setTotalItemsCount(result.data.agents.total);  
+        setActivePage(result.data.agents.current_page);
+        setFromCount(result.data.agents.from);  
+        setToCount(result.data.agents.to);  
+        setTotalPages(result.data.agents.last_page);
       });
     }   
 
   }, []);  
 
-   const openCheckout = (event) => {
 
-   let amount = event.currentTarget.dataset.amount;
-    let new_amount = amount;
-    let user_id = user.id;
-    let options = {
-      "key": "rzp_test_FvMwf7j3FOOnh8",
-      "amount": amount*100,
-      "name": "TravelJet",
-      "description": "Pay to Add Balance",
-      "image": "http://127.0.0.1:8000/frontend/image/logo.png",
-      "handler": function (response){
-        console.log(response);
-        try {
-         const paymentId = response.razorpay_payment_id;
-         const query = {
-          payment_id:paymentId,
-          user_id:user_id,
-          amount:(new_amount),
-        }
-        axios.post('/api/credits/save_user_credits',query)
-        .then(response=>{
-          setCredits(response.data.credits);
-          setSuccess(' '+(response.data.added_credits)+' Credits Added Successfully!');
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    "prefill": {
-      "name": user.name,
-      "email": user.email,
-      "contact": user.phone,
-    },
-    "modal": {
-        "ondismiss": function () {
-            return false;
-            // window.location.href ='/';
-        },
-    },
-    "theme": {
-      "color": "#F37254"
-    }
+  const handlePageChange = (pageNumber) => {
+ axios.get('/api/getAgents/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&company='+searchCompany+'&page='+pageNumber)
+  .then(result=>{
+     setAgentData(result.data.agents.data);  
+     setCheckedIds(result.data.customer_ids.data);  
+      setItemsCountPerPage(result.data.agents.per_page);  
+      setTotalItemsCount(result.data.agents.total);  
+      setActivePage(result.data.agents.current_page);
+      setFromCount(result.data.agents.from);  
+      setToCount(result.data.agents.to);  
+      setTotalPages(result.data.agents.last_page);
+  });
+}
+
+  const onChangeSearchName = e => {
+    const searchEmail = e.target.value;
+    setSearchName(searchEmail);
   };
-    
-    let rzp = new Razorpay(options);
-    rzp.open();
+
+
+const onChangeSearchEmail = e => {
+    const searchEmail = e.target.value;
+    setSearchEmail(searchEmail);
+  };
+
+const onChangeSearchMobile = e => {
+    const searchMobile = e.target.value;
+    setSearchMobile(searchMobile);
+  };
+
+  const onChangeSearchCompany = e => {
+    const searchCompany = e.target.value;
+    setSearchCompany(searchCompany);
+  };
+
+  const resetFilter = () => {
+    setSearchName("");
+    setSearchMobile("");
+    setSearchEmail("");
+    setSearchCompany("");
+    axios.get('/api/getAgents/')
+    .then(result=>{
+      setAgentData(result.data.agents.data);  
+      setCheckedIds(result.data.customer_ids.data);  
+      setItemsCountPerPage(result.data.agents.per_page);  
+      setTotalItemsCount(result.data.agents.total);  
+      setActivePage(result.data.agents.current_page);
+      setFromCount(result.data.agents.from);  
+      setToCount(result.data.agents.to);  
+      setTotalPages(result.data.agents.last_page);
+    });
   }
+
+  const findByFilter = () => {
+    axios('/api/getAgents/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&company='+searchCompany)
+    .then(result => {
+      setAgentData(result.data.agents.data);  
+      setCheckedIds(result.data.customer_ids.data);  
+      setItemsCountPerPage(result.data.agents.per_page);  
+      setTotalItemsCount(result.data.agents.total);  
+      setActivePage(result.data.agents.current_page);
+      setFromCount(result.data.agents.from);  
+      setToCount(result.data.agents.to);  
+      setTotalPages(result.data.agents.last_page);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const isItemSelected = (id) => {
+    let fruites = allChecked
+    if (fruites.length > 0) {
+      fruites.forEach(fruite => {
+        if (fruite === id){
+          console.log('if');
+          return false;
+        }
+      })
+    }else{
+      return false;
+    }
+  }
+
+  
+  const toggleCheckbox = (e, item) => {   
+    if(e.target.checked) {
+      let arr = checkedBoxes;
+      arr.push(item.id);
+
+      setCheckedBoxes(arr);
+    } else {       
+
+      let items = checkedBoxes.splice(checkedBoxes.indexOf(item.id), 1);
+
+      setCheckedBoxes(items)
+    } 
+    console.log(checkedBoxes);
+  }
+
+
+  const handleAllChecked = (event) => {
+    let ids = [];
+    let fruites = agentData
+    fruites.forEach(fruite => {
+      fruite.isChecked = event.target.checked
+      ids.push(fruite.id)
+    })
+    setAgentData(fruites);
+    setAllChecked(ids);
+  }
+
+  const handleCheckChieldElement = (event) => {
+    let fruites = agentData
+    fruites.forEach(fruite => {
+       if (fruite.id == event.target.value){
+          fruite.isChecked =  event.target.checked
+        }
+    })
+    setAgentData(fruites);
+
+    
+  }
+    console.log(agentData);
 
   return (  
     <div id="content-wrapper">
@@ -118,7 +205,7 @@ function Credits(props) {
                         <table className="table">
                           <thead className="thead-light">
                             <tr>
-                              <th scope="col"><input className="form-check-input form-control" type="checkbox" defaultValue /></th>
+                              <th scope="col"><input className="form-check-input form-control" onClick={(e) => handleAllChecked(e)} type="checkbox" /></th>
                               <th scope="col">Agent Name</th>
                               <th scope="col">Email</th>
                               <th scope="col">Mobile Number</th>
@@ -127,108 +214,34 @@ function Credits(props) {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
-                            <tr>
-                              <td><input className="form-check-input" type="checkbox" defaultValue /></td>
-                              <td>Rahul Kumar</td>
-                              <td>rahulkumar@gmail.com</td>
-                              <td>9200929292</td>
-                              <td>Star Travels</td>
-                              <td><a href="viewagentdetail.php" className="btn btn-primary">View</a></td>
-                            </tr>
+                           {agentData.map((query,i)=>{
+                               return(
+                               <tr key={i}>
+                               <td><input type="checkbox" className="form-check-input" value={query.id} onClick={(e) => handleCheckChieldElement(e)}/></td>
+                               <td>{query.name}</td>
+                              <td>{query.email}</td>
+                              <td>{query.phone}</td>
+                              <td>{(query.company === 'null' || !query.company) ? '---' : query.company}</td>
+                              <td><a href={'/admin/agent/'+query.id} className="btn btn-primary">View</a></td>
+                               </tr>
+                           )
+                           })
+                           }
                             <tr>
                               <td colSpan={6}>
                                 <div className="col-sm-6">
-                                  <nav aria-label="Page navigation">
-                                    <ul className="pagination">
-                                      <li className="page-item">
-                                        <a href="#" aria-label="Previous">
-                                          <i className="fa fa-angle-left" />
-                                        </a>
-                                      </li>
-                                      <li className="active"><a className="page-link" href="#">1</a></li>
-                                      <li><a className="page-link" href="#">2</a></li>
-                                      <li>
-                                        <a href="#" aria-label="Next">
-                                          <i className="fa fa-angle-right" />
-                                        </a>
-                                      </li>
-                                    </ul>
-                                  </nav>
+                                  <Pagination 
+                                    activePage={activePage}
+                                    itemsCountPerPage={itemsCountPerPage}
+                                    totalItemsCount={totalItemsCount}
+                                    pageRangeDisplayed={pageRangeDisplayed}
+                                    onChange={handlePageChange}
+                                    itemClass="page-item"
+                                    linkClass="page-link"
+                                    />
                                 </div>
                                 <div className="col-sm-6">
-                                  <div className="showpage">Showing 1 to 13 of 20 (2 Pages)</div>
+                                  <div className="showpage">Showing {fromCount} to {toCount} of {totalItemsCount} ({totalPages} Pages)</div>
                                 </div>
                               </td>
                             </tr>
@@ -240,7 +253,7 @@ function Credits(props) {
                 </div>
                 <div className="col-sm-4">
                   <div className="cardbg total-transaction informationform">
-                    <div className="card-header">
+                    <div className="card-header customerheader">
                       <h4 className="card-title">Filter</h4>
                     </div>
                     <div className="card-body">
@@ -248,23 +261,24 @@ function Credits(props) {
                         <div className="form-row">
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Agent Name</label>
-                            <input type="text" className="form-control" placeholder="Agent Name" />
+                            <input type="text" className="form-control" name="name" value={searchName} onChange={onChangeSearchName} placeholder="Agent Name" />
                           </div>
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Email</label>
-                            <input type="text" className="form-control" placeholder="Email" />
+                            <input type="text" className="form-control" name="email" value={searchEmail} onChange={onChangeSearchEmail} placeholder="Eamil" />
                           </div>
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Mobile Number</label>
-                            <input type="number" className="form-control" placeholder="Mobile Number" />
+                            <input type="number" className="form-control" name="mobile" value={searchMobile} onChange={onChangeSearchMobile} placeholder="Mobile Number" />
                           </div>
                           <div className="form-group col-md-12">
                             <label htmlFor="labelname">Company Name</label>
-                            <input type="text" className="form-control" placeholder="Company Name" />
+                            <input type="text" className="form-control" name="company" value={searchCompany} onChange={onChangeSearchCompany} placeholder="Company Name" />
                           </div>
                         </div>
                         <div className="placebidbtn filterbtn">
-                          <a href="#" className="btn btn-primary">Filter</a>
+                          <a onClick={findByFilter} className="btn btn-primary">Filter</a>
+                          <a onClick={resetFilter} className="btn btn-primary">Reset Filter</a>
                         </div>
                       </form>
                     </div>
@@ -281,4 +295,4 @@ function Credits(props) {
   )  
 }  
   
-export default Credits
+export default Agents

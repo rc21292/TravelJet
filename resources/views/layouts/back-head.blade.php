@@ -21,12 +21,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
-<script src="{{asset('backend/js/jquery-2.1.1.min.js')}}></script>
-<script src="{{asset('backend/js/bootstrap.min.js')}}></script>
-<script src="{{asset('backend/js/selectize.min.js')}}></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="{{asset('backend/js/jquery-2.1.1.min.js')}}"></script>
+<script src="{{asset('backend/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('backend/js/selectize.min.js')}}"></script>
+<script src="{{asset('backend/js/payment.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js')}}></script>
-<script src="{{asset('backend/js/payment.js')}}></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')}}></script>
 <script type="text/javascript">
 	$(document).ready(function() {

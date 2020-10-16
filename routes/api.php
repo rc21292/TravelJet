@@ -26,7 +26,9 @@ Route::get('queries/getStopages/{id}','Api\QueryController@getStopages');
 Route::get('queries/getQuotationStoppages/{id}/{user_id}','Api\QueryController@getQuotationStoppages');
 Route::get('queries/getStopagesData/{id}','Api\QueryController@getStopagesData');
 Route::get('queries/getStoppages/{id}','Api\QueryController@getStoppages');
+
 Route::get('queries/getQueriesByUserId/{id}','Api\QueryController@getQueriesByUserId');
+
 Route::get('queries/getBookedQueriesByUserId/{id}','Api\QueryController@getBookedQueriesByUserId');
 Route::get('queries/getTotalBookings/{id}','Api\QueryController@getTotalBookings');
 Route::post('queries/update/{id}','Api\QueryController@update');
@@ -52,6 +54,11 @@ Route::post('queries/cancelCustBooking/{id}','Api\QueryController@cancelCustBook
 /*rebooking after cancel*/
 Route::post('queries/reBooking/{id}','Api\QueryController@reBooking');
 
+
+/*admin apis*/
+Route::get('getCustomers','UserController@getCustomers');
+Route::get('getAgents','UserController@getAgents');
+/*admin apis*/
 
 /*quotation apis*/
 Route::post('quotations/storeBid','QuotationController@storeBid');
@@ -129,6 +136,8 @@ Route::post('settings/saveCommissionSettings','SiteManagementController@storeCom
 Route::get('settings/getSettings','SiteManagementController@getCoinSettings');
 Route::get('settings/getCommissionSettings','SiteManagementController@getCommissionSettings');
 
+Route::get('getAdminCommissions','CommissionController@index');
+
 
 Route::get('getdashboardData/{id}','HomeController@index');
 Route::get('getAdminDashboardData','HomeController@getAdminDashboardData');
@@ -181,3 +190,10 @@ Route::get('drivers/getDriverNames/{id}','DriverController@getDriverNames');
 
 Route::get('vehicles/getVehicles/{id}','VehicleController@index');
 Route::post('vehicles/saveVehicles/{id}','VehicleController@store');
+
+/*admin customers apis*/
+Route::get('getBookingsByUserId/{id}','Api\QueryController@getBookingsByUserId');
+Route::get('getBookedBookingsByUserId/{id}','Api\QueryController@getBookedBookingsByUserId');
+Route::get('getCnceledBookingsByUserId/{id}','Api\QueryController@getCnceledBookingsByUserId');
+Route::get('getCustomerDetails/{id}','UserController@getCustomerDetails');
+/*admin customers apis*/
