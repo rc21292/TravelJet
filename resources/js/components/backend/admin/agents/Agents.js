@@ -11,10 +11,7 @@ function Agents(props) {
 
   const history = useHistory()
 
-   const [user, setUser] = useState(false);
-   const [checkedBoxes, setCheckedBoxes] = useState([]);
-   const [checkedIds, setCheckedIds] = useState([]);
-   const [allChecked, setAllChecked] = useState([]);
+  const [user, setUser] = useState(false);
 
   const [agentData, setAgentData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
@@ -39,7 +36,6 @@ function Agents(props) {
       setUser(AppState.user);
       axios('/api/getAgents/').then(result=>{        
         setAgentData(result.data.agents.data);  
-        setCheckedIds(result.data.customer_ids.data);  
         setItemsCountPerPage(result.data.agents.per_page);  
         setTotalItemsCount(result.data.agents.total);  
         setActivePage(result.data.agents.current_page);
@@ -51,20 +47,45 @@ function Agents(props) {
 
   }, []);  
 
+  const handleAllChecked = (event) => {
+    let fruites = [...agentData]
+    fruites.forEach(fruite => {
+      fruite.isChecked = event.target.checked
+    })
+    setAgentData(fruites);
+  }
+
+  const handleCheckChieldElement = (event) => {
+    let fruites = [...agentData]
+    fruites.forEach(fruite => {
+       if (fruite.id == event.target.value){
+          fruite.isChecked =  event.target.checked
+        }
+    })
+    setAgentData(fruites);    
+  }
+
+  const deleteCustomer = () => {
+  if(window.confirm('Are you sure, want to delete the selected product?')) {
+  axios.post('/api/deleteAgent/',agentData)  
+      .then((result) => {  
+      // window.location.reload(false);
+      });  
+    }
+  };  
 
   const handlePageChange = (pageNumber) => {
- axios.get('/api/getAgents/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&company='+searchCompany+'&page='+pageNumber)
-  .then(result=>{
+   axios.get('/api/getAgents/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&company='+searchCompany+'&page='+pageNumber)
+   .then(result=>{
      setAgentData(result.data.agents.data);  
-     setCheckedIds(result.data.customer_ids.data);  
-      setItemsCountPerPage(result.data.agents.per_page);  
-      setTotalItemsCount(result.data.agents.total);  
-      setActivePage(result.data.agents.current_page);
-      setFromCount(result.data.agents.from);  
-      setToCount(result.data.agents.to);  
-      setTotalPages(result.data.agents.last_page);
-  });
-}
+     setItemsCountPerPage(result.data.agents.per_page);  
+     setTotalItemsCount(result.data.agents.total);  
+     setActivePage(result.data.agents.current_page);
+     setFromCount(result.data.agents.from);  
+     setToCount(result.data.agents.to);  
+     setTotalPages(result.data.agents.last_page);
+   });
+ }
 
   const onChangeSearchName = e => {
     const searchEmail = e.target.value;
@@ -95,7 +116,6 @@ const onChangeSearchMobile = e => {
     axios.get('/api/getAgents/')
     .then(result=>{
       setAgentData(result.data.agents.data);  
-      setCheckedIds(result.data.customer_ids.data);  
       setItemsCountPerPage(result.data.agents.per_page);  
       setTotalItemsCount(result.data.agents.total);  
       setActivePage(result.data.agents.current_page);
@@ -109,7 +129,6 @@ const onChangeSearchMobile = e => {
     axios('/api/getAgents/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&company='+searchCompany)
     .then(result => {
       setAgentData(result.data.agents.data);  
-      setCheckedIds(result.data.customer_ids.data);  
       setItemsCountPerPage(result.data.agents.per_page);  
       setTotalItemsCount(result.data.agents.total);  
       setActivePage(result.data.agents.current_page);
@@ -121,61 +140,6 @@ const onChangeSearchMobile = e => {
       console.log(e);
     });
   };
-
-  const isItemSelected = (id) => {
-    let fruites = allChecked
-    if (fruites.length > 0) {
-      fruites.forEach(fruite => {
-        if (fruite === id){
-          console.log('if');
-          return false;
-        }
-      })
-    }else{
-      return false;
-    }
-  }
-
-  
-  const toggleCheckbox = (e, item) => {   
-    if(e.target.checked) {
-      let arr = checkedBoxes;
-      arr.push(item.id);
-
-      setCheckedBoxes(arr);
-    } else {       
-
-      let items = checkedBoxes.splice(checkedBoxes.indexOf(item.id), 1);
-
-      setCheckedBoxes(items)
-    } 
-    console.log(checkedBoxes);
-  }
-
-
-  const handleAllChecked = (event) => {
-    let ids = [];
-    let fruites = agentData
-    fruites.forEach(fruite => {
-      fruite.isChecked = event.target.checked
-      ids.push(fruite.id)
-    })
-    setAgentData(fruites);
-    setAllChecked(ids);
-  }
-
-  const handleCheckChieldElement = (event) => {
-    let fruites = agentData
-    fruites.forEach(fruite => {
-       if (fruite.id == event.target.value){
-          fruite.isChecked =  event.target.checked
-        }
-    })
-    setAgentData(fruites);
-
-    
-  }
-    console.log(agentData);
 
   return (  
     <div id="content-wrapper">
@@ -191,7 +155,7 @@ const onChangeSearchMobile = e => {
                 </div>
                 <div className="col-sm-6">
                   <div className="trash">
-                    <a href="#" className="btn btn-danger">
+                    <a onClick={deleteCustomer} className="btn btn-danger">
                       <i className="fa fa-trash" />
                     </a>
                   </div>
@@ -217,16 +181,16 @@ const onChangeSearchMobile = e => {
                            {agentData.map((query,i)=>{
                                return(
                                <tr key={i}>
-                               <td><input type="checkbox" className="form-check-input" value={query.id} onClick={(e) => handleCheckChieldElement(e)}/></td>
+                               <td><input type="checkbox" className="form-check-input" checked={query.isChecked} value={query.id} onClick={(e) => handleCheckChieldElement(e)}/></td>
                                <td>{query.name}</td>
                               <td>{query.email}</td>
                               <td>{query.phone}</td>
                               <td>{(query.company === 'null' || !query.company) ? '---' : query.company}</td>
                               <td><a href={'/admin/agent/'+query.id} className="btn btn-primary">View</a></td>
                                </tr>
-                           )
-                           })
-                           }
+                             )
+                             })
+                             }
                             <tr>
                               <td colSpan={6}>
                                 <div className="col-sm-6">

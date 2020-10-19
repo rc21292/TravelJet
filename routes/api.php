@@ -196,4 +196,16 @@ Route::get('getBookingsByUserId/{id}','Api\QueryController@getBookingsByUserId')
 Route::get('getBookedBookingsByUserId/{id}','Api\QueryController@getBookedBookingsByUserId');
 Route::get('getCnceledBookingsByUserId/{id}','Api\QueryController@getCnceledBookingsByUserId');
 Route::get('getCustomerDetails/{id}','UserController@getCustomerDetails');
+Route::get('getAgentDetails/{id}','UserController@getAgentDetails');
+Route::post('deleteCustomer','UserController@deleteCustomer');
+Route::post('deleteAgent','UserController@deleteAgent');
 /*admin customers apis*/
+
+/*admin agent apis*/
+
+
+Route::get('getBookingsByAgentId/{id}','Api\QueryController@getBookingsByAgentId');
+Route::get('getBookedBookingsByAgentId/{id}','Api\QueryController@getBookedBookingsByAgentId');
+Route::get('getCnceledBookingsByAgentId/{id}','Api\QueryController@getCnceledBookingsByAgentId');
+
+/*admin agent apis*/

@@ -14,7 +14,6 @@ function Customers(props) {
    const [user, setUser] = useState(false);
    const [checkedBoxes, setCheckedBoxes] = useState([]);
    const [checkedIds, setCheckedIds] = useState([]);
-   const [allChecked, setAllChecked] = useState([]);
 
   const [customerData, setCustomerData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
@@ -52,18 +51,18 @@ function Customers(props) {
 
 
   const handlePageChange = (pageNumber) => {
- axios.get('/api/getCustomers/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&page='+pageNumber)
-  .then(result=>{
+   axios.get('/api/getCustomers/?name='+searchName+'&email='+searchEmail+'&mobile='+searchMobile+'&page='+pageNumber)
+   .then(result=>{
      setCustomerData(result.data.customers.data);  
      setCheckedIds(result.data.customer_ids.data);  
-      setItemsCountPerPage(result.data.customers.per_page);  
-      setTotalItemsCount(result.data.customers.total);  
-      setActivePage(result.data.customers.current_page);
-      setFromCount(result.data.customers.from);  
-      setToCount(result.data.customers.to);  
-      setTotalPages(result.data.customers.last_page);
-  });
-}
+     setItemsCountPerPage(result.data.customers.per_page);  
+     setTotalItemsCount(result.data.customers.total);  
+     setActivePage(result.data.customers.current_page);
+     setFromCount(result.data.customers.from);  
+     setToCount(result.data.customers.to);  
+     setTotalPages(result.data.customers.last_page);
+   });
+ }
 
   const onChangeSearchName = e => {
     const searchEmail = e.target.value;
@@ -114,51 +113,20 @@ const onChangeSearchMobile = e => {
       console.log(e);
     });
   };
-
-  const isItemSelected = (id) => {
-    let fruites = allChecked
-    if (fruites.length > 0) {
-      fruites.forEach(fruite => {
-        if (fruite === id){
-          console.log('if');
-          return false;
-        }
-      })
-    }else{
-      return false;
-    }
-  }
-
   
-  const toggleCheckbox = (e, item) => {   
-    if(e.target.checked) {
-      let arr = checkedBoxes;
-      arr.push(item.id);
-
-      setCheckedBoxes(arr);
-    } else {       
-
-      let items = checkedBoxes.splice(checkedBoxes.indexOf(item.id), 1);
-
-      setCheckedBoxes(items)
-    } 
-    console.log(checkedBoxes);
-  }
-
-
   const handleAllChecked = (event) => {
     let ids = [];
-    let fruites = customerData
+    let fruites = [...customerData]
     fruites.forEach(fruite => {
+      console.log(event.target.checked)
       fruite.isChecked = event.target.checked
       ids.push(fruite.id)
     })
     setCustomerData(fruites);
-    setAllChecked(ids);
   }
 
   const handleCheckChieldElement = (event) => {
-    let fruites = customerData
+    let fruites = [...customerData]
     fruites.forEach(fruite => {
        if (fruite.id == event.target.value){
           fruite.isChecked =  event.target.checked
@@ -168,6 +136,17 @@ const onChangeSearchMobile = e => {
 
     
   }
+
+
+const deleteCustomer = () => {
+  if(window.confirm('Are you sure, want to delete the selected product?')) {
+  axios.post('/api/deleteCustomer/',customerData)  
+      .then((result) => {  
+      window.location.reload(false);
+      });  
+    }
+  };  
+
     console.log(customerData);
 
   return (  
@@ -184,7 +163,7 @@ const onChangeSearchMobile = e => {
                 </div>
                 <div className="col-sm-6">
                   <div className="trash">
-                    <a href="#" className="btn btn-danger">
+                    <a onClick={deleteCustomer} className="btn btn-danger">
                       <i className="fa fa-trash" />
                     </a>
                   </div>
@@ -198,7 +177,7 @@ const onChangeSearchMobile = e => {
                         <table className="table">
                           <thead className="thead-light">
                             <tr>
-                              <th scope="col"><input className="form-check-input form-control" onClick={(e) => handleAllChecked(e)} type="checkbox" /></th>
+                              <th scope="col"><input className="form-check-input form-control" onChange={(e) => handleAllChecked(e)} type="checkbox" /></th>
                               <th scope="col">Customer Name</th>
                               <th scope="col">Email</th>
                               <th scope="col">Mobile Number</th>
@@ -209,14 +188,13 @@ const onChangeSearchMobile = e => {
                            {customerData.map((query,i)=>{
                                return(
                                <tr key={i}>
-                               <td><input type="checkbox" className="form-check-input" value={query.id} onClick={(e) => handleCheckChieldElement(e)}/></td>
+                               <td><input type="checkbox" className="form-check-input" checked={query.isChecked} value={query.id} onClick={(e) => handleCheckChieldElement(e)}/></td>
                                <td>{query.name}</td>
                               <td>{query.email}</td>
                               <td>{query.phone}</td>
                               <td><a href={'/admin/customer/'+query.id} className="btn btn-primary">View</a></td>
                                </tr>
-                           )
-                           })
+                           )})
                            }
                             <tr>
                               <td colSpan={6}>

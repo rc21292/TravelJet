@@ -201,6 +201,53 @@ class QueryController extends Controller
         return $result;
     }
 
+    public function getBookingsByAgentId(Request $request,$id)
+    {
+        DB::connection()->enableQueryLog();
+         $result = Booking::
+         join('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.id','bookings.from_places','bookings.to_places','bookings.created_at','bookings.depart','bookings.arrival','bookings.booking_type','bookings.no_of_adults','bookings.no_of_childrens','bookings.no_of_infants')
+         ->where('quotations.user_id',$id)->where('bookings.status','!=','booked')->where('bookings.status','!=','cancelled')
+         ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
+         ->paginate(4);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+        return $result;
+    }
+
+    public function getBookedBookingsByAgentId(Request $request,$id)
+    {
+        DB::connection()->enableQueryLog();
+         $result = Booking::
+         join('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.id','bookings.from_places','bookings.to_places','bookings.created_at','bookings.depart','bookings.arrival','bookings.booking_type','bookings.no_of_adults','bookings.no_of_childrens','bookings.no_of_infants')
+         ->where('quotations.user_id',$id)->where('bookings.status','booked')
+         ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
+         ->paginate(4);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+        return $result;
+    }
+
+    public function getCnceledBookingsByAgentId(Request $request,$id)
+    {
+        DB::connection()->enableQueryLog();
+         $result = Booking::
+         join('quotations', 'bookings.id' ,'quotations.booking_id')
+         ->select('bookings.id','bookings.from_places','bookings.to_places','bookings.created_at','bookings.depart','bookings.arrival','bookings.booking_type','bookings.no_of_adults','bookings.no_of_childrens','bookings.no_of_infants')
+         ->where('quotations.user_id',$id)->where('bookings.status','cancelled')
+         ->groupBy('bookings.id')
+         ->latest('bookings.created_at')
+         ->paginate(4);
+
+         $queries = DB::getQueryLog();
+         $last_query = end($queries);
+        return $result;
+    }
 
     public function getBookingsByUserId(Request $request, $id)
     {

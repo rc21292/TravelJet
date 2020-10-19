@@ -72,14 +72,6 @@ const [csvData, setCsvData] = useState([]);
   });
 }
 
-  const deleteBooking = (id) => {  
-    axios.delete('api/queries/delete/'+ id)  
-      .tden((result) => {  
-        history.push('/Bookings')  
-      });  
-  };  
-
-
   const downloadReport = (event, done) => {
     // API call to get data
     const objReport = {

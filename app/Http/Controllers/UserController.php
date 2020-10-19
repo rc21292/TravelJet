@@ -70,7 +70,7 @@ class UserController extends Controller
             $user_s->where('company','LIKE', '%'.$company.'%');
         } 
 
-        $agents = $user_s->select('users.*','agent_profiles.company')->paginate(10);
+        $agents = $user_s->select('users.*','agent_profiles.company')->latest('users.id')->paginate(10);
 
         $queries = DB::getQueryLog();
         $last_query = end($queries);
@@ -82,6 +82,34 @@ class UserController extends Controller
             'email' => $email,
             'mobile' => $mobile,
             'company' => $company,
+        ], 200);
+    }
+
+
+    public function deleteCustomer(request $request)
+    {
+        foreach ($request->all() as $customers) {
+            if ($customers['isChecked'] && !empty($customers['isChecked'])) {
+                // echo "<pre>";print_r(User::find($customers['id']));"</pre>";exit;
+                User::find($customers['id'])->delete();
+            }
+        }
+
+        return response()->json([
+            'success' => "Customer Deleted Scessfully!",
+        ], 200);
+    }
+
+    public function deleteAgent(request $request)
+    {
+        foreach ($request->all() as $agent) {
+            if ($agent['isChecked'] && !empty($agent['isChecked'])) {
+                User::find($agent['id'])->delete();
+            }
+        }
+
+        return response()->json([
+            'success' => "Agent Deleted Scessfully!",
         ], 200);
     }
 
@@ -109,9 +137,9 @@ class UserController extends Controller
             $user_s->where('phone','LIKE', '%'.$mobile.'%');
         } 
 
-        $customers = $user_s->paginate(10);
+        $customers = $user_s->latest('users.created_at')->paginate(10);
 
-        $customer_ids = $user_s->select('id')->paginate(10);
+        $customer_ids = $user_s->select('id')->latest('users.id')->paginate(10);
 
         foreach ($customers as $key => $value) {
             $customers[$key]['isChecked'] = 0;
@@ -558,6 +586,14 @@ class UserController extends Controller
     public function getCustomerDetails($id)
     {
         return $user = User::leftjoin('user_profiles','user_profiles.user_id','users.id')->where('users.id',$id)->select('users.*','user_profiles.address','user_profiles.pincode','user_profiles.city','user_profiles.state')->first();
+
+        return $user->toJson();
+    }
+
+
+    public function getAgentDetails($id)
+    {
+        return $user = User::leftjoin('agent_profiles','agent_profiles.user_id','users.id')->where('users.id',$id)->select('users.*','agent_profiles.address','agent_profiles.pincode','agent_profiles.city','agent_profiles.state','agent_profiles.company','agent_profiles.father_name','agent_profiles.dob','agent_profiles.birth_place','agent_profiles.category','agent_profiles.account_number','agent_profiles.beneficiary_name','agent_profiles.branch_ifsc_code','agent_profiles.bank_name')->first();
 
         return $user->toJson();
     }

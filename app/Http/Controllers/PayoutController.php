@@ -60,10 +60,56 @@ class PayoutController extends Controller
         ], 200);
     }
 
+    public function adminPayoutTransactions(Request $request)
+    {
+        $from_date = $request->input('from_date');
+        $to_date = $request->input('to_date');
+
+        $user_transaction_s = Payout::where('user_id', 1)->join('users', 'users.id','payouts.reciver_id')->latest();
+
+        if (($request->has('from_date') && $request->has('to_date')) && (!empty($request->from_date) && !empty($request->to_date)) ) {
+            $from_date = date('Y-m-d', strtotime($request->from_date));
+            $to_date = date('Y-m-d', strtotime($request->to_date));
+            $user_transaction_s->whereDate('payouts.updated_at', '>=', $from_date)
+                              ->whereDate('payouts.updated_at', '<=', $to_date);
+        }else if ($request->has('from_date') && !empty($request->from_date)) {
+            $from_date = date('Y-m-d', strtotime($request->from_date));
+            $user_transaction_s->where('payouts.updated_at','LIKE', '%'.$from_date.'%');
+        }else if ($request->has('to_date') && !empty($request->to_date)) {
+            $to_date = date('Y-m-d', strtotime($request->to_date));
+            $user_transaction_s->where('payouts.updated_at','LIKE', '%'.$to_date.'%');
+        }
+        $payouts = $user_transaction_s->select('payouts.*','users.name',DB::raw("DATE_FORMAT(payouts.updated_at, '%d-%b-%Y') as processing_date"))->paginate(10);
+
+      return response()->json([
+        'success' => true,
+        'payouts' => $payouts,
+      ], 200);
+    }
+
 
     public function payoutTransactions(Request $request,$id)
     {
-      $payouts =  Payout::where('reciver_id',$id)->latest()->paginate(10);
+
+       $from_date = $request->input('from_date');
+        $to_date = $request->input('to_date');
+
+        $user_transaction_s = Payout::where('reciver_id', $id)->join('users', 'users.id','payouts.reciver_id')->latest();
+
+        if (($request->has('from_date') && $request->has('to_date')) && (!empty($request->from_date) && !empty($request->to_date)) ) {
+            $from_date = date('Y-m-d', strtotime($request->from_date));
+            $to_date = date('Y-m-d', strtotime($request->to_date));
+            $user_transaction_s->whereDate('payouts.updated_at', '>=', $from_date)
+                              ->whereDate('payouts.updated_at', '<=', $to_date);
+        }else if ($request->has('from_date') && !empty($request->from_date)) {
+            $from_date = date('Y-m-d', strtotime($request->from_date));
+            $user_transaction_s->where('payouts.updated_at','LIKE', '%'.$from_date.'%');
+        }else if ($request->has('to_date') && !empty($request->to_date)) {
+            $to_date = date('Y-m-d', strtotime($request->to_date));
+            $user_transaction_s->where('payouts.updated_at','LIKE', '%'.$to_date.'%');
+        }
+        $payouts = $user_transaction_s->select('payouts.*','users.name',DB::raw("DATE_FORMAT(payouts.updated_at, '%d-%b-%Y') as processing_date"))->paginate(10);
+
       return response()->json([
         'success' => true,
         'payouts' => $payouts,
