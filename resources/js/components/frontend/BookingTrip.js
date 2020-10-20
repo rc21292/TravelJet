@@ -166,7 +166,7 @@ const BookingTrip = (props) => {
 		setWidthProgressBar(percent);
 
 		loadScript(
-			`https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places,geometry,drawing`,
+			`https://maps.googleapis.com/maps/api/js?key=AIzaSyDVR2fXPoEVoCNLIqagX5GQzna3feez4lI&libraries=places,geometry,drawing`,
 			() => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
 			);
 	},[])
@@ -270,24 +270,24 @@ const BookingTrip = (props) => {
 			setErrors(errors);
 			return;
 		}
-		/*if ((query === '') || (!query)) {  
+		if ((query === '') || (!query)) {  
 			errors["from_places"] = "*Please Enter Starting Point.";
 			setErrors(errors);
 			setIsErrors(1);
 			return;
-		}*/
+		}
 		if ((bookings.destinationstate === '') || (!bookings.destinationstate)) {  
 			errors["destinationstate"] = "*Please Select Destination State.";
 			setErrors(errors);
 			setIsErrors(1);
 			return;
 		}
-		/*if ((query1 === '') || (!query1)) {  
+		if ((query1 === '') || (!query1)) {  
 			errors["to_places"] = "*Please Enter End Point.";
 			setErrors(errors);
 			setIsErrors(1);
 			return;
-		}*/
+		}
 		setShow(1);
 
 		let curStep = 2;
