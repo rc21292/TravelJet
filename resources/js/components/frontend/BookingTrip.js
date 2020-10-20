@@ -36,8 +36,8 @@ function handleScriptLoad(
 		lat: 28.29,
 		lng: 79.86
 	};
-	var map = new google.maps.Map(document.getElementById('google-map'), {zoom: 5, center: myLatLng});
 
+	var map = new google.maps.Map(document.getElementById('google-map'), {zoom: 5, center: myLatLng});
 
 	autoComplete1 = new window.google.maps.places.Autocomplete(
 		autoCompleteRef1.current,
@@ -74,33 +74,58 @@ async function handlePlaceSelect(updateQuery) {
 
 function calcRoute(destination) {
     //create request
-    console.log(document.getElementById("from_places").value);
-    console.log(destination);
     var request = {
         origin: document.getElementById("from_places").value,
         destination: destination,
         travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC
+        unitSystem: google.maps.UnitSystem.IMPERIAL
     }
 
-    var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer();
-    directionsService.route(request, function (result, status) {
-    	console.log(google.maps.DirectionsStatus);
-        if (status == google.maps.DirectionsStatus.OK) {
-            
-            $("#output").html("<div class='result-table'> Driving distance: " + result.routes[0].legs[0].distance.text + ".<br />Duration: " + result.routes[0].legs[0].duration.text + ".</div>");
-            document.getElementById("output").style.display = "block";
+    const service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [document.getElementById("from_places").value],
+      destinations: [destination],
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false,
+    },
+    (response, status) => {
+      if (status !== "OK") {
+        alert("Error was: " + status);
+      } else {
+      	document.getElementById("distance_cal").innerHTML = response.rows[0].elements[0].distance.text;
+      	document.getElementById("distance").value = response.rows[0].elements[0].distance.text;
+    }
+});
 
-            directionsDisplay.setDirections(result);
-        } else {
-        	/*26.449923
-        	80.331871
-        	map.setCenter(myLatLng);*/
-            directionsDisplay.setDirections({ routes: [] });
-             directionsDisplay.setDirections({ routes: [] });
-        }
-    });
+
+var myLatLng = {
+		lat: 28.29,
+		lng: 79.86
+	};
+	var map = new google.maps.Map(document.getElementById('google-map'), {zoom: 5, center: myLatLng});
+	
+
+  var directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            var directionsService = new google.maps.DirectionsService();
+
+    directionsService.route({
+                origin: document.getElementById("from_places").value,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING,
+                avoidTolls: true
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setMap(map);
+                    directionsDisplay.setDirections(response);                  
+                } else {
+                    directionsDisplay.setMap(null);
+                    directionsDisplay.setDirections(null);
+                    alert('Could not display directions due to: ' + status);
+                }
+            });
 
 }
 
@@ -134,7 +159,8 @@ const BookingTrip = (props) => {
 		vehicle_budget:"",
 		no_of_adults:1,
 		no_of_childrens:0,
-		no_of_infants:0
+		no_of_infants:0,
+		distance:0,
 	};
 
 	const [bookings, setBookings] = useState(initialBookingState);
@@ -183,6 +209,9 @@ const BookingTrip = (props) => {
 			setErrors(errors);
 			return;
 		}
+
+		var distance = (document.getElementById('distance_cal').innerHTML).replace(' km','');
+
 		var data = {
 			user_id: bookings.user_id,
 			pickupstate: bookings.pickupstate,
@@ -209,6 +238,7 @@ const BookingTrip = (props) => {
 			mobile:bookings.mobile,
 			description:bookings.description,
 			otp:bookings.otp,
+			distance:distance,
 			vehicle_budget:bookings.vehicle_budget
 		};
 		axios({
@@ -512,7 +542,6 @@ const BookingTrip = (props) => {
 			data: data,
 		})
 		.then(response => {
-			console.log(response);
 			if ((response.data.message == 'success') || (response.data.message == 'Success') || (response.data.message =='Otp Verified Succesfully')) {
 				setBookings({...bookings,user_id:response.data.id});
 			setShow(8);
@@ -535,8 +564,12 @@ const BookingTrip = (props) => {
 
 	const handleInputChanges = event => {
 
+
 		const { name, value } = event.target;
 
+		if (name == 'distance') {
+			value = value.replace(' km','');
+		}
 		setBookings({ ...bookings, [name]: value });
 	};
 
@@ -769,7 +802,8 @@ const BookingTrip = (props) => {
 	                            <span className="slider round" />
 	                          </label>
 	                        </div>
-	                        <p>Total Kilometre 2500</p>
+	                        <p>Total Kilometre : <span id="distance_cal"> 2200 Km.</span></p>
+	                        <input type="hidden" name="distance" onChange={handleInputChanges} id="distance" value="0"/>
 	                      </div>
 	                    </div>
 	                  </div>
@@ -809,7 +843,7 @@ const BookingTrip = (props) => {
 	                    <div style={{color:'red',marginTop:'-15px'}}>{errors.depart}{errors.arrival}{errors.pickup_time}</div>
 	                  </div>
 	                  <div className="col-sm-5 col-xs-12">
-	                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
+	                  <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
 	                  </div>
 	                </div>
 	                <div className="clearfix" />
@@ -828,8 +862,7 @@ const BookingTrip = (props) => {
 	                    </div>
 	                  </div>
 	                  <div className="col-sm-5 col-xs-12">
-	                    <div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>
-	                  </div>
+						<div className="mapouter"><div className="gmap_canvas"><iframe width="100%" height={350} id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} /><a href="https://2torrentz.net" /></div></div>	                  </div>
 	                </div>
 	                <div className="clearfix" />
 	                <input type="button" onClick={event => previousStep(1)} name="previous" className="previous btn btn-secondary" defaultValue="Previous" />

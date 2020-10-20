@@ -7,155 +7,122 @@ import { useState, useEffect } from 'react'
 import Moment from 'react-moment';
 
 
-function AgentDrivers(props) {
+function AgentDrivers(props) { 
 
   const history = useHistory()
 
   const [user, setUser] = useState(false);
 
-  const [activeTab, setActiveTab] = useState(1); 
-  const [customerId, setCustomerId] = useState(0); 
-
-  const [agentData, setAgentData] = useState({}); 
-
-
-const [activePage, setActivePage] = useState(1);  
+  const [driversData, setDriversData] = useState([]);  
+  const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3); 
+
+  const [agentId,setAgentId] = useState();
+
+  const [searchName, setSearchName] = useState("");
+  const [drivingLicence, setSearchDrivingLicence] = useState("");
+  const [searchMobile, setSearchMobile] = useState("");
+  const [searchStatus, setSearchStatus] = useState("");
+
   const [fromCount, setFromCount] = useState(1);  
   const [toCount, setToCount] = useState(1);  
   const [totalPages, setTotalPages] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState(""); 
 
-  const [balance, setBalance] = useState(false);
-
-  const [walletTransactions, setWalletTransactions] = useState([]);
-
-  const [payoutsData, setPayoutsData] = useState([]);    
-
-  const [headersData, setHeadersData] = useState([
-    { label: "Date", key: "created_on" },
-    { label: "Transaction Type", key: "type" },
-    { label: "Transaction Description", key: "description_data" },
-    { label: "Amount", key: "amount" }
-    ]);
-
-
-  const [csvData, setCsvData] = useState([]);
-
-  const [csvReport, setCsvReport] = useState({data: csvData,headers: headersData,filename: 'Transactions.csv'});   
+  console.log('ou',props.agent_id);
 
   useEffect(() => {
 
-    console.log(props.agent_id);
-
-    let parts = location.pathname.split('/');
-    let customer_id = parts.pop() || parts.pop();  
-    setCustomerId(props.agent_id);
-
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const active_tab = params.get('tab');
-    if (active_tab > 0) {
-      setActiveTab(active_tab);
-    }else{
-      setActiveTab(1);
-    }
-
+  setAgentId(props.agent_id);
     let stateqq = localStorage["appState"];
+
+    setAgentId(props.agent_id);
+
+    console.log('in',props.agent_id);
+
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
-      setUser(AppState.user);    
-
-       axios.get('/api/users/getbalance/'+customer_id)
-      .then(response=>{
-        setBalance(response.data.balance);
+      setUser(AppState.user);
+      axios('/api/getDriversByAgentId/'+props.agent_id).then(result=>{        
+        setDriversData(result.data.data);  
+        setItemsCountPerPage(result.data.per_page);  
+        setTotalItemsCount(result.data.total);  
+        setActivePage(result.data.current_page);
+        setFromCount(result.data.from);  
+        setToCount(result.data.to);  
+        setTotalPages(result.data.last_page);
       });
-
-      axios('/api/transaction_history/'+customer_id).then(result=>{
-        setCsvReport({...csvReport,data:result.data.user_transactions.data});  
-        setWalletTransactions(result.data.user_transactions.data);  
-        setItemsCountPerPage(result.data.user_transactions.per_page);  
-        setTotalItemsCount(result.data.user_transactions.total);  
-        setActivePage(result.data.user_transactions.current_page);
-        setFromCount(result.data.user_transactions.from);  
-        setToCount(result.data.user_transactions.to);  
-        setTotalPages(result.data.user_transactions.last_page);  
-      });
-
     }   
 
   }, [props.agent_id]);  
 
-
   const handlePageChange = (pageNumber) => {
-    axios.get('/api/transaction_history/'+customerId+'?transation_type='+searchTransactionType+'&from_date='+searchDateFrom+'&to_date='+searchDateTo+'&page='+pageNumber)
-    .then(result=>{
-      setWalletTransactions(result.data.user_transactions.data);  
-      setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
-    });
-  }
+   axios.get('/api/getDriversByAgentId/'+agentId+'?name='+searchName+'&licence='+drivingLicence+'&mobile='+searchMobile+'&company='+searchStatus+'&page='+pageNumber)
+   .then(result=>{
+     setDriversData(result.data.data);  
+     setItemsCountPerPage(result.data.per_page);  
+     setTotalItemsCount(result.data.total);  
+     setActivePage(result.data.current_page);
+     setFromCount(result.data.from);  
+     setToCount(result.data.to);  
+     setTotalPages(result.data.last_page);
+   });
+ }
 
-const onChangeSearchTransactionType = e => {
-    const searchTransactionType = e.target.value;
-    setSearchTransactionType(searchTransactionType);
+  const onChangeSearchName = e => {
+    const drivingLicence = e.target.value;
+    setSearchName(drivingLicence);
   };
 
-  const onChangeSearchDateFrom = e => {
-    const searchTransactionType = e.target.value;
-    setSearchDateFrom(searchTransactionType);
+
+const onChangeSearchDrivingLicence = e => {
+    const drivingLicence = e.target.value;
+    setSearchDrivingLicence(drivingLicence);
   };
 
-  const onChangeSearchDateTo = e => {
-    const searchTransactionType = e.target.value;
-    setSearchDateTo(searchTransactionType);
+const onChangeSearchMobile = e => {
+    const searchMobile = e.target.value;
+    setSearchMobile(searchMobile);
+  };
+
+  const onChangeSearchStatus = e => {
+    const searchStatus = e.target.value;
+    setSearchStatus(searchStatus);
   };
 
   const resetFilter = () => {
- setSearchTransactionType("");
-       setSearchDateTo("");
-      setSearchDateFrom("");
-    axios.get('/api/transaction_history/'+customerId)
-  .then(result=>{
-     setWalletTransactions(result.data.user_transactions.data);  
-     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
-     
-  }); 
-
+    setSearchName("");
+    setSearchMobile("");
+    setSearchDrivingLicence("");
+    setSearchStatus("");
+    axios.get('/api/getDriversByAgentId/'+agentId)
+    .then(result=>{
+      setDriversData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+      setFromCount(result.data.from);  
+      setToCount(result.data.to);  
+      setTotalPages(result.data.last_page);
+    });
   }
-  const findByFilter = () => {
 
-    axios(`/api/transaction_history/${customerId}?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
+  const findByFilter = () => {
+    axios('/api/getDriversByAgentId/'+agentId+'?name='+searchName+'&licence='+drivingLicence+'&mobile='+searchMobile+'&company='+searchStatus)
     .then(result => {
-      setWalletTransactions(result.data.user_transactions.data); 
-      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
+      setDriversData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+      setFromCount(result.data.from);  
+      setToCount(result.data.to);  
+      setTotalPages(result.data.last_page);
     })
     .catch(e => {
       console.log(e);
     });
   };
-
 
   return (  
     <div className="tab-pane" id="6a">
@@ -178,169 +145,32 @@ const onChangeSearchTransactionType = e => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#" className="unverified">Unverified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Rahul Kumar
-                        </td>
-                        <td>
-                          9200929292
-                        </td>
-                        <td>
-                          DL-000000000
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary editdriver">View</a>
-                        </td>
-                      </tr>
+                      {driversData.map((query,i)=>{
+                               return(
+                               <tr key={i}>
+                               <td>{query.name}</td>
+                              <td>{query.mobile}</td>
+                              <td>{query.driving_licence}</td>
+                              <td><a href="#">{query.status}</a></td>
+                              <td><a href={'/admin/drivers/edit/'+query.id} className="btn btn-primary editdriver">View</a></td>
+                               </tr>
+                             )
+                             })
+                             }
                       <tr><td colSpan={5}>
                           <div className="col-sm-6">
-                            <nav aria-label="Page navigation">
-                              <ul className="pagination">
-                                <li className="page-item">
-                                  <a href="#" aria-label="Previous">
-                                    <i className="fa fa-angle-left" />
-                                  </a>
-                                </li>
-                                <li className="active"><a className="page-link" href="#">1</a></li>
-                                <li><a className="page-link" href="#">2</a></li>
-                                <li>
-                                  <a href="#" aria-label="Next">
-                                    <i className="fa fa-angle-right" />
-                                  </a>
-                                </li>
-                              </ul>
-                            </nav>
+                             <Pagination 
+                                    activePage={activePage}
+                                    itemsCountPerPage={itemsCountPerPage}
+                                    totalItemsCount={totalItemsCount}
+                                    pageRangeDisplayed={pageRangeDisplayed}
+                                    onChange={handlePageChange}
+                                    itemClass="page-item"
+                                    linkClass="page-link"
+                                    />
                           </div>
                           <div className="col-sm-6">
-                            <div className="showpage">Showing 1 to 13 of 20 (2 Pages)</div>
+                            <div className="showpage">Showing {fromCount} to {toCount} of {totalItemsCount} ({totalPages} Pages)</div>
                           </div>
                         </td>
                       </tr></tbody>
@@ -359,26 +189,27 @@ const onChangeSearchTransactionType = e => {
                   <div className="form-row">
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Driver Name</label>
-                      <input type="text" className="form-control" placeholder="Driver Name" />
+                      <input type="text" className="form-control" value={searchName} onChange={onChangeSearchName} placeholder="Driver Name" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Mobile Number</label>
-                      <input type="text" className="form-control" placeholder="Mobile Number" />
+                      <input type="text" className="form-control" value={setSearchDrivingLicence} onChange={onChangeSearchDrivingLicence} placeholder="Mobile Number" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Driving Licence</label>
-                      <input type="text" className="form-control" placeholder="Driving Licence" />
+                      <input type="text" className="form-control" value={searchMobile} onChange={onChangeSearchMobile} placeholder="Driving Licence" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Document Status</label>
-                      <select id="inputState" className="form-control">
-                        <option >Verified</option>
-                        <option>Pending</option>
+                      <select id="inputState" className="form-control" value={searchStatus} onChange={onChangeSearchStatus}>
+                        <option value="Verified">Verified</option>
+                        <option value="Approval Pending">Approval Pending</option>
                       </select>
                     </div>
                   </div>
                   <div className="placebidbtn filterbtn">
-                    <a href="#" className="btn btn-primary">Filter</a>
+                    <a onClick={findByFilter} className="btn btn-primary">Filter</a>
+                    <a onClick={resetFilter} className="btn btn-primary">Reset Filter</a>
                   </div>
                 </form>
               </div>
