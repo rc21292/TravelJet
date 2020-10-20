@@ -695,7 +695,7 @@ const BookingRoundTrip = (props) => {
                             <span className="slider round" />
                           </label>
                         </div>
-                        <p>Total Kilometre 2500</p>
+                        {/*<p>Total Kilometre 2500</p>*/}
                       </div>
                       <div className="clearfix" />
                       <div className="book-destinationPanel" id="enterdestin" style={{display: 'none'}}>
