@@ -802,7 +802,7 @@ const BookingTrip = (props) => {
 	                            <span className="slider round" />
 	                          </label>
 	                        </div>
-	                        <p>Total Kilometre : <span id="distance_cal"> 2200 Km.</span></p>
+	                        <p>Total Kilometre : <span id="distance_cal">0 Km.</span></p>
 	                        <input type="hidden" name="distance" onChange={handleInputChanges} id="distance" value="0"/>
 	                      </div>
 	                    </div>

@@ -1,7 +1,6 @@
 import React from 'react'  
 import axios from 'axios';  
 import { useHistory, useLocation } from 'react-router-dom'
-import { CSVLink } from "react-csv";
 import Pagination from "react-js-pagination";
 import { useState, useEffect } from 'react'  
 import Moment from 'react-moment';
@@ -13,149 +12,44 @@ function KYCDetails(props) {
 
   const [user, setUser] = useState(false);
 
-  const [activeTab, setActiveTab] = useState(1); 
   const [customerId, setCustomerId] = useState(0); 
-
-  const [agentData, setAgentData] = useState({}); 
-
-
-const [activePage, setActivePage] = useState(1);  
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
-  const [totalItemsCount, setTotalItemsCount] = useState(1);  
-  const [fromCount, setFromCount] = useState(1);  
-  const [toCount, setToCount] = useState(1);  
-  const [totalPages, setTotalPages] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState(""); 
-
-  const [balance, setBalance] = useState(false);
-
-  const [walletTransactions, setWalletTransactions] = useState([]);
-
-  const [payoutsData, setPayoutsData] = useState([]);    
-
-  const [headersData, setHeadersData] = useState([
-    { label: "Date", key: "created_on" },
-    { label: "Transaction Type", key: "type" },
-    { label: "Transaction Description", key: "description_data" },
-    { label: "Amount", key: "amount" }
-    ]);
-
-
-  const [csvData, setCsvData] = useState([]);
-
-  const [csvReport, setCsvReport] = useState({data: csvData,headers: headersData,filename: 'Transactions.csv'});   
+  const [agentProfile, setAgentProfile] = useState({});
 
   useEffect(() => {
 
-    console.log(props.agent_id);
-
     let parts = location.pathname.split('/');
     let customer_id = parts.pop() || parts.pop();  
-    setCustomerId(props.agent_id);
-
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const active_tab = params.get('tab');
-    if (active_tab > 0) {
-      setActiveTab(active_tab);
-    }else{
-      setActiveTab(1);
-    }
+    setCustomerId(customer_id);
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);    
 
-       axios.get('/api/users/getbalance/'+customer_id)
-      .then(response=>{
-        setBalance(response.data.balance);
-      });
-
-      axios('/api/transaction_history/'+customer_id).then(result=>{
-        setCsvReport({...csvReport,data:result.data.user_transactions.data});  
-        setWalletTransactions(result.data.user_transactions.data);  
-        setItemsCountPerPage(result.data.user_transactions.per_page);  
-        setTotalItemsCount(result.data.user_transactions.total);  
-        setActivePage(result.data.user_transactions.current_page);
-        setFromCount(result.data.user_transactions.from);  
-        setToCount(result.data.user_transactions.to);  
-        setTotalPages(result.data.user_transactions.last_page);  
+      axios('/api/users/getAgentProfile/'+customer_id).then(result=>{
+        setAgentProfile(result.data); 
       });
 
     }   
 
-  }, [props.agent_id]);  
+  }, []);  
 
 
   const handlePageChange = (pageNumber) => {
-    axios.get('/api/transaction_history/'+customerId+'?transation_type='+searchTransactionType+'&from_date='+searchDateFrom+'&to_date='+searchDateTo+'&page='+pageNumber)
+    axios.get('/api/users/getAgentProfile/'+customerId+'?page='+pageNumber)
     .then(result=>{
-      setWalletTransactions(result.data.user_transactions.data);  
-      setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
+      setAgentProfile(result.data);  
     });
   }
 
-const onChangeSearchTransactionType = e => {
-    const searchTransactionType = e.target.value;
-    setSearchTransactionType(searchTransactionType);
-  };
+  const downloadFile = (type,filename) => {
 
-  const onChangeSearchDateFrom = e => {
-    const searchTransactionType = e.target.value;
-    setSearchDateFrom(searchTransactionType);
-  };
+    var a = document.createElement("a");
+    a.href = '/uploads/users/'+customerId+'/'+type+'/'+filename;
+    a.setAttribute("download", filename);
+    a.click();
 
-  const onChangeSearchDateTo = e => {
-    const searchTransactionType = e.target.value;
-    setSearchDateTo(searchTransactionType);
-  };
-
-  const resetFilter = () => {
- setSearchTransactionType("");
-       setSearchDateTo("");
-      setSearchDateFrom("");
-    axios.get('/api/transaction_history/'+customerId)
-  .then(result=>{
-     setWalletTransactions(result.data.user_transactions.data);  
-     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
-     
-  }); 
-
-  }
-  const findByFilter = () => {
-
-    axios(`/api/transaction_history/${customerId}?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
-    .then(result => {
-      setWalletTransactions(result.data.user_transactions.data); 
-      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
-    })
-    .catch(e => {
-      console.log(e);
-    });
-  };
-
+  } 
 
   return (  
     <div className="tab-pane" id="2b">
@@ -175,65 +69,65 @@ const onChangeSearchTransactionType = e => {
                   <tr>
                     <td>Passport Photo</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/passport_size_photo/'+agentProfile.passport_size_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('document',agentProfile.passport_size_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Signature</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/signature_photo/'+agentProfile.signature_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('signature_photo',agentProfile.signature_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Aadhar Card/Front</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.aadhar_front_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href={true} onClick={() => downloadFile('documents',agentProfile.aadhar_front_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Aadhar Card/Back</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.aadhar_back_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.aadhar_back_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Driving License/Front</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.driving_license_front_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.driving_license_front_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Driving License/Back</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.driving_license_back_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.driving_license_back_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Passport / Front</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.passport_front_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.passport_front_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Passport / Back</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.passport_back_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.passport_back_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Pan Card</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.pancard_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.pancard_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                 </tbody>
               </table>
@@ -247,13 +141,13 @@ const onChangeSearchTransactionType = e => {
               <div className="form-group row">
                 <label htmlFor="labelname" className="col-sm-2">Company Name</label>
                 <div className="col-sm-10">
-                  <input type="text" className="form-control" placeholder="Company Name" />
+                  <input type="text" className="form-control" readOnly={true} defaultValue={agentProfile.company} placeholder="Company Name" />
                 </div>
               </div>
               <div className="form-group row">
                 <label htmlFor="labelname" className="col-sm-2">Website</label>
                 <div className="col-sm-10">
-                  <input type="text" className="form-control" placeholder="Website" />
+                  <input type="text" className="form-control" readOnly={true} defaultValue={agentProfile.website} placeholder="Website" />
                 </div>
               </div>
             </div>
@@ -274,37 +168,30 @@ const onChangeSearchTransactionType = e => {
                   <tr>
                     <td>CIN Number</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.cinno_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.cinno_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Company Pan Card</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/documents/'+agentProfile.company_pancard_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('documents',agentProfile.company_pancard_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>Office address proof</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/office_address_proof_photo/'+agentProfile.office_address_proof_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('office_address_proof_photo',agentProfile.office_address_proof_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                   <tr>
                     <td>GST Number (Optional)</td>
                     <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
+                      <img style={{height:'106px'}} src={'/uploads/users/'+customerId+'/gstno_photo/'+agentProfile.gstno_photo} alt="image description" />
                     </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
-                  </tr>
-                  <tr>
-                    <td>Driving License/Front</td>
-                    <td>
-                      <img src="image/icons/uploadimg.jpg" alt="image description" />
-                    </td>
-                    <td><a href="#"><i className="fa fa-download" /></a></td>
+                    <td><a href="#" onClick={() => downloadFile('gstno_photo',agentProfile.gstno_photo)}><i className="fa fa-download" /></a></td>
                   </tr>
                 </tbody>
               </table>
