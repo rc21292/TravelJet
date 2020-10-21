@@ -30,6 +30,39 @@ class VehicleController extends Controller
         //
     }
 
+
+    public function getVehiclesByAgentId(Request $request, $id)
+    {
+        $type = $request->input('type');
+        $model = $request->input('model');
+        $number = $request->input('number');
+        $status = $request->input('status');
+
+        DB::connection()->enableQueryLog();
+        $vehicles = Vehicle::where('user_id', $id)->latest();
+
+        if ($request->has('type') && !empty($request->type)) {
+            $type = $request->type;
+            $vehicles->where('vehicle_type','LIKE', '%'.$type.'%');
+        }
+
+        if ($request->has('model') && !empty($request->model)) {
+            $model = $request->model;
+            $vehicles->where('vehicle_model','LIKE', '%'.$model.'%');
+        } 
+        if ($request->has('number') && !empty($request->number)) {
+            $number = $request->number;
+            $vehicles->where('vehicle_number','LIKE', '%'.$number.'%');
+        } 
+
+        if ($request->has('status') && !empty($request->status)) {
+            $status = $request->status;
+            $vehicles->where('status','LIKE', '%'.$status.'%');
+        } 
+
+        return $vehicles->paginate(10);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

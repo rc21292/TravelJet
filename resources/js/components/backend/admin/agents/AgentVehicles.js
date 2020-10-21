@@ -7,157 +7,121 @@ import { useState, useEffect } from 'react'
 import Moment from 'react-moment';
 
 
-function AgentDetails(props) {
+function AgentVehicles(props) { 
 
   const history = useHistory()
 
   const [user, setUser] = useState(false);
 
-  const [activeTab, setActiveTab] = useState(1); 
-  const [customerId, setCustomerId] = useState(0); 
-
-  const [agentData, setAgentData] = useState({}); 
-
-
-const [activePage, setActivePage] = useState(1);  
+  const [vehiclesData, setVehiclesData] = useState([]);  
+  const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
   const [totalItemsCount, setTotalItemsCount] = useState(1);  
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3); 
+
+  const [agentId,setAgentId] = useState();
+
+  const [searchType, setSearchType] = useState("");
+  const [searchModel, setSearchModel] = useState("");
+  const [searchNumber, setSearchNumber] = useState("");
+  const [searchStatus, setSearchStatus] = useState("");
+
   const [fromCount, setFromCount] = useState(1);  
   const [toCount, setToCount] = useState(1);  
   const [totalPages, setTotalPages] = useState(1);  
-  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3);  
-  const [searchTransactionType, setSearchTransactionType] = useState("");
-  const [searchDateFrom, setSearchDateFrom] = useState("");
-  const [searchDateTo, setSearchDateTo] = useState(""); 
-
-  const [balance, setBalance] = useState(false);
-
-  const [walletTransactions, setWalletTransactions] = useState([]);
-
-  const [payoutsData, setPayoutsData] = useState([]);    
-
-  const [headersData, setHeadersData] = useState([
-    { label: "Date", key: "created_on" },
-    { label: "Transaction Type", key: "type" },
-    { label: "Transaction Description", key: "description_data" },
-    { label: "Amount", key: "amount" }
-    ]);
-
-
-  const [csvData, setCsvData] = useState([]);
-
-  const [csvReport, setCsvReport] = useState({data: csvData,headers: headersData,filename: 'Transactions.csv'});   
 
   useEffect(() => {
 
-    console.log(props.agent_id);
-
     let parts = location.pathname.split('/');
     let customer_id = parts.pop() || parts.pop();  
-    setCustomerId(props.agent_id);
-
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const active_tab = params.get('tab');
-    if (active_tab > 0) {
-      setActiveTab(active_tab);
-    }else{
-      setActiveTab(1);
-    }
+    setAgentId(customer_id);
 
     let stateqq = localStorage["appState"];
+    
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
-      setUser(AppState.user);    
-
-       axios.get('/api/users/getbalance/'+customer_id)
-      .then(response=>{
-        setBalance(response.data.balance);
+      setUser(AppState.user);
+      axios('/api/getVehiclesByAgentId/'+customer_id).then(result=>{        
+        setVehiclesData(result.data.data);  
+        setItemsCountPerPage(result.data.per_page);  
+        setTotalItemsCount(result.data.total);  
+        setActivePage(result.data.current_page);
+        setFromCount(result.data.from);  
+        setToCount(result.data.to);  
+        setTotalPages(result.data.last_page);
       });
-
-      axios('/api/transaction_history/'+customer_id).then(result=>{
-        setCsvReport({...csvReport,data:result.data.user_transactions.data});  
-        setWalletTransactions(result.data.user_transactions.data);  
-        setItemsCountPerPage(result.data.user_transactions.per_page);  
-        setTotalItemsCount(result.data.user_transactions.total);  
-        setActivePage(result.data.user_transactions.current_page);
-        setFromCount(result.data.user_transactions.from);  
-        setToCount(result.data.user_transactions.to);  
-        setTotalPages(result.data.user_transactions.last_page);  
-      });
-
     }   
 
-  }, [props.agent_id]);  
-
+  }, []);  
 
   const handlePageChange = (pageNumber) => {
-    axios.get('/api/transaction_history/'+customerId+'?transation_type='+searchTransactionType+'&from_date='+searchDateFrom+'&to_date='+searchDateTo+'&page='+pageNumber)
-    .then(result=>{
-      setWalletTransactions(result.data.user_transactions.data);  
-      setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
-    });
-  }
+   axios.get('/api/getVehiclesByAgentId/'+agentId+'?type='+searchType+'&model='+searchModel+'&number='+searchNumber+'&status='+searchStatus+'&page='+pageNumber)
+   .then(result=>{
+     setVehiclesData(result.data.data);  
+     setItemsCountPerPage(result.data.per_page);  
+     setTotalItemsCount(result.data.total);  
+     setActivePage(result.data.current_page);
+     setFromCount(result.data.from);  
+     setToCount(result.data.to);  
+     setTotalPages(result.data.last_page);
+   });
+ }
 
-const onChangeSearchTransactionType = e => {
-    const searchTransactionType = e.target.value;
-    setSearchTransactionType(searchTransactionType);
+  const onChangeSearchType = e => {
+    const searchType = e.target.value;
+    setSearchType(searchType);
   };
 
-  const onChangeSearchDateFrom = e => {
-    const searchTransactionType = e.target.value;
-    setSearchDateFrom(searchTransactionType);
+
+const onChangeSearchModel = e => {
+    const searchModel = e.target.value;
+    setSearchModel(searchModel);
   };
 
-  const onChangeSearchDateTo = e => {
-    const searchTransactionType = e.target.value;
-    setSearchDateTo(searchTransactionType);
+const onChangeSearchNumber = e => {
+    const searchNumber = e.target.value;
+    setSearchNumber(searchNumber);
+  };
+
+  const onChangeSearchStatus = e => {
+    const searchStatus = e.target.value;
+    setSearchStatus(searchStatus);
   };
 
   const resetFilter = () => {
- setSearchTransactionType("");
-       setSearchDateTo("");
-      setSearchDateFrom("");
-    axios.get('/api/transaction_history/'+customerId)
-  .then(result=>{
-     setWalletTransactions(result.data.user_transactions.data);  
-     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
-     
-  }); 
-
+    setSearchType("");
+    setSearchNumber("");
+    setSearchModel("");
+    setSearchStatus("");
+    axios.get('/api/getVehiclesByAgentId/'+agentId)
+    .then(result=>{
+      setVehiclesData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+      setFromCount(result.data.from);  
+      setToCount(result.data.to);  
+      setTotalPages(result.data.last_page);
+    });
   }
-  const findByFilter = () => {
 
-    axios(`/api/transaction_history/${customerId}?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
+  const findByFilter = () => {
+    axios('/api/getVehiclesByAgentId/'+agentId+'?type='+searchType+'&model='+searchModel+'&number='+searchNumber+'&status='+searchStatus)
     .then(result => {
-      setWalletTransactions(result.data.user_transactions.data); 
-      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
-      setItemsCountPerPage(result.data.user_transactions.per_page);  
-      setTotalItemsCount(result.data.user_transactions.total);  
-      setActivePage(result.data.user_transactions.current_page);
-      setFromCount(result.data.user_transactions.from);  
-      setToCount(result.data.user_transactions.to);  
-      setTotalPages(result.data.user_transactions.last_page);  
+      setVehiclesData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
+      setFromCount(result.data.from);  
+      setToCount(result.data.to);  
+      setTotalPages(result.data.last_page);
     })
     .catch(e => {
       console.log(e);
     });
   };
 
-
-  return (  
+  return ( 
     <div className="tab-pane" id="5a">
         <div className="vehiclediv test" style={{display: 'block'}}>
           <div className="col-sm-12">
@@ -178,166 +142,29 @@ const onChangeSearchTransactionType = e => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#" className="unverified">Unverified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#" className="unverified">Unverified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr><tr>
-                        <td>
-                          Hatchback
-                        </td>
-                        <td>
-                          Dezire
-                        </td>
-                        <td>
-                          DL3SCL8604
-                        </td>
-                        <td><a href="#">Verified</a>
-                        </td>
-                        <td><a className="btn btn-primary edit">View</a>
-                        </td>
-                      </tr>
+                      {vehiclesData.map((query,i)=>{
+                         return(
+                         <tr key={i}>
+                         <td>{query.vehicle_type}</td>
+                        <td>{query.vehicle_model}</td>
+                        <td>{query.vehicle_number}</td>
+                        <td><a href="#">{query.status}</a></td>
+                        <td><a href={'/admin/drivers/edit/'+query.id} className="btn btn-primary editdriver">View</a></td>
+                         </tr>
+                       )
+                       })
+                       }
                       <tr><td colSpan={5}>
                           <div className="col-sm-6">
-                            <nav aria-label="Page navigation">
-                              <ul className="pagination">
-                                <li className="page-item">
-                                  <a href="#" aria-label="Previous">
-                                    <i className="fa fa-angle-left" />
-                                  </a>
-                                </li>
-                                <li className="active"><a className="page-link" href="#">1</a></li>
-                                <li><a className="page-link" href="#">2</a></li>
-                                <li>
-                                  <a href="#" aria-label="Next">
-                                    <i className="fa fa-angle-right" />
-                                  </a>
-                                </li>
-                              </ul>
-                            </nav>
+                           <Pagination 
+                            activePage={activePage}
+                            itemsCountPerPage={itemsCountPerPage}
+                            totalItemsCount={totalItemsCount}
+                            pageRangeDisplayed={pageRangeDisplayed}
+                            onChange={handlePageChange}
+                            itemClass="page-item"
+                            linkClass="page-link"
+                            />
                           </div>
                           <div className="col-sm-6">
                             <div className="showpage">Showing 1 to 13 of 20 (2 Pages)</div>
@@ -359,26 +186,27 @@ const onChangeSearchTransactionType = e => {
                   <div className="form-row">
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Vehicle Type</label>
-                      <input type="text" className="form-control" placeholder="Vehicle Type" />
+                      <input type="text" className="form-control" value={searchType} onChange={onChangeSearchType} placeholder="Vehicle Type" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Vehicle Model</label>
-                      <input type="text" className="form-control" placeholder="Vehicle Model" />
+                      <input type="text" className="form-control" value={searchModel} onChange={onChangeSearchModel} placeholder="Vehicle Model" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Vehicle Number</label>
-                      <input type="text" className="form-control" placeholder="Vehicle Number" />
+                      <input type="text" className="form-control" value={searchNumber} onChange={onChangeSearchNumber} placeholder="Vehicle Number" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Document Status</label>
-                      <select id="inputState" className="form-control">
+                      <select id="inputState" className="form-control" value={searchStatus} onChange={onChangeSearchStatus}>
                         <option value="Verified">Verified</option>
-                        <option value="Pending">Pending</option>
+                        <option value="Approval Pending">Approval Pending</option>
                       </select>
                     </div>
                   </div>
                   <div className="placebidbtn filterbtn">
-                    <a href="#" className="btn btn-primary">Filter</a>
+                    <a onClick={findByFilter} className="btn btn-primary">Filter</a>
+                    <a onClick={resetFilter} className="btn btn-primary">Reset Filter</a>
                   </div>
                 </form>
               </div>
@@ -500,4 +328,4 @@ const onChangeSearchTransactionType = e => {
   )  
 }  
   
-export default AgentDetails
+export default AgentVehicles

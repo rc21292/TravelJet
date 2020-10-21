@@ -24,17 +24,31 @@ function Header() {
     },[]); 
 
 return (
-  <div>
-         <header>
+    <div>
+      <header>
         <div className="container-fluid">
           <div className="row">
-            {/* LOGO */}
             <div className="col-sm-3">
               <div className="logo">
                 <a href="http://n2rtech.com/traveljetadminpanel/">
                   <img src="/backend/image/logo.png" className="img-responsive" alt="Travel Jet" />
                 </a>
               </div>
+            </div>
+            <div className="col-sm-9">
+            <ul className="menu list-inline pull-right">
+            <li><a href="#">Inbox <span id="badge-counter">0</span></a>
+            </li>
+            <li><a href="#">Notification <span id="badge-counter2">0</span></a>
+            </li>
+            <li className="dropdown pull-right">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown"><img src="/backend/image/adminprofile.png" alt="profile" /> Abhishek</a>
+            <ul className="dropdown-menu">
+            <li><a href="/admin/profile">Edit Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+            </ul>
+            </li>
+            </ul>
             </div>
           </div>
         </div>

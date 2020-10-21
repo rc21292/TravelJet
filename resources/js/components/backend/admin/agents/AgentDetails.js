@@ -43,8 +43,6 @@ function AgentDetails(props) {
 
   const [csvReport, setCsvReport] = useState({data: csvData,headers: headersData,filename: 'Transactions.csv'});  
 
-
-
   const [pageRangeDisplayed, setPageRangeDisplayed] = useState(3); 
 
   const [bookingsData, setBookingsData] = useState([]);  

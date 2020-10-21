@@ -136,39 +136,37 @@ class DriverController extends Controller
         //
     }
 
-    public function getDriversByAgentId($id)
+    public function getDriversByAgentId(Request $request, $id)
     {
-        // return $drivers = Driver::where('user_id',$id)->latest()->paginate(2);
-
         $name = $request->input('name');
-        $email = $request->input('email');
-        $mobile = $request->input('mobile');
+        $licence = $request->input('licence');
+        $number = $request->input('number');
         $status = $request->input('status');
 
         DB::connection()->enableQueryLog();
-        $user_s = User::leftjoin('agent_profiles','agent_profiles.user_id','users.id')->where('role', 'agent')->latest();
+        $drivers = Driver::where('user_id', $id)->latest();
 
         if ($request->has('name') && !empty($request->name)) {
             $name = $request->name;
-            $user_s->where('users.name','LIKE', '%'.$name.'%');
+            $drivers->where('name','LIKE', '%'.$name.'%');
         }
 
-        if ($request->has('email') && !empty($request->email)) {
-            $email = $request->email;
-            $user_s->where('users.email','LIKE', '%'.$email.'%');
-        } 
-        if ($request->has('mobile') && !empty($request->mobile)) {
-            $mobile = $request->mobile;
-            $user_s->where('users.phone','LIKE', '%'.$mobile.'%');
-        } 
+        if ($request->has('licence') && !empty($request->licence)) {
+            $licence = $request->licence;
+            $drivers->where('driving_licence','LIKE', '%'.$licence.'%');
+        }
+
+        if ($request->has('number') && !empty($request->number)) {
+            $number = $request->number;
+            $drivers->where('mobile','LIKE', '%'.$number.'%');
+        }
 
         if ($request->has('status') && !empty($request->status)) {
             $status = $request->status;
-            $user_s->where('status','LIKE', '%'.$status.'%');
+            $drivers->where('status','LIKE', '%'.$status.'%');
         } 
 
-        $agents = $user_s->select('users.*','agent_profiles.status')->latest('users.id')->paginate(10);
-
+        return $drivers->paginate(10);
     }
 
     /**

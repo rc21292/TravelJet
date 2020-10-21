@@ -37,7 +37,7 @@ function PaymentDetail(props) {
       let data = saveData;
       axios.post('/api/payouts/updatePayout/',data)  
       .then((result) => {  
-        window.location.href = "/admin/pending-payouts";
+        // window.location.href = "/admin/pending-payouts";
       }); 
     }     
   }; 

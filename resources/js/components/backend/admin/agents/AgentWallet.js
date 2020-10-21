@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import Moment from 'react-moment';
 
 
-function AgentDetails(props) {
+function AgentWallet(props) {
 
   const history = useHistory()
 
@@ -50,20 +50,9 @@ const [activePage, setActivePage] = useState(1);
 
   useEffect(() => {
 
-    console.log(props.agent_id);
-
     let parts = location.pathname.split('/');
     let customer_id = parts.pop() || parts.pop();  
-    setCustomerId(props.agent_id);
-
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const active_tab = params.get('tab');
-    if (active_tab > 0) {
-      setActiveTab(active_tab);
-    }else{
-      setActiveTab(1);
-    }
+    setCustomerId(customer_id);
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
@@ -88,7 +77,7 @@ const [activePage, setActivePage] = useState(1);
 
     }   
 
-  }, [props.agent_id]);  
+  }, []);  
 
 
   const handlePageChange = (pageNumber) => {
@@ -279,4 +268,4 @@ const onChangeSearchTransactionType = e => {
   )  
 }  
   
-export default AgentDetails
+export default AgentWallet

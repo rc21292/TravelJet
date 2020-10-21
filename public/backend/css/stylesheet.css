@@ -107,11 +107,37 @@ header {
     padding-top: 20px;
 }
 .menu li a{
-    color: #333;
+    color: #fff;
 }
 .calltoAction{
     position: relative;
     top: -4px;
+}
+.menu li.dropdown {
+    padding-top: 6px;
+}
+.menu li .dropdown-menu {
+    min-width: 110px;
+    border-radius: 0;
+    padding-top: 0;
+}
+.menu li .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: #fff !important;
+    text-decoration: none;
+    background-color: #007bff;
+}
+.menu li .dropdown-menu li a {
+    color: #000;
+    font-size: 15px;
+}
+.menu li .dropdown-menu li{
+    padding-top: 6px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.menu li a img {
+    width: 45px;
+    height: 45px;
 }
 .banner{
     background: url(..//image/travel-banner.jpg);
@@ -2639,7 +2665,7 @@ hr {
 /***********End*********************/
 /***********NotificationPage********/
 .notification-page h1{
-	color: #111;
+    color: #111;
     margin-bottom: 25px;
     font-size: 26px;
 }
@@ -2664,9 +2690,9 @@ hr {
 /***********End*************/
 /***********My Leads *******/
 .myleads h1{
-	color: #111;
+    color: #111;
     margin-bottom: 25px;
-    font-size: 26px;	
+    font-size: 26px;    
 }
 .myleadsstatus #exTab2 .nav-tabs {
     justify-content: left;
@@ -2700,7 +2726,7 @@ hr {
     margin-bottom: 15px;
 }
 .myleadsstatus #exTab2 .leadquotation input{
-	width: 100%;
+    width: 100%;
     padding-right: 60px;
     color: #808080;
     outline: none;
@@ -2733,16 +2759,16 @@ hr {
     padding: 10px;
 }
 .bd{
-	min-width: 95px;
+    min-width: 95px;
 }
 .bt{
-	min-width: 110px;
+    min-width: 110px;
 }
 .sd{
-	min-width: 100px;
+    min-width: 100px;
 }
 .mb{
-	min-width: 70px;
+    min-width: 70px;
 }
 .leadstatus tbody tr td {
     font-size: 11px;
@@ -2795,9 +2821,9 @@ hr {
     border: 1px solid #ddd;
 }
 .venderprofile h1{
-	color: #111;
+    color: #111;
     margin-bottom: 25px;
-    font-size: 26px;	
+    font-size: 26px;    
 }
 .bashboard {
     padding-top: 20px;
@@ -2898,9 +2924,10 @@ hr {
     padding-bottom: 30px;
 }
 .useremail h3 {
-    font-size: 17px;
+    font-size: 18px;
     padding-left: 15px;
     margin-top: 0;
+    font-weight: 600;
 }
 .useremail span {
     padding-left: 15px;
@@ -3005,13 +3032,13 @@ hr {
     padding-right: 0;
 }
 .businessselect .col-form-label{
-	font-size: 15px;
+    font-size: 15px;
 }
 .businessselect .form-check-input {
     height: auto;
 }
 .businessselect label{
-	margin-right: 10px;
+    margin-right: 10px;
 }
 .businessselect .form-check input {
     cursor: pointer;
@@ -3021,7 +3048,7 @@ hr {
     margin-top: 20px;
 }
 .informationform textarea{
-	padding: 10px 20px;
+    padding: 10px 20px;
 }
 .informationform select{
     color: #111;
@@ -3032,7 +3059,7 @@ hr {
     -webkit-box-shadow: none;
     box-shadow: none;
     line-height: 18px;
-    padding: 10px 20px;
+    padding: 7px 20px;
     border-radius: 4px;
     display: inline-block;
     vertical-align: middle;
@@ -3916,3 +3943,48 @@ a.unverified {
     padding: 30px;
 }
 /********end********/
+
+/********admin.css-19-10-2020*******/
+#badge-counter {
+    position: relative;
+    top: -8px;
+    left: -2px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 2px 6px 2px 6px;
+}
+#badge-counter2 {
+    position: relative;
+    top: -8px;
+    left: -2px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 2px 6px 2px 6px;
+}
+.adminbookingpage .transaction-show {
+    margin-top: 28px;
+}
+.adminbooking {
+    background: #fff;
+    padding: 15px;
+}
+.btn-group-sm>.btn, .btn-sm {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    line-height: 1.5;
+    border-radius: 3px !important;
+}
+.vehicletype .table>thead>tr>th input{
+    width: auto;
+    right: 0;
+}
+.savevehicle .card-body {
+    padding: 15px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+/********end************/

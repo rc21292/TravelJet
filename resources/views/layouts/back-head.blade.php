@@ -24,7 +24,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script src="{{asset('backend/js/jquery-2.1.1.min.js')}}"></script>
+<!-- <script src="{{asset('backend/js/jquery-2.1.1.min.js')}}"></script> -->
 <script src="{{asset('backend/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('backend/js/selectize.min.js')}}"></script>
 <script src="{{asset('backend/js/payment.js')}}"></script>

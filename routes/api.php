@@ -207,6 +207,9 @@ Route::post('deleteAgent','UserController@deleteAgent');
 Route::get('getBookingsByAgentId/{id}','Api\QueryController@getBookingsByAgentId');
 Route::get('getBookedBookingsByAgentId/{id}','Api\QueryController@getBookedBookingsByAgentId');
 Route::get('getCnceledBookingsByAgentId/{id}','Api\QueryController@getCnceledBookingsByAgentId');
+
+
 Route::get('getDriversByAgentId/{id}','DriverController@getDriversByAgentId');
+Route::get('getVehiclesByAgentId/{id}','VehicleController@getVehiclesByAgentId');
 
 /*admin agent apis*/

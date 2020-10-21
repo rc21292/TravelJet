@@ -22,7 +22,7 @@ function AgentDrivers(props) {
   const [agentId,setAgentId] = useState();
 
   const [searchName, setSearchName] = useState("");
-  const [drivingLicence, setSearchDrivingLicence] = useState("");
+  const [searchDrivingLicence, setSearchDrivingLicence] = useState("");
   const [searchMobile, setSearchMobile] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
 
@@ -30,21 +30,18 @@ function AgentDrivers(props) {
   const [toCount, setToCount] = useState(1);  
   const [totalPages, setTotalPages] = useState(1);  
 
-  console.log('ou',props.agent_id);
-
   useEffect(() => {
+    
+    let parts = location.pathname.split('/');
+    let customer_id = parts.pop() || parts.pop();  
+    setAgentId(customer_id);
 
-  setAgentId(props.agent_id);
     let stateqq = localStorage["appState"];
-
-    setAgentId(props.agent_id);
-
-    console.log('in',props.agent_id);
 
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/getDriversByAgentId/'+props.agent_id).then(result=>{        
+      axios('/api/getDriversByAgentId/'+customer_id).then(result=>{        
         setDriversData(result.data.data);  
         setItemsCountPerPage(result.data.per_page);  
         setTotalItemsCount(result.data.total);  
@@ -55,7 +52,7 @@ function AgentDrivers(props) {
       });
     }   
 
-  }, [props.agent_id]);  
+  }, []);  
 
   const handlePageChange = (pageNumber) => {
    axios.get('/api/getDriversByAgentId/'+agentId+'?name='+searchName+'&licence='+drivingLicence+'&mobile='+searchMobile+'&company='+searchStatus+'&page='+pageNumber)
@@ -160,14 +157,14 @@ const onChangeSearchMobile = e => {
                       <tr><td colSpan={5}>
                           <div className="col-sm-6">
                              <Pagination 
-                                    activePage={activePage}
-                                    itemsCountPerPage={itemsCountPerPage}
-                                    totalItemsCount={totalItemsCount}
-                                    pageRangeDisplayed={pageRangeDisplayed}
-                                    onChange={handlePageChange}
-                                    itemClass="page-item"
-                                    linkClass="page-link"
-                                    />
+                              activePage={activePage}
+                              itemsCountPerPage={itemsCountPerPage}
+                              totalItemsCount={totalItemsCount}
+                              pageRangeDisplayed={pageRangeDisplayed}
+                              onChange={handlePageChange}
+                              itemClass="page-item"
+                              linkClass="page-link"
+                              />
                           </div>
                           <div className="col-sm-6">
                             <div className="showpage">Showing {fromCount} to {toCount} of {totalItemsCount} ({totalPages} Pages)</div>
@@ -193,7 +190,7 @@ const onChangeSearchMobile = e => {
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Mobile Number</label>
-                      <input type="text" className="form-control" value={setSearchDrivingLicence} onChange={onChangeSearchDrivingLicence} placeholder="Mobile Number" />
+                      <input type="text" className="form-control" value={searchDrivingLicence} onChange={onChangeSearchDrivingLicence} placeholder="Mobile Number" />
                     </div>
                     <div className="form-group col-md-12">
                       <label htmlFor="labelname">Driving Licence</label>

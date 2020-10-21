@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
-import Home from '../Home';
 
 function Sidebar() {
 return (
@@ -10,6 +9,18 @@ return (
           <a className="nav-link" href="/admin">
             <span>Dashboard</span></a>
         </li>
+        <li className="nav-item">
+        <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBookings" aria-expanded="true" aria-controls="collapseBookings">
+          <span>Booking</span>
+        </a>
+        <div id="collapseBookings" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div className="bg-white py-2 collapse-inner rounded">
+            <a className="collapse-item" href="/admin/bookings">Upcoming Booking</a>
+            <a className="collapse-item" href="/admin/booked-bookings">Booked</a>
+            <a className="collapse-item" href="/admin/cancelled-bookings">Cancelled</a>
+          </div>
+        </div>
+      </li>
         <li className="nav-item">
           <a className="nav-link active" href="/admin/agents">
             <span>Agents</span></a>
