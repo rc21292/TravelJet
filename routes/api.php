@@ -143,8 +143,8 @@ Route::get('getdashboardData/{id}','HomeController@index');
 Route::get('getAdminDashboardData','HomeController@getAdminDashboardData');
 
 /*reviews apis*/
-Route::get('getAgenReviews/{id}','ReviewController@getAgenReviews');
 Route::post('saveReviews','ReviewController@store');
+Route::get('getAgenReviews/{id}','ReviewController@getAgenReviews');
 Route::get('getAgentTestimonials/{id}','ReviewController@getAgentTestimonials');
 
 /*notification apis*/

@@ -119,12 +119,12 @@ class Portfolio extends Component {
     bodyFormData.append('image', this.state.image);
     axios({
     method: 'post',
-    url: 'http://13.235.238.138/api/users/insertPortfolioImages',
+    url: '/api/users/insertPortfolioImages',
     data: bodyFormData,
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
     .then(function (response) {
-        // window.location.href = "/login";
+        window.location.href = "/login";
     })
     .catch(function (response) {
         console.log(response);

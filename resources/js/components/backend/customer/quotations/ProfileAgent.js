@@ -137,7 +137,7 @@ function ProfileAgent({match}) {
                   </div>
                 </div>
               </div>
-              <div className="roundtrip"> {agentProfile.city} | {agentProfile.state}</div>
+              <div className="roundtrip"> {(agentProfile.city != '' || agentProfile.city != 'null') && agentProfile.city} | {(agentProfile.state != '' || agentProfile.state != 'null') && agentProfile.state}</div>
               <div className="country">
                 <img src="/images/icons/flag.png" alt="flag" /> <span>{agentProfile.country}</span>
               </div>
@@ -180,7 +180,7 @@ function ProfileAgent({match}) {
                 <div className="modal-dialog">
                   <div className="modal-content">
                     <div className="modal-header">
-                      <h5>Lorem Ipsum</h5>
+                      <h5>{portfolioData.title}</h5>
                       <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>
@@ -190,7 +190,6 @@ function ProfileAgent({match}) {
                       <p>{portfolioData.detail}</p>
                     </div>
                     <div className="modal-footer">
-                      <h6>Highlights</h6>
                     </div>
                   </div>
                 </div>

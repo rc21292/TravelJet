@@ -63,7 +63,12 @@ function Review() {
     }
 
     let user_id = user.id;
-    axios.post('/api/saveReviews/',query).then(res=>
+
+    axios({
+      method: 'post',
+      url: '/api/saveReviews',
+      data: query,
+    }).then(res=>
     { 
       if (res.data.success === true) {
         history.push('/customer/reviews')

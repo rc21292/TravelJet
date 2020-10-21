@@ -333,7 +333,7 @@ function QuotationDetaills({id}) {
                 </li>
                 <li><span> <a href={"/chatify/"+quotation2.user_id} className="btn btn-default chatbtn">Chat Now</a></span>
                 </li>
-                <li><span> <a href="#" className="btn btn-info">Contact Vendor</a></span>
+                <li><span> <a onClick={() => viewProfile(quotation2.user_id)} className="btn btn-info">Contact Vendor</a></span>
                 </li>
               </ul>
             </div>
