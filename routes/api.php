@@ -18,6 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/*api by krishna mishra*/
+
 
 /*booking api's*/
 Route::get('queries/edit/{id}','Api\QueryController@edit');
