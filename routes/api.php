@@ -122,7 +122,7 @@ Route::post('payouts/savePayoutRequest','PayoutController@savePayoutRequest');
 Route::get('payouts/getRequestedPayouts/{id}', 'PayoutController@getRequestedPayouts');
 /*for admin*/
 Route::get('getPayoutRequested', 'PayoutController@getPayoutRequested');
-Route::post('payouts/updatePayout', 'PayoutController@updatePayout');
+Route::post('/payouts/updatePayout', 'PayoutController@updatePayout');
 Route::get('getRequestedPayoutById/{id}', 'PayoutController@getRequestedPayoutById');
 
 /*agent credits apis*/
