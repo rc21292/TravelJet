@@ -39,11 +39,11 @@ function Cancelled({match}) {
 
 
   const reBooking = () => {  
-    let data = {quotation_id : bookingData.id};
+       window.location.href = "/";
+   /* let data = {quotation_id : bookingData.id};
     axios.post('/api/queries/reBooking/'+ match.params.id,data)  
       .then((result) => {  
-       window.location.href = "/customer/bookings";
-      });  
+      });  */
   };  
 
   return (  

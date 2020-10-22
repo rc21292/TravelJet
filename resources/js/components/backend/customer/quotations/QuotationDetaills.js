@@ -493,7 +493,7 @@ function QuotationDetaills({id}) {
                     <div className="triproute">
                       <div className="row">
                         <div className="col-sm-6">
-                          <div className="bookdetail">Trip Route <a href="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed">View Google Map</a>
+                          <div className="bookdetail">Trip Route
                           </div>
                         </div>
                         <div className="col-sm-6">
