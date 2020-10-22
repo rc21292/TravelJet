@@ -32,6 +32,7 @@ function QuotationDetaills({id}) {
 
   const [bookingsData, setBookingsData] = useState({});  
   const [paymentData, setPaymentData] = useState({});  
+  const [paymentTotal, setPaymentTotals] = useState(0);  
   const [balance, setBalance] = useState(0);  
   const [isUsedWallet, setIsUsedWallet] = useState(0);  
   const [stopages, setStopages] = useState([]);  
@@ -123,6 +124,42 @@ function QuotationDetaills({id}) {
     let new_amount = amount;
     let user_id = user.id;
     let wallet_amount = isUsedWallet;
+
+    if (amount == 0) {
+
+       axios.get('/api/quotations/getQuotationById/'+quotation_id).then(result=>{
+        try {
+         const paymentId = '';
+         const query = {
+          payment_id:paymentId,
+          wallet:result.data.payment_first,
+          for:'Booking',
+          user_id:user.id,
+          amount:result.data.payment_first,
+          total_amount:result.data.payment_first,
+        }
+
+        axios.post('/api/users/save_razorpay_details',query)
+        .then(response=>{
+
+          axios.post('/api/quotations/awardBooking/'+ quotation_id,query)  
+          .then((result) => { 
+            if (result.data.success) {
+              window.location.href = "/customer/bookings";
+              // window.location.reload(false);
+            } 
+          });
+
+        });        
+
+      } catch (err) {
+        console.log(err);
+      }
+      });
+
+       
+
+    }else{
     let options = {
       "key": "rzp_test_FvMwf7j3FOOnh8",
       "amount": amount*100,
@@ -177,6 +214,7 @@ function QuotationDetaills({id}) {
     let rzp = new Razorpay(options);
     rzp.open();
   }
+}
 
   const deleteQuotation = (id) => {
   axios.delete('/api/queries/delete/'+ id)  
@@ -198,16 +236,33 @@ function QuotationDetaills({id}) {
   // window.location.href = "/customer/profile/"+id 
   };  
 
-  const UseWallet = (e) => {
-    let new_amount = (paymentData.payment_first-balance);
-    let newamount = (parseInt(paymentData.payment_first)+parseInt(balance));
-    var checked = e.target.checked;
-    if(checked){
+  const UseWallet = (e,quotation_id) => {
+
+    if (balance > paymentData.payment_first) {
+       var checked = e.target.checked;
+       let new_amount = 0;
+      let new_balance = (parseInt(balance)-parseInt(paymentData.payment_first));
+      let newamount1 = (parseInt(paymentData.payment_first)+parseInt(0));
+      if(checked){
       setPaymentData({...paymentData, payment_first:new_amount});
-      setIsUsedWallet(balance);
+       }else{
+        axios.get('/api/quotations/getQuotationById/'+quotation_id).then(result=>{
+        setPaymentData({...paymentData, payment_first:result.data.payment_first});
+      });
+      }
+
     }else{
-      setPaymentData({...paymentData, payment_first:newamount});
-      setIsUsedWallet(0);
+
+      let new_amount = (paymentData.payment_first-balance);
+      let newamount = (parseInt(paymentData.payment_first)+parseInt(balance));
+      var checked = e.target.checked;
+      if(checked){
+        setPaymentData({...paymentData, payment_first:new_amount});
+        setIsUsedWallet(balance);
+      }else{
+        setPaymentData({...paymentData, payment_first:newamount});
+        setIsUsedWallet(0);
+      }
     }
   }
 
@@ -232,13 +287,13 @@ function QuotationDetaills({id}) {
                 <div className="modal-content">
                   <div className="modal-header">
                     <div className="row">
-                      <div className="col-sm-6">
+                      <div className="col-sm-10">
                         <div className="paynow">
-                          <h3>Booking Title</h3>
+                          <h3>{bookingsData.booking_name}</h3>
                           <span>Booking ID:000000{paymentData.booking_id}</span>
                         </div>
                       </div>
-                      <div className="col-sm-6">
+                      <div className="col-sm-2">
                         <div className="headerbudget">
                           <span>Total Cost</span> 
                           <div className="budgetprice">
@@ -252,7 +307,7 @@ function QuotationDetaills({id}) {
                     <div className="row">
                       <div className="col-sm-6">
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" onClick={UseWallet} type="checkbox" disabled={(balance <= 0) ? true : null} defaultValue="option1" />
+                          <input className="form-check-input" onClick={(e) => UseWallet(e,paymentData.id)} type="checkbox" disabled={(balance <= 0) ? true : null} defaultValue="option1" />
                           <label className="form-check-label" htmlFor="inlineCheckbox1">I am using my wallet</label>
                         </div>
                       </div>

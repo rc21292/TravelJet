@@ -305,7 +305,7 @@ class QueryController extends Controller
         DB::connection()->enableQueryLog();
 
          $result = Booking::
-         where('bookings.user_id',$id)->where('bookings.status','posted')->count('id');
+         where('bookings.user_id',$id)->whereIn('bookings.status',['awarded','booked'])->count('id');
 
          $queries = DB::getQueryLog();
          $last_query = end($queries);
@@ -350,7 +350,7 @@ class QueryController extends Controller
 
         $user = User::where('id',$request->user_id)->first();
 
-        $message = "<a href='/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <a href='/booking-details/". $data_re->id."'>".$request->booking_name."</a>";
+        $message = "<a href='/customer/profile/".$request->user_id."'> ".$user->name." </a> <span> posted a new booking </span> <a href='/booking-details/". $data_re->id."'>".$request->booking_name."</a>";
 
         Notice::create(['user_id' => $request->user_id, 'receiver_id' => 0, 'data' => $message , 'type' => 'job_post', 'created_at' => \Carbon\Carbon::now()]);
 
@@ -593,9 +593,9 @@ class QueryController extends Controller
         $quotation = Quotation::where('id', $request->quotation_id)->first();
         $user = User::where('id',$quotation->user_id)->first();
 
-        $message = "<a href='/profile/".$user->user_id."'> ".$user->name." </a> <span> confirmed booking </span> <a href='/customer-booking/". $id."'>".$booking->booking_name."</a>";
+        $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> confirmed booking </span> <a href='/customer-booking/". $id."'>".$booking->booking_name."</a>";
 
-        Notice::create(['user_id' => $user->user_id, 'receiver_id' => $booking->user_id, 'data' => $message , 'type' => 'booked', 'created_at' => \Carbon\Carbon::now()]);
+        Notice::create(['user_id' => $user->id, 'receiver_id' => $booking->user_id, 'data' => $message , 'type' => 'booked', 'created_at' => \Carbon\Carbon::now()]);
 
         return 'saved';
     }
@@ -606,13 +606,13 @@ class QueryController extends Controller
         $query->cancellation_reason = $request->reason;
         $query->status = 'cancelled';
         $query->save();
+
         DB::table('quotations')
         ->where('id', $request->quotation_id)
         ->update(['status' => 'cancelled']);
 
-        $booking = Booking::find($id)->first();
+        $booking = Booking::where('id',$id)->first();
         $quotation = Quotation::where('id',$request->quotation_id)->first();
-
 
         $paid_amount = $quotation->payment_first;
         foreach (json_decode($quotation->payments_status) as $key => $value) {
@@ -622,14 +622,14 @@ class QueryController extends Controller
         }
 
         $user = User::where('id',$booking->user_id)->first();
-        $user->deposit($paid_amount);
 
         $returned_amt = $paid_amount-(($paid_amount*10)/100);
         $agent = User::where('id',$quotation->user_id)->first();
         $agent->withdraw($returned_amt);
+        $user->deposit($returned_amt);
 
         $admin = User::where('id',1)->first();
-        $admin->withdraw((($paid_amount*10)/100));
+        // $admin->withdraw((($paid_amount*10)/100));
 
         $message = "<a href='/profile/".$user->id."'> ".$user->name." </a> <span> cancelled booking </span> <a href='/cancelled-booking/".$id."'>".$booking->booking_name."</a>";
 
@@ -639,12 +639,12 @@ class QueryController extends Controller
 
         UserTransaction::create(['user_id' => $user->id, 'receiver_id' =>  $agent->id, 'description' => $pay_message_agent , 'type' => 'withdraw' , 'amount' => $returned_amt]);
 
-        $pay_message_to_customer = "received Rs. $paid_amount from <a href='/profile/".$agent->id."'> ".$agent->name." </a> for cancelled booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
+        $pay_message_to_customer = "received Rs. $returned_amt from <a href='/profile/".$agent->id."'> ".$agent->name." </a> for cancelled booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
 
-        UserTransaction::create(['user_id' => $agent->id, 'receiver_id' =>  $user->id, 'description' => $pay_message_to_customer , 'type' => 'deposit' , 'amount' => $paid_amount]);
+        UserTransaction::create(['user_id' => $agent->id, 'receiver_id' =>  $user->id, 'description' => $pay_message_to_customer , 'type' => 'deposit' , 'amount' => $returned_amt]);
 
         $message_tra = "deposit for cancelled booking ".$booking->booking_name;
-        WalletTransaction::create(['user_id' => $user->id, 'receiver_id' => $agent->id, 'booking_id' => $quotation->booking_id, 'transaction_id' => '', 'booking_name' => $booking->booking_name, 'amount' => $paid_amount , 'status' => 1 , 'type' => 'deposit', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);
+        WalletTransaction::create(['user_id' => $user->id, 'receiver_id' => $agent->id, 'booking_id' => $quotation->booking_id, 'transaction_id' => '', 'booking_name' => $booking->booking_name, 'amount' => $returned_amt , 'status' => 1 , 'type' => 'deposit', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);
         return 'saved';
     }
 
@@ -659,7 +659,7 @@ class QueryController extends Controller
         ->where('id', $request->quotation_id)
         ->update(['status' => 'cancelled']);
 
-        $booking = Booking::find($id)->first();
+        $booking = Booking::where('id',$id)->first();
         $quotation = Quotation::where('id',$request->quotation_id)->first();
 
 
@@ -671,14 +671,14 @@ class QueryController extends Controller
         }
 
         $user = User::where('id',$booking->user_id)->first();
-        $user->deposit($paid_amount);
 
         $returned_amt = $paid_amount-(($paid_amount*10)/100);
+        $user->deposit($returned_amt);
         $agent = User::where('id',$quotation->user_id)->first();
         $agent->withdraw($returned_amt);
 
         $admin = User::where('id',1)->first();
-        $admin->withdraw((($paid_amount*10)/100));
+        // $admin->withdraw((($paid_amount*10)/100));
 
         $message = "<a href='/profile/".$agent->id."'> ".$agent->name." </a> <span> cancelled booking </span> <a href='/cancelled-booking/".$id."'>".$booking->booking_name."</a>";
 

@@ -98,6 +98,9 @@ class Index extends Component {
                                                             <Route path="/customer/profile/:id">
                                                                   <ProfileAgent/>
                                                             </Route> 
+                                                            <Route path="/profile/:id">
+                                                                  <ProfileAgent/>
+                                                            </Route> 
                                                             <Route path="/customer/change-password">
                                                                   <ChangePassword/>
                                                             </Route>

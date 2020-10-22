@@ -92,7 +92,7 @@ function CustomerBookings({match}) {
        let data = {'reason' :saveData,'quotation_id' : quotationData.id};
        axios.post('/api/queries/cancelCustBooking/'+ match.params.id,data)  
       .then((result) => {  
-        // window.location.href = "/customer/cancelled-bookings";
+        window.location.href = "/customer/cancelled-bookings";
       }); 
     }
   

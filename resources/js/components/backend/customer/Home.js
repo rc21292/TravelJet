@@ -130,7 +130,7 @@ function Home(props) {
                   )
                   })
                   }
-                  {bookingData.length > 0 ? '' :<center><tr style={{ color:'red'}}>Data not found..........</tr></center>}
+                  {bookingData.length > 0 ? '' :<center><tr style={{ color:'red'}}>There are no bookings in the list</tr></center>}
                   <tr>
                    <td colSpan="5">
                      <div className="placebidbtn">

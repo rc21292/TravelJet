@@ -35,6 +35,7 @@ Route::get('/customer-booking/{id}', function () { return view('welcome'); });
 Route::get('/cancelled-booking/{id}', function () { return view('welcome'); });
 Route::get('/profile/{id}', function () { return view('welcome'); });
 Route::get('/customer/profile/{id}', function () { return view('customer'); });
+Route::get('/profile/{id}', function () { return view('customer'); });
 Route::get('/agent/create-invoice/{id}', function () { return view('agent'); });
 Route::get('/agent/invoice/{id}', function () { return view('agent'); });
 Route::get('/customer/invoice/{id}', function () { return view('customer'); });
