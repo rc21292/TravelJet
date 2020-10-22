@@ -74,6 +74,7 @@ function Reviews(props) {
                         </tr>
                         )
                       })}
+                      {reviewsData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>There are no reviews in the list </td></tr>}
                     </tbody>
                   </table>
                   <div className="d-flex justify-content-center" style={{marginTop:'-20px'}}>

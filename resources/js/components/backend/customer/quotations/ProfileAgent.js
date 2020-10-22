@@ -142,7 +142,7 @@ function ProfileAgent({match}) {
                 <img src="/images/icons/flag.png" alt="flag" /> <span>{agentProfile.country}</span>
               </div>
               <ul className="wt-userlisting-breadcrumb">
-                <li><span> <a onClick={openChatBox} className="btn btn-default chatbtn">Chat Now</a></span>
+                <li><span> <a href={"/chatify/"+agentProfile.user_id} className="btn btn-default chatbtn">Chat Now</a></span>
                 </li>
               </ul>
             </div>

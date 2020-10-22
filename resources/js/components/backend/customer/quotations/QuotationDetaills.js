@@ -534,6 +534,10 @@ function QuotationDetaills({id}) {
 
                     {isEditStoppages ? <EditStoppages id={isEditStoppages} onIdChnage={changeIsEditStoppages} /> : null }
 
+                     <div style={(isQuotation) ? {display:'block',textAlign:'center', marginBottom:'-20px', marginTop:'-12px'} : {display:'none'} } className="row col-sm-12">
+                        <h2>Quote from Vendor</h2>
+                      </div>
+
                     <div className="clearfix" />
                     <div className="triproute inclusion" style={(isQuotation) ? {display:'block'} : {display:'none'} }>
                       <div className="row">
@@ -573,13 +577,13 @@ function QuotationDetaills({id}) {
                           </tr>
                           <tr>
                             <td>Sitting Capacity</td>
-                            <td>{quotation1.sitting_capacity}</td>
+                            <td>{(quotation1.sitting_capacity > 0 ) && quotation1.sitting_capacity}</td>
                             <td></td>
                             <td></td>
                           </tr>
                           <tr>
                             <td>Luggage Space</td>
-                            <td>{quotation1.luggage_space} Small Bags</td>
+                            <td>{(quotation1.luggage_space > 0 ) && quotation1.luggage_space+' Small Bags'} </td>
                             <td></td>
                             <td></td>
                           </tr>

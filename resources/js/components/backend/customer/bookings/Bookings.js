@@ -26,6 +26,7 @@ export default class Bookings extends Component {
     this.setState({user : AppState.user});
     axios.get('/api/queries/getUpcommingBookings/'+AppState.user.id)
     .then(response=>{
+      console.log(response);
       this.setState({
         queries:response.data.data,
         itemsCountPerPage:response.data.per_page,
@@ -38,7 +39,7 @@ export default class Bookings extends Component {
 }
 
  handlePageChange(pageNumber) {
-  axios.get('/api/queries/'+this.state.user.id+'?page='+pageNumber)
+  axios.get('/api/queries/getUpcommingBookings/'+this.state.user.id+'?page='+pageNumber)
   .then(response=>{
     this.setState({
       queries:response.data.data,
@@ -94,6 +95,7 @@ render() {
                            )
                         })
                      }
+                     {this.state.queries.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>There are no bookings in the list </td></tr>}
                   </tbody>
                   </table>
                   <div className="d-flex justify-content-center">

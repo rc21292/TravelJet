@@ -227,10 +227,6 @@ function BookingDetails({match}) {
     setQuotations({ ...quotations, payments: values });
   };
 
-
-  console.log(paymentFields);
-
-
   const handleRemovePaymentFields = (index, event) => {
     event.preventDefault();
     const values = [...paymentFields];

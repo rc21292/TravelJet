@@ -262,7 +262,7 @@ function CustomerBookings({match}) {
                                   <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
                                   <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
                                   <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
-                                  <li><span>Total Kilometers : <b>570</b></span></li>
+                                  <li><span>Total Kilometers : <b>{bookingData.distance}</b></span></li>
                                   <li><span>Description: <b>{bookingData.description}</b></span></li>
                                 </ul>
                               </div>

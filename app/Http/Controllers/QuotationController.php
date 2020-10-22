@@ -293,10 +293,13 @@ class QuotationController extends Controller
 
         }
 
-        if ($request->total_kilometer > 0) {
-             DB::table('bookings')
-            ->where('id', $request->booking_id)
-            ->update(['distance' => $request->total_kilometer]);
+        if ($request->booking_type == 'Round Trip with Sightseeing') 
+        {
+            if ($request->total_kilometer > 0) {
+                DB::table('bookings')
+                    ->where('id', $request->booking_id)
+                    ->update(['distance' => $request->total_kilometer]);
+            }
         }
 
         return response()->json([
@@ -327,12 +330,14 @@ class QuotationController extends Controller
 
         }
 
-        if ($request->total_kilometer > 0) {
-             DB::table('bookings')
-            ->where('id', $request->booking_id)
-            ->update(['distance' => $request->total_kilometer]);
+        if ($request->booking_type == 'Round Trip with Sightseeing') 
+        {
+            if ($request->total_kilometer > 0) {
+                DB::table('bookings')
+                    ->where('id', $request->booking_id)
+                    ->update(['distance' => $request->total_kilometer]);
+            }
         }
-        
 
         return response()->json([
             'success' => true,

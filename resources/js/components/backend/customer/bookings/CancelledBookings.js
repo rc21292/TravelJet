@@ -38,7 +38,7 @@ export default class CancelledBookings extends Component {
 }
 
  handlePageChange(pageNumber) {
-  axios.get('/api/queries/'+this.state.user.id+'?page='+pageNumber)
+  axios.get('/api/queries/getCancelledBookings/'+this.state.user.id+'?page='+pageNumber)
   .then(response=>{
     this.setState({
       queries:response.data.data,
@@ -94,6 +94,7 @@ render() {
                            )
                         })
                      }
+                     {this.state.queries.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>There are no bookings in the list </td></tr>}
                   </tbody>
                   </table>
                   <div className="d-flex justify-content-center">

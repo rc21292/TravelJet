@@ -39,10 +39,12 @@ function Quotations(props) {
 
 
   const deleteQuotation = (id) => {
-  axios.delete('/api/queries/delete/'+ id)  
+    if(window.confirm('Are you sure you want to delete ?')) {
+      axios.delete('/api/queries/delete/'+ id)  
       .then((result) => {  
-      window.location.reload(false);
-      });  
+        window.location.reload(false);
+      }); 
+    } 
   };  
 
   const viewQuotation = (id) => { 
@@ -90,6 +92,7 @@ function Quotations(props) {
                         </tr>
                         )
                       })}
+                      {bookingsData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>There are no quotations in the list </td></tr>}
                     </tbody>
                   </table>
                   <div className="d-flex justify-content-center" style={{marginTop:'-25px', float:'right'}}>
