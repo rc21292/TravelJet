@@ -46,13 +46,29 @@ class NoticeController extends Controller
         $user_data = User::where('id',$user_id)->select('role')->first();
         $user_created_at = User::where('id',$user_id)->value('created_at');
         if ($user_data->role === 'agent') {
+
+            Notice::whereIn('receiver_id',[0,$user_id])->whereIn('type', ['job_post','award'])->update(['status'=>1]);
+
             return $notices = $this->notice::whereIn('type', ['job_post','award'])->where('created_at','>=',$user_created_at)->whereIn('receiver_id',[0,$user_id])->orderBy('created_at','DESC')->get();
         } elseif ($user_data->role === 'admin') {
+
+            Notice::where('receiver_id',1)->update(['status'=>1]);
+
             $notices = $this->notice::where('receiver_id',1)->orderBy('created_at','DESC');
             return $notices->get();
         } else {
+
+            Notice::where('receiver_id',$user_id)->whereIn('type', ['quotation','booked','invoice'])->update(['status'=>1]);
+
             return $notices = $this->notice::whereIn('type', ['quotation','booked','invoice'])->where('created_at','>=',$user_created_at)->where('receiver_id',$user_id)->orderBy('created_at','DESC')->get();
         }
+    }
+
+    public function countNotificationsByUserId($id)
+    {
+        $user_created_at = User::where('id',$id)->value('created_at');
+
+        return $notice_count = Notice::whereIn('type', ['quotation','booked','invoice'])->where('created_at','>=',$user_created_at)->where('receiver_id',$id)->where('status',0)->count();
     }
 
     public function getAdminNotifications(Request $request)

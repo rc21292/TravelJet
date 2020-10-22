@@ -78,7 +78,7 @@ Route::get('quotations/checkQuotaions/{id}','QuotationController@checkQuotaions'
 Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
-
+Route::get('countNotificationsByUserId/{id}','NoticeController@countNotificationsByUserId');
 
 /*users apis*/
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');

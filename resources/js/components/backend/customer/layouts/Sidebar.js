@@ -2,7 +2,40 @@ import React, { useState, useEffect } from 'react'
 import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 import Home from '../Home';
 
-function Sidebar() {
+function Sidebar(props) {
+
+	const [user, setUser] = useState(false);
+	const [countNotice, setCountNotice] = useState(0);
+	const [userId, setUserId] = useState(props.user_id);
+
+	useEffect(() => {
+
+    axios.get("/api/users/show/"+userId).then(response => {
+      return response;
+    }).then(json => {
+      if (json.data) {
+        let userData = {
+          id: json.data.id,
+          name: json.data.name,
+          gender: json.data.gender,
+          email: json.data.email,
+          phone: json.data.phone,
+          role: json.data.role,
+        };
+        let appState = {
+          isLoggedIn: true,
+          user: userData
+        };
+        setUser(appState.user);
+        localStorage["appState"] = JSON.stringify(appState);
+      }
+    });
+    axios.get('/api/countNotificationsByUserId/'+userId)
+    .then(result=>{
+      setCountNotice(result.data)
+    });
+
+  },[]); 
   return (
   <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 {/* Sidebar - Brand */}
@@ -62,10 +95,10 @@ function Sidebar() {
 </li>
 <li className="nav-item">
 <a className="nav-link" href="/customer/notifications">
-<span>Notification</span></a>
+<span>Notification <span style={{ float: 'right'}} id="badge-counter2">{countNotice}</span> </span></a>
 </li>
 <li className="nav-item">
-<a className="nav-link" href="/logout">
+<a className="nav-link" href="/logout"> 
 <span>Logout</span></a>
 </li>
 <hr className="sidebar-divider d-none d-md-block" />
