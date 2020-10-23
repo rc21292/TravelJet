@@ -133,6 +133,7 @@ function Invoices(props) {
                     })
                     : null
                   }
+                  {invoicesData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>Search result not Found</td></tr>}
                   </tbody>
                 </table>
               </div>

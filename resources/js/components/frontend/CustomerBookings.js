@@ -183,7 +183,7 @@ function CustomerBookings({match}) {
                           <div className="row">
                             <div className="col-sm-12">
                               <div className="cancel text-center informationform">
-                                <span> Way are you cancelled this booking?</span> 
+                                <span> Why are you going to cancel this booking ?</span> 
                                 <div className="form-group">
                                   <select onChange={handleChange} className="form-control">
                                     <option value=''>Please Select Reason</option>
@@ -262,7 +262,7 @@ function CustomerBookings({match}) {
                                   <li><span>Pickup Time : <b>{bookingData.pickup}</b></span></li>
                                   <li><span>Number of Person : <b>{bookingData.no_of_adults} Adults + {bookingData.no_of_childrens } Childrens+ { bookingData.no_of_infants} infants</b></span></li>
                                   <li><span>Type of Vehicle : <b>{bookingData.vehicle_type}</b></span></li>
-                                  <li><span>Total Kilometers : <b>{bookingData.distance}</b></span></li>
+                                  <li><span>Total Kilometers : <b>{(bookingData.booking_type == 'One Way Trip') ? bookingData.distance : 'Estimated kilometers will be provided by the agent.'} </b></span></li>
                                   <li><span>Description: <b>{bookingData.description}</b></span></li>
                                 </ul>
                               </div>
