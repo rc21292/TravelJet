@@ -20,6 +20,7 @@ function Invoices(props) {
   const [success, setSuccess] = useState(false);
 
   const [invoicesData, setInvoicesData] = useState([]);  
+  const [isSeraching, setIsSeraching] = useState(false);  
   const [searchData, setSearchData] = useState('');
   const [activePage, setActivePage] = useState(1);  
   const [itemsCountPerPage, setItemsCountPerPage] = useState(1);  
@@ -45,8 +46,9 @@ function Invoices(props) {
 
   const searchInvoice = (event) => {
 
-     axios(`/api/invoices/getInvoices/${user.id}?search=${searchData}`)
+  axios(`/api/invoices/getInvoices/${user.id}?search=${searchData}`)
     .then(result => {
+      setIsSeraching(true);
       setInvoicesData(result.data.data);  
       setItemsCountPerPage(result.data.per_page);  
       setTotalItemsCount(result.data.total);  
@@ -94,9 +96,8 @@ function Invoices(props) {
                   </span>
                 </div>
               </div>
-              <div className="row col-sm-12">
-               {success ? <FlashMessage duration={10000} persistOnHover={true}>
-                <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
+              <div className="col-sm-12">
+               {isSeraching ? 'Search Results : ' : ''}
               </div>
               <div className="clearfix" />
               <div className="col-sm-12">
