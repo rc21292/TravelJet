@@ -8,6 +8,8 @@ function Sidebar(props) {
 	const [countNotice, setCountNotice] = useState(0);
 	const [userId, setUserId] = useState(props.user_id);
 
+  const [profileData, setProfileData] = useState({});
+
 	useEffect(() => {
 
     axios.get("/api/users/show/"+userId).then(response => {
@@ -30,6 +32,11 @@ function Sidebar(props) {
         localStorage["appState"] = JSON.stringify(appState);
       }
     });
+
+    axios('/api/users/getCustomerProfile/'+userId).then(result=>{
+        setProfileData(result.data.data);
+      });
+
     axios.get('/api/countNotificationsByUserId/'+userId)
     .then(result=>{
       setCountNotice(result.data)
@@ -39,11 +46,12 @@ function Sidebar(props) {
   return (
   <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 {/* Sidebar - Brand */}
-<a className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+<a style={{paddingLeft:'20px', marginBottom:'7px'}} className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
 <div className="sidebar-brand-icon">
-<img src="/frontend/image/icons/user.png" alt="user" />
+{profileData.profile ? <img style={{height:'70px'}} src={'/uploads/users/'+user.id+'/profile/medium-'+profileData.profile}></img> : <img src="/frontend/image/icons/user.png" alt="user" /> }
+
 </div>
-<div className="sidebar-brand-text mx-3">Hello</div>
+<div className="sidebar-brand-text mx-3">{user.name}</div>
 </a>
 {/* Divider */}
 <hr className="sidebar-divider my-0" />

@@ -86,10 +86,12 @@ Route::get('users/getCancelReasons','UserController@getCancelReasons');
 
 /*agent profiles apis*/
 Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
+Route::get('users/getCustomerProfile/{id}','UserController@getCustomerProfile');
 Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 
 Route::post('users/update/{id}','UserController@update');
 Route::post('users/updateAgentProfile/{id}','UserController@updateAgentProfile');
+Route::post('users/updateCustomerProfile/{id}','UserController@updateCustomerProfile');
 Route::get('users/getbalance/{id}','UserController@balance');
 Route::post('users/save_razorpay_details','UserController@save_razorpay_details');
 Route::get('users/show/{id}','UserController@show');

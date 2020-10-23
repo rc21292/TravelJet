@@ -15,6 +15,7 @@ function Profile() {
   const [name, setName] = useState(false);
   const [email, setEmail] = useState(false);
   const [phone, setPhone] = useState(false);
+  const [profileData, setProfileData] = useState({});
   const [isUpdated, setIsUpdated] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -38,9 +39,47 @@ function Profile() {
       if (AppState.isLoggedIn == false) {
         history.push('/login');
       }
+
+      axios('/api/users/getCustomerProfile/'+AppState.user.id).then(result=>{
+        setProfileData(result.data.data);
+      });
+
     }   
 
   },[]); 
+
+
+  const fileSelect = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    const field_name = event.target.name;
+    setProfileData({...profileData, name : event.target.files[0]});
+
+    var bodyFormData = new FormData();
+    bodyFormData.append('name', field_name);
+    bodyFormData.append('user_id', user.id);
+    bodyFormData.append(name, event.target.files[0]);
+    axios({
+    method: 'post',
+    url: '/api/users/insertImages',
+    data: bodyFormData,
+    config: { headers: {'Content-Type': 'multipart/form-data' }}
+    })
+    .then(function (response) {
+        const query = {
+          name : field_name,
+          image:response.data
+        }
+        axios.post('/api/users/updateCustomerProfile/'+user.id,query).then(result=>
+        {
+          setProfileData({...profileData, 'profile' : result.data});
+        });
+    })
+    .catch(function (response) {
+        console.log(response);
+    });
+
+    }
 
   const handleGenderChange = (event) => {
     setGenderValue(event.target.value);
@@ -198,8 +237,6 @@ function Profile() {
     }
   }
 
-
-console.log(genderValue);
   return (
 
     <div className="information-page">
@@ -268,6 +305,27 @@ console.log(genderValue);
           : ''}
           </div>
           </div>
+
+          <div className="row">
+                  <div className="form-group col-md-3">
+                    <div className="uploadprofile">
+                      <label htmlFor="inputname3" className="col-form-label">Upload Profile Photo</label>
+                      <div className="upload-field2">
+                        <input type="text" className="form-control" />
+                        <ul className="list-inline upload-icon2">
+                          <li>
+                            <a href="#" title="">
+                              <div className="file-upload1">
+                                <input type="file" name="profile" title={profileData.profile} onChange={fileSelect} />{profileData.profile ? <img style={{marginLeft: '1px'}} src={'/uploads/users/'+user.id+'/profile/medium-'+profileData.profile}></img> : <i className="fa fa-cloud-upload" /> }
+                              </div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
           </form>
           </div>
           </div>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Profile;
 use App\Quotation;
+use App\UserProfile;
 use App\Query;
 use App\AgentProfile;
 use Auth;
@@ -429,6 +430,17 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function getCustomerProfile($id)
+    {
+        $user_profile = DB::table('user_profiles')->select('profile')->where('user_id',$id)->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => $user_profile,
+            'message' => 'Bid Edited successfully!'
+        ], 201);
+    }
+
 
     public function insertPortfolio(Request $request)
     {
@@ -634,6 +646,28 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
+    public function updateCustomerProfile(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        $user_profile = UserProfile::select('id')->where('user_id', $id)->first();
+        if (!empty($user_profile->id)) {
+            $profile = UserProfile::find($user_profile->id);
+        } else {
+            $profile = $this;
+        }
+
+        $old_path = Helper::PublicPath() . '/uploads/users/temp';
+        if ($request['name'] == 'profile') {
+            $filename = $request['image'];
+            $profile->profile = filter_var($filename, FILTER_SANITIZE_STRING);
+        }
+
+        $profile->save();
+        return response()->json($filename);
+    }
 
 
     public function updateAgentProfile(Request $request, $id)
