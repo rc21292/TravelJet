@@ -22,7 +22,7 @@ function Profile() {
   const [readonlyEmail, setReadonlyEmail] = useState(true);
   const [readonlyPhone, setReadonlyPhone] = useState(true);
 
-  const [gender, setGender] = useState('');
+  const [genderValue, setGenderValue] = useState('');
 
   const history = useHistory()
 
@@ -33,7 +33,7 @@ function Profile() {
       setUser(AppState.user);
       setName(AppState.user.name);
       setEmail(AppState.user.email);
-      setGender(AppState.user.gender);
+      setGenderValue(AppState.user.gender);
       setPhone(AppState.user.phone);
       if (AppState.isLoggedIn == false) {
         history.push('/login');
@@ -41,6 +41,41 @@ function Profile() {
     }   
 
   },[]); 
+
+  const handleGenderChange = (event) => {
+    setGenderValue(event.target.value);
+
+    let user_id = user.id;
+    const query = {
+      gender:event.target.value
+    }
+    axios.post('/api/users/update/'+user.id,query).then(res=>
+    {
+
+      axios.get("/api/users/show/"+user_id).then(json => {
+          if (json.data) {
+            let userData = {
+              id: json.data.id,
+              name: json.data.name,
+              email: json.data.email,
+              gender: json.data.gender,
+              phone: json.data.phone,
+              role: json.data.role,
+            };
+            let appState = {
+              isLoggedIn: true,
+              user: userData
+            };
+            // localStorage["appState"] = JSON.stringify(appState);
+            localStorage.setItem('appState', JSON.stringify(appState));
+          }
+        });
+      
+      setIsUpdated(true);
+      window.scrollTo(0, 0);
+    });
+
+  }
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -164,7 +199,7 @@ function Profile() {
   }
 
 
-
+console.log(genderValue);
   return (
 
     <div className="information-page">
@@ -186,18 +221,19 @@ function Profile() {
       <a onClick={handleSubmit} className="btn btn-primary">Save</a>
       </div>
       : ''}
+
       </div>
       <div className="form-group">
       <label htmlFor="gender">Your Gender</label>
       <div className="row">
       <div className="form-check col-sm-2">
-      <input className="form-check-input" type="radio" name="gender"  id="gender1" checked={ gender === "Male"}  />
+      <input type="radio" name="gender" value="Male" checked={genderValue == "Male"} onChange={handleGenderChange} />
       <label className="form-check-label" htmlFor="gender1">
       Male
       </label>
       </div>
       <div className="form-check col-sm-2">
-      <input className="form-check-input" type="radio" name="gender" id="gender2" checked={ gender === "Female"} />
+      <input type="radio" name="gender" value="Female" checked={genderValue =="Female"} onChange={handleGenderChange} />
       <label className="form-check-label" htmlFor="gender2">
       Female
       </label>

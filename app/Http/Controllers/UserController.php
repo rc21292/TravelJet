@@ -670,14 +670,22 @@ class UserController extends Controller
     {
 
          $user = User::find($id);
+        
     
     // $user->slug = filter_var($request['name'], FILTER_SANITIZE_STRING);
         
-        $user->name = filter_var($request['name'], FILTER_SANITIZE_STRING);
-        $user->phone = $request['phone'];
-        if (!empty($request['email'])) {
-            $user->email = filter_var($request['email'], FILTER_SANITIZE_STRING);
+        
+
+        if (!empty($request['gender'])) {
+            $user->gender = $request['gender'];
+        }else{
+            $user->name = filter_var($request['name'], FILTER_SANITIZE_STRING);
+            $user->phone = $request['phone'];
+            if (!empty($request['email'])) {
+                $user->email = filter_var($request['email'], FILTER_SANITIZE_STRING);
+            }
         }
+
         $user->save();
         
 

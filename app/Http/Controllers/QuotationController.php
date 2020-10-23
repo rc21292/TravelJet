@@ -7,6 +7,7 @@ use App\User;
 use App\Booking;
 use App\Commission;
 use App\Notice;
+use App\AgentProfile;
 use App\WalletTransaction;
 use App\UserTransaction;
 use App\UserCredit;
@@ -491,7 +492,11 @@ class QuotationController extends Controller
             }
 
         $quotation = $quotation->map(function($i) {
+
+            $profile = AgentProfile::where('user_id',$i->user_id)->value('profile');
+
             $i->payments = unserialize($i->payments);
+            $i->profile = $profile;
             return $i;
         });
 

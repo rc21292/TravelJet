@@ -88,7 +88,7 @@ Route::get('users/getCancelReasons','UserController@getCancelReasons');
 Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
 Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 
-Route::post('users/update/{id}','UserController@users/update');
+Route::post('users/update/{id}','UserController@update');
 Route::post('users/updateAgentProfile/{id}','UserController@updateAgentProfile');
 Route::get('users/getbalance/{id}','UserController@balance');
 Route::post('users/save_razorpay_details','UserController@save_razorpay_details');

@@ -362,7 +362,12 @@ function QuotationDetaills({id}) {
                   return (
                   <div key={k} style={(quotation_id == k ) ? {display:'block'} : {display:'none'} } >
             <figure className="wt-userlistingimg">
+
+            {quotation2.profile ?
+            <img src={"/uploads/users/"+quotation2.user_id+"/profile/"+quotation2.profile} alt="image description" />
+          :           
               <img src="/frontend/image/icons/chat-profile.png" alt="image description" />
+            }
             </figure>
             
             <div className="wt-userlistingcontent">
@@ -615,7 +620,7 @@ function QuotationDetaills({id}) {
                                         return( <tr key={i}>
                                         <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} Part</td>
                                         <td> <i className="fa fa-inr" />{payments_data.payment}</td>
-                                        <td><span><Moment format="DD-MMM-YYYY">{payments_data.date}</Moment></span></td>
+                                        <td><span>{(payments_data.date) ? <Moment format="DD-MMM-YYYY">{payments_data.date}</Moment> : '-' }</span></td>
                                         </tr>
                                           )
                                         })

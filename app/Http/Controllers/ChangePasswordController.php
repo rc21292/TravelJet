@@ -53,7 +53,7 @@ class ChangePasswordController extends Controller
             if($request->newPassword != $request->confirmPassword){
                 return response()->json([
                     'success' => false,
-                    'message' => 'new password and confirm password does not match!'
+                    'message' => 'New password and confirm password does not match!'
                 ], 200);   
             }else{
                $user_id = $id;                       
@@ -63,13 +63,13 @@ class ChangePasswordController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'password chnaged successfully!'
+                    'message' => 'Password chnaged successfully!'
                 ], 200);   
             }
         }else{
             return response()->json([
                 'success' => false,
-                'message' => 'current password does not match!'
+                'message' => 'Current password does not match!'
             ], 200);   
         }
     }

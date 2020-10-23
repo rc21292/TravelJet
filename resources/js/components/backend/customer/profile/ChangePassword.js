@@ -147,7 +147,7 @@ function ChangePassword() {
         <div className="informationform">
 
             {success ? <FlashMessage duration={10000} persistOnHover={true}>
-                <h5 className={"alert alert-danger"}>success: {success}</h5></FlashMessage> : ''}
+                <h5 className={"alert alert-success"}>Success: {success}</h5></FlashMessage> : ''}
 
 
                 {error ? <FlashMessage duration={10000} persistOnHover={true}>

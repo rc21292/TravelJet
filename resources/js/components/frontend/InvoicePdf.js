@@ -60,7 +60,7 @@ function InvoicePdf({match}) {
         <div className="container">
           <div className="row">
             <Pdf targetRef={ref} filename={"invoice_"+match.params.id+".pdf"}>
-              {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
+              {({ toPdf }) => <button onClick={toPdf}>Download Pdf</button>}
             </Pdf>
              <div className="invoicepdf" ref={ref}>
               <div className="row">

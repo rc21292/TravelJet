@@ -64,10 +64,10 @@ function Invoices(props) {
   const handlePageChange = (pageNumber) => {
     axios.get('/api/invoices/getInvoices/'+user.id+'?page='+pageNumber)
     .then(result=>{
-      setInvoicesData(result.data);  
-      setItemsCountPerPage(result.per_page);  
-      setTotalItemsCount(result.total);  
-      setActivePage(result.current_page);
+      setInvoicesData(result.data.data);  
+      setItemsCountPerPage(result.data.per_page);  
+      setTotalItemsCount(result.data.total);  
+      setActivePage(result.data.current_page);
     });
   }
 
@@ -124,15 +124,9 @@ function Invoices(props) {
                       <td><i className="fa fa-inr" /> {invoice.tax}</td>
                       <td><i className="fa fa-inr" /> {invoice.total}</td>
                       <td>
-                        <div className="dropdown">
-                          <a id="dLabel" role="button" data-toggle="dropdown" className="btn btn-primary" data-target="#" onClick={(e) => viewInvoice(invoice.id)} >
-                            View <span className="caret" />
+                        <a id="dLabel" role="button" data-toggle="dropdown" className="btn btn-primary" data-target="#" onClick={(e) => downloadPdf(invoice.id)} >
+                            View && Download Invoice
                           </a>
-
-                          <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                            <li><a onClick={(e) => downloadPdf(invoice.id)}>Download PDF</a></li>
-                          </ul>
-                        </div>
                       </td>
                     </tr>
                       )

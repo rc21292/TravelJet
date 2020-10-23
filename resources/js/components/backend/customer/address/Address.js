@@ -177,21 +177,13 @@ const [address_type, setAddress_type ] = useState('Home');
       setState(value);
       break;
 
-     /* case 'landmark': 
-      errors.landmark = 
-      value.length < 1
-      ? 'field is Required!'
-      : '';
+      case 'landmark': 
       setLandmark(value);
       break;
 
       case 'alternate_phone': 
-      errors.alternate_phone = 
-      value.length < 1
-      ? 'field is Required!'
-      : '';
       setAlternate_phone(value);
-      break;*/
+      break;
 
       case 'address_type': 
       setAddress_type(value);
@@ -253,7 +245,7 @@ const [address_type, setAddress_type ] = useState('Home');
       <div className="manageaddress-page">
 
       {success ? <FlashMessage duration={10000} persistOnHover={true}>
-      <h5 className={"alert alert-success"}>success: {success}</h5></FlashMessage> : ''}
+      <h5 className={"alert alert-success"}>Success: {success}</h5></FlashMessage> : ''}
 
       {error ? <FlashMessage duration={10000} persistOnHover={true}>
       <h5 className={"alert alert-danger"}>Error: {error}</h5></FlashMessage> : ''}
@@ -271,7 +263,7 @@ const [address_type, setAddress_type ] = useState('Home');
                 <div style={{color:'red'}}>{errors.name}</div>
               </div>
               <div className="form-group col-sm-4">
-                <input type="number" onChange={handleChange} name="mobile" placeholder="10-dist mobile number" value={mobile} className="form-control" />
+                <input type="number" onChange={handleChange} name="mobile" placeholder="10-digit mobile number" value={mobile} className="form-control" />
                 <div style={{color:'red'}}>{errors.mobile}</div>
               </div>
             </div>
@@ -342,11 +334,9 @@ const [address_type, setAddress_type ] = useState('Home');
             <div className="row">
               <div className="form-group col-sm-4">
                 <input type="text" onChange={handleChange} name="landmark" value={landmark} placeholder="Landmark (Optional)" className="form-control" />
-                <div style={{color:'red'}}>{errors.landmark}</div>
               </div>
               <div className="form-group col-sm-4">
                 <input type="number" onChange={handleChange} name="alternate_phone" value={alternate_phone} placeholder="Alternate Phone (Optional)" className="form-control" />
-                <div style={{color:'red'}}>{errors.alternate_phone}</div>
               </div>
             </div>
             <div className="addresstype">
