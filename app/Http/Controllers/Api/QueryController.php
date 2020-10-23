@@ -615,9 +615,11 @@ class QueryController extends Controller
         $quotation = Quotation::where('id',$request->quotation_id)->first();
 
         $paid_amount = $quotation->payment_first;
-        foreach (json_decode($quotation->payments_status) as $key => $value) {
-            if ($value == 'paid') {
-               $paid_amount += $key;
+        if($quotation->payments_status){
+            foreach (json_decode($quotation->payments_status) as $key => $value) {
+                if ($value == 'paid') {
+                    $paid_amount += $key;
+                }
             }
         }
 
