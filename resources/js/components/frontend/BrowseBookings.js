@@ -381,8 +381,8 @@ function BrowseBookings(props) {
                                               <li><span><i className="fa fa-map-marker" /> Pickup from: {booking.from_places}</span></li>
                                               <li><span> <i className="fa fa-taxi" /> Cab: {booking.vehicle_type}</span></li>
                                               <br />
-                                              <li><span><b>Posted</b>  <Moment interval={1000} parse="YYYY-MM-DD HH:mm" fromNow>{booking.created_at}</Moment> - {booking.count} qoute</span></li>
-                                              <li><span><i className="fa fa-calendar" /> Starting Date: <Moment format="Do MMMM YYYY">{booking.created_at}</Moment></span></li>
+                                              <li><span><b>Posted</b>  <Moment fromNow> {booking.created_at }</Moment> - {booking.count} qoute</span></li>
+                                              <li><span><i className="fa fa-calendar" /> Starting Date: <Moment format="Do MMMM YYYY">{booking.depart}</Moment></span></li>
                                             </ul>
                                           </div>
                                           <div className="col-sm-3 paddingright">
