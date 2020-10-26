@@ -17,6 +17,7 @@ function Booked({match}) {
 
   const [saveData, setSaveData] = useState('');  
   const [invoice, setInvoice] = useState(false);  
+  const [paymentStatus, setPaymentStatus] = useState('');  
 
   const [error, setError] = useState();  
 
@@ -29,6 +30,11 @@ function Booked({match}) {
 
       axios.get('/api/quotations/getQuotationDetailById/'+result.data.id).then((result) => { 
         setQuotationDetails(result.data); 
+      });
+
+
+      axios.get('/api/quotations/getPaymentStatus/'+result.data.id).then((result) => { 
+        setPaymentStatus(result.data); 
       });
 
       axios.get('/api/invoices/checkInvoice/'+match.params.id)
@@ -169,7 +175,7 @@ function Booked({match}) {
                               </div>
                               <div className="bookeddetail conformbooked">
                                 <ul className="list-unstyled">
-                                    <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">Paid</div></span></li>
+                                    <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">{paymentStatus?'paid':'unpaid'}</div></span></li>
                                   <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
                                   <li><span><p style={{ width:'25%'}}>Pickup Location: </p><strong style={{ color: '#222' }}>{bookingData.from_places}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Drop Location: </p><strong style={{ color: '#222' }}>{bookingData.to_places}</strong></span></li>
@@ -192,7 +198,7 @@ function Booked({match}) {
                                         <div className="bookedinclusion">Inclusions</div>
                                         <div className="form-group">
                                           <div className="bookinclusion">
-                                            State Tax,<br /> {bookingData.inclusions}
+                                          {bookingData.inclusions}
                                           </div>
                                         </div>
                                       </div>
@@ -212,11 +218,6 @@ function Booked({match}) {
                             </div>{/*End*/}
                             <div className="placebidbtn movebtn">
                               <a href="#" className="btn btn-primary">Send Voucher</a>
-                              { invoice ?
-                              <a href={"/agent/invoices"} className="btn btn-primary">Invoice Created</a>
-                              :
-                              <a href={"/agent/create-invoice/"+match.params.id} className="btn btn-primary">Create Invoice</a>
-                              }
                                { (bookingData.status == 'cancelled') ?
                               <a className="btn btn-primary">This Booking Canceled</a> :
                               <a className="btn btn-primary"  data-toggle="modal" data-target="#myModal3">Cancel This Booking</a>

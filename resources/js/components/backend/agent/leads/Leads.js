@@ -239,7 +239,7 @@ function Leads(props) {
                       </span>
                     </div>
                   </div>
-                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                  <div className="col-sm-12" style={{ marginBottom:'7px' }}>
                     {isSeraching ? 'Search Results : ' : ''}
                   </div>
                   <div className="clearfix" />
@@ -310,7 +310,7 @@ function Leads(props) {
                       </span>
                     </div>
                   </div>
-                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                  <div className="col-sm-12" style={{ marginBottom:'7px' }}>
                     {isSeraching1 ? 'Search Results : ' : ''}
                   </div>
                   <div className="clearfix" />
@@ -381,7 +381,7 @@ function Leads(props) {
                       </span>
                     </div>
                   </div>                  
-                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                  <div className="col-sm-12" style={{ marginBottom:'7px' }}>
                     {isSeraching2 ? 'Search Results : ' : ''}
                   </div>
                   <div className="clearfix" />
@@ -452,7 +452,7 @@ function Leads(props) {
                       </span>
                     </div>
                   </div>                  
-                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                  <div className="col-sm-12" style={{ marginBottom:'7px' }}>
                     {isSeraching3 ? 'Search Results : ' : ''}
                   </div>
                   <div className="clearfix" />

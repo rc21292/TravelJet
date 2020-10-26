@@ -64,6 +64,7 @@ Route::get('getAgents','UserController@getAgents');
 
 /*quotation apis*/
 Route::post('quotations/storeBid','QuotationController@storeBid');
+Route::get('quotations/getPaymentStatus/{id}','QuotationController@getPaymentStatus');
 Route::get('quotations/getBookedBooking/{id}','QuotationController@getBookedBooking');
 Route::post('quotations/storeQuotation','QuotationController@storeQuotation');
 Route::post('quotations/storeQuotationDetails/{id}','QuotationController@storeQuotationDetails');

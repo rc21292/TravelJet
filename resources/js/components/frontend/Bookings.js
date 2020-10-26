@@ -782,14 +782,6 @@ function Bookings({match}) {
                                     <div className="inclusionsedit" style={(!editData.inclusions) ? {display:'none'} : {display:'block'} }>
                                       <div className="formtitle">
                                         <h5>Inclusions</h5>
-                                        <div className="quedit">
-                                          <div className="form-group">
-                                            <select className="form-control" id="exampleFormControlSelect1">
-                                              <option>Add Inclusions</option>
-                                              <option>Add Inclusions</option>
-                                            </select>
-                                          </div>
-                                        </div>
                                       </div>
                                       <div className="form-group">
                                         <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotationDetails.inclusions} name="inclusions" onChange={handleInputsChanges} />
@@ -808,14 +800,6 @@ function Bookings({match}) {
                                     <div className="exclusionsedit" style={(!editData.exclusions) ? {display:'none'} : {display:'block'} }>
                                       <div className="formtitle">
                                         <h5>Exclusions</h5>
-                                        <div className="quedit">
-                                          <div className="form-group">
-                                            <select className="form-control" id="exampleFormControlSelect1">
-                                              <option>Add Exclusions</option>
-                                              <option>Add Exclusions</option>
-                                            </select>
-                                          </div>
-                                        </div>
                                       </div>
                                       <div className="form-group">
                                         <textarea name="w3review" rows={4} cols={50} className="form-control" value={quotationDetails.exclusions} name="exclusions" onChange={handleInputsChanges} />
