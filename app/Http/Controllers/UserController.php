@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Profile;
 use App\Quotation;
+use App\UserOtp;
 use App\UserProfile;
 use App\Query;
 use App\AgentProfile;
@@ -29,6 +30,22 @@ class UserController extends Controller
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+
+    public function verifyMobileNo(Request $request) 
+    {
+        $phone = UserOtp::where('otp',$request->otp)->value('phone');
+        $otp = UserOtp::where('phone',$request->phone)->value('otp');
+        if($request->otp == $otp && $request->phone == $phone){
+            $user = User::find($request->id);
+            $user->phone = $request['phone'];
+            $user->save();
+            return response()->json(["message" => "Success","id" => $user->id]);
+            return response()->json('success');
+        } else {
+            return response()->json(["message" => "Not Verified"]);
+        }
     }
 
     public function index()

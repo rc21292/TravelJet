@@ -15,9 +15,12 @@ function Profile() {
   const [name, setName] = useState(false);
   const [email, setEmail] = useState(false);
   const [phone, setPhone] = useState(false);
+  const [otp, setOtp] = useState(false);
   const [profileData, setProfileData] = useState({});
   const [isUpdated, setIsUpdated] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const [success, setSuccess] = useState({});
 
   const [readonlyName, setReadonlyName] = useState(true);
   const [readonlyEmail, setReadonlyEmail] = useState(true);
@@ -116,6 +119,24 @@ function Profile() {
 
   }
 
+  const generateOTP = (event) => {
+    event.preventDefault();
+    var data = {
+      phone: phone
+    };
+    axios({
+      method: 'post',
+      url: '/api/sendotp',
+      data: data,
+    })
+    .then(response => {
+      setSuccess({otpSended:'Otp sended successfully!'});
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
@@ -129,6 +150,15 @@ function Profile() {
       : '';
       setName(value);
       break;
+
+      case 'otp': 
+      errors.otp = 
+      otp.length < 4
+      ? 'Otp required,must be atlest 4 digits long!'
+      : '';
+      setOtp(value);
+      break;
+
       case 'email': 
       errors.email = 
       validEmailRegex.test(value)
@@ -136,11 +166,22 @@ function Profile() {
       : 'Email is not valid!';
       setEmail(value);
       break;
+
       case 'phone': 
       errors.phone = 
       value.length < 10
       ? 'phone must be 10 characters long!'
       : '';
+
+      var mobPattern = /^(?:(?:\\+|0{0,2})91(\s*[\\-]\s*)?|[0]?)?[789]\d{9}$/;    
+      if (!mobPattern.test(value)) {    
+        errors.phone = "Invalid phone number.";  
+      }
+
+      if ((otp === '') || (!otp)) {  
+        errors.otp = "*Please Enter Otp (Generate Otp and enter here).";
+      }
+
       setPhone(value);
       break;
       default:
@@ -185,6 +226,79 @@ function Profile() {
     return formIsValid;
   }
 
+
+
+  const handlePhoneSubmit = (event) => {
+    let errors = {};
+    setSuccess({});
+    if (!phone) {    
+      errors.phone = "Phone number is required.";    
+      setErrors(errors);
+      return;
+    }    
+    else {    
+      var mobPattern = /^(?:(?:\\+|0{0,2})91(\s*[\\-]\s*)?|[0]?)?[789]\d{9}$/;    
+      if (!mobPattern.test(phone)) {    
+        errors.phone = "Invalid phone number.";  
+        setErrors(errors);
+        return;  
+      }    
+    }    
+
+    if ((otp === '') || (!otp)) {  
+      errors.otp = "*Please Enter Otp (Generate Otp and enter here).";
+      setErrors(errors);
+      return;
+    }
+
+    var data = {
+      phone: phone,
+      id: user.id,
+      otp: otp
+    };
+    axios({
+      method: 'post',
+      url: '/api/verifyMobileNo',
+      data: data,
+    })
+    .then(response => {
+      if ((response.data.message == 'success') || (response.data.message == 'Success') || (response.data.message =='Otp Verified Succesfully')) {
+        axios.get("/api/users/show/"+user.id).then(json => {
+          if (json.data) {
+            let userData = {
+              id: json.data.id,
+              name: json.data.name,
+              email: json.data.email,
+              gender: json.data.gender,
+              phone: json.data.phone,
+              role: json.data.role,
+            };
+            let appState = {
+              isLoggedIn: true,
+              user: userData
+            };
+            localStorage.setItem('appState', JSON.stringify(appState));
+          }
+        });
+
+        setIsUpdated(true);
+        setReadonlyName(true);
+        setReadonlyEmail(true);
+        setReadonlyPhone(true);
+
+        window.scrollTo(0, 0);
+      }else{
+        errors["otp"] = "*Otp not varified (Generate Otp and enter here).";
+      setErrors(errors);
+        return;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+      return;
+    });
+
+  }
 
 
   const handleSubmit = (event) => {
@@ -251,7 +365,7 @@ function Profile() {
     <div className="row">
     <div className="form-group col-sm-4">
     <input type="text" name="name" value={name} onChange={handleChange} placeholder="Enter Full Name" className="form-control" readOnly = {readonlyName}/>
-    <div className="errorMsg">{errors.name}</div>
+    <div style={{color:'red'}}>{errors.name}</div>
     </div>
     {!readonlyName ?
       <div className="form-group col-sm-4">
@@ -282,7 +396,7 @@ function Profile() {
       <div className="row">
       <div className="form-group col-sm-4">
       <input type="text" name="email" value={email} onChange={handleChange} readOnly={readonlyEmail} placeholder="Enter Email" className="form-control" />
-      <div className="errorMsg">{errors.email}</div>
+      <div style={{color:'red'}}>{errors.email}</div>
       </div>
       {!readonlyEmail ?
         <div className="form-group col-sm-4">
@@ -296,12 +410,24 @@ function Profile() {
         <div className="row">
         <div className="form-group col-sm-4">
         <input type="text" name="phone" value={phone} onChange={handleChange} readOnly={readonlyPhone} placeholder="Enter Phone" className="form-control" />
-        <div className="errorMsg">{errors.phone}</div>
+        <div style={{color:'red'}}>{errors.phone}</div>
+        <div style={{color:'green'}}>{success.otpSended}</div>
         </div>
         {!readonlyPhone ?
-          <div className="form-group col-sm-4">
-          <a onClick={handleSubmit} className="btn btn-primary">Save</a>
+          <>
+          <div className="form-group col-sm-2">
+            <a onClick={generateOTP} className="btn btn-default generateOTP">Generate OTP</a>
           </div>
+
+          <div className="form-group col-sm-2">
+            <input type="number" className="form-control"  onChange={handleChange} name="otp" placeholder="OTP" />
+          <div style={{color:'red'}}>{errors.otp}</div>
+          </div>
+
+          <div className="form-group col-sm-4">
+          <a onClick={handlePhoneSubmit} className="btn btn-primary">Save</a>
+          </div>
+          </>
           : ''}
           </div>
           </div>

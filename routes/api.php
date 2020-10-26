@@ -107,6 +107,7 @@ Route::post('users/insertPortfolioImages','UserController@insertPortfolio');
 
 Route::post('sendotp', 'LoginController@otp');
 Route::post('verifyotp', 'LoginController@verify');
+Route::post('verifyMobileNo', 'UserController@verifyMobileNo');
 
 /*customer address apis*/
 Route::post('save_address/{id}','AddressController@store');
