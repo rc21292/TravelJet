@@ -138,7 +138,7 @@ class Portfolio extends Component {
     return (
        <div className="transactionhistory portfollopage">
         {/* Page Heading */}
-        <h1>Portfollo</h1>
+        <h1>Portfolio</h1>
         <div className="portfollo informationform">
           <form>
             <div className="form-group col-sm-8">

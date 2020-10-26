@@ -34,7 +34,11 @@ function Sidebar(props) {
     });
 
     axios('/api/users/getCustomerProfile/'+userId).then(result=>{
+      if (result.data.data.profile) {
         setProfileData(result.data.data);
+      }else{
+        setProfileData({...profileData,profile:''});
+      }
       });
 
     axios.get('/api/countNotificationsByUserId/'+userId)
