@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 // use Illuminate\Support\Facades\Session;
 use App\User;
 use App\UserOtp;
+use App\UserProfile;
 use DB;
 use Session;
 
@@ -112,6 +113,12 @@ class LoginController extends Controller
     $user->role = 'customer';
     $user->password = bcrypt($request['password']);
     $user->save();
+    UserProfile::create([
+      'name' => $request->name,
+      'email' => $request->email,
+      'phone'=> $request->phone,
+      'user_id'=> $user->id,
+    ]);
     return $user->id;
   } 
 
