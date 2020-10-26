@@ -1063,7 +1063,7 @@ function Bookings({match}) {
                                           <tr>
                                             <td>1) First Part</td>
                                             <td> <i className="fa fa-inr" /> {quotationData.payment_first}</td>
-                                            <td> <b>Paid</b> <a href="#"><i className="fa fa-eye" /></a></td>
+                                            <td> <b>Paid</b></td>
                                           </tr>
                                            {
                                             quotationData.payments ?
@@ -1071,7 +1071,7 @@ function Bookings({match}) {
                                               return( <tr key={i}>
                                               <td>{i+2}) {i==0 && 'Second'} {i==1 && 'Third'} {i==2 && 'Fourth'} {i==3 && 'Fifth'} Part</td>
                                               <td> <i className="fa fa-inr" />{payments_data.payment}</td>
-                                              <td>{payments_data.status == 'paid' ? <b>Paid <a href="#"> <i className="fa fa-eye" /></a></b> : <b>Unpaid</b> }</td>
+                                              <td>{payments_data.status == 'paid' ? <b>Paid </b> : <b>Unpaid</b> }</td>
                                               </tr>
                                                 )
                                               })

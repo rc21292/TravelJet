@@ -33,7 +33,7 @@ class QueryController extends Controller
                      ->where('quotations.user_id',$id);
                      if ($request->has('search') && !empty($request->search)) {
                         $search = $request->search;
-                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%')->orWhere('bookings.id',$search);
                     }
                     $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
@@ -46,7 +46,7 @@ class QueryController extends Controller
                      ->where('quotations.user_id',$id);
                       if ($request->has('search') && !empty($request->search)) {
                         $search = $request->search;
-                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%')->orWhere('bookings.id',$search);
                     }
                     $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
@@ -59,7 +59,7 @@ class QueryController extends Controller
                      ->where('quotations.user_id',$id);
                       if ($request->has('search') && !empty($request->search)) {
                         $search = $request->search;
-                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%')->orWhere('bookings.id',$search);
                     }
                     $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);
@@ -72,7 +72,7 @@ class QueryController extends Controller
                      ->where('quotations.user_id',$id);
                       if ($request->has('search') && !empty($request->search)) {
                         $search = $request->search;
-                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%');
+                        $result_data->where('bookings.booking_name','LIKE', '%'.$search.'%')->orWhere('bookings.id',$search);
                     }
                     $result = $result_data->latest('bookings.created_at')
                      ->paginate(15);

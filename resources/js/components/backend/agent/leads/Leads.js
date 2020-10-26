@@ -16,6 +16,12 @@ function Leads(props) {
 
   const [quotationsData, setQuotationsData] = useState([]);  
   const [bookingsData, setBookingsData] = useState([]);  
+
+  const [isSeraching, setIsSeraching] = useState(false); 
+  const [isSeraching1, setIsSeraching1] = useState(false); 
+  const [isSeraching2, setIsSeraching2] = useState(false); 
+  const [isSeraching3, setIsSeraching3] = useState(false); 
+
   const [bookedsData, setBookedsData] = useState([]);  
   const [cancelledData, setCancelledData] = useState([]);  
   const [activePage, setActivePage] = useState(1);  
@@ -109,6 +115,7 @@ function Leads(props) {
 
     axios(`/api/queries/${user.id}?type=quotation&search=${searchByTitle}`)
     .then(result => {
+      setIsSeraching(true);
       setQuotationsData(result.data.data);  
       setItemsCountPerPage(result.data.per_page);  
       setTotalItemsCount(result.data.total);  
@@ -122,6 +129,7 @@ function Leads(props) {
 
     axios(`/api/queries/${user.id}?type=booking&search=${searchByTitle1}`)
     .then(result => {
+      setIsSeraching1(true);
       setBookingsData(result.data.data);  
       setItemsCountPerPage1(result.data.per_page);  
       setTotalItemsCount1(result.data.total);  
@@ -136,6 +144,7 @@ function Leads(props) {
 
     axios(`/api/queries/${user.id}?type=booked&search=${searchByTitle2}`)
     .then(result => {
+      setIsSeraching2(true);
       setBookedsData(result.data.data);  
       setItemsCountPerPage2(result.data.per_page);  
       setTotalItemsCount2(result.data.total);  
@@ -146,9 +155,9 @@ function Leads(props) {
     });
   };
   const findBySearchTitle3 = () => {
-
     axios(`/api/queries/${user.id}?type=cancel&search=${searchByTitle3}`)
     .then(result => {
+      setIsSeraching3(true);
       setCancelledData(result.data.data);  
       setItemsCountPerPage3(result.data.per_page);  
       setTotalItemsCount3(result.data.total);  
@@ -162,7 +171,6 @@ function Leads(props) {
 
   const handlePageChange = (pageNumber) => {
     axios.get('/api/queries/'+user.id+'?type=quotation'+'&page='+pageNumber)
-
     .then(result=>{
       setQuotationsData(result.data.data);
       setItemsCountPerPage(result.data.per_page);  
@@ -173,7 +181,6 @@ function Leads(props) {
 
    const handlePageChange1 = (pageNumber) => {
     axios.get('/api/queries/'+user.id+'?type=booking'+'&page='+pageNumber)
-
     .then(result=>{
       setBookingsData(result.data.data);
       setItemsCountPerPage1(result.data.per_page);  
@@ -184,7 +191,6 @@ function Leads(props) {
 
    const handlePageChange2 = (pageNumber) => {
     axios.get('/api/queries/'+user.id+'?type=booked'+'&page='+pageNumber)
-
     .then(result=>{
       setBookedsData(result.data.data);
       setItemsCountPerPage2(result.data.per_page);  
@@ -195,7 +201,6 @@ function Leads(props) {
 
   const handlePageChange3 = (pageNumber) => {
     axios.get('/api/queries/'+user.id+'?type=cancel'+'&page='+pageNumber)
-
     .then(result=>{
       setBookedsData(result.data.data);
       setItemsCountPerPage3(result.data.per_page);  
@@ -234,6 +239,9 @@ function Leads(props) {
                       </span>
                     </div>
                   </div>
+                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                    {isSeraching ? 'Search Results : ' : ''}
+                  </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
                     <table className="table table-bordered leadstatus">
@@ -264,8 +272,9 @@ function Leads(props) {
                           <td><a href={'/quotations/'+quotation.id} className="btn btn-primary"><i className="fa fa-eye" /> View</a></td>
                         </tr>
                         )
-                              })
-                            }
+                      })
+                      }
+                      {quotationsData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>Search result not Found</td></tr>}
                       </tbody>
                     </table>
                   </div>
@@ -301,6 +310,9 @@ function Leads(props) {
                       </span>
                     </div>
                   </div>
+                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                    {isSeraching1 ? 'Search Results : ' : ''}
+                  </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
                     <table className="table table-bordered leadstatus">
@@ -333,6 +345,7 @@ function Leads(props) {
                             )
                           })
                         }
+                        {bookingsData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>Search result not Found</td></tr>}
                       </tbody>
                     </table>
                   </div>
@@ -367,6 +380,9 @@ function Leads(props) {
                         <a onClick={findBySearchTitle2 } className="btn btn-primary"><i className="fa fa-search" /></a>
                       </span>
                     </div>
+                  </div>                  
+                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                    {isSeraching2 ? 'Search Results : ' : ''}
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
@@ -400,6 +416,7 @@ function Leads(props) {
                             )
                           })
                         }
+                        {bookedsData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>Search result not Found</td></tr>}
                       </tbody>
                     </table>
                   </div>
@@ -434,6 +451,9 @@ function Leads(props) {
                         <a onClick={findBySearchTitle3 } className="btn btn-primary"><i className="fa fa-search" /></a>
                       </span>
                     </div>
+                  </div>                  
+                  <div className="col-sm-12" style={{ marginBootom:'7px' }}>
+                    {isSeraching3 ? 'Search Results : ' : ''}
                   </div>
                   <div className="clearfix" />
                   <div className="col-sm-12">
@@ -467,6 +487,7 @@ function Leads(props) {
                             )
                           })
                         }
+                        {cancelledData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>Search result not Found</td></tr>}
                       </tbody>
                     </table>
                   </div>
