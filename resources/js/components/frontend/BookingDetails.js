@@ -157,7 +157,7 @@ function BookingDetails({match}) {
     }
 
     loadScript(
-      `https://maps.googleapis.com/maps/api/js?key=AIzaSyC5rAQjCpCTECHjSl7fSxVuvSy4TFbXvwE&libraries=places`,
+      `https://maps.googleapis.com/maps/api/js?key=AIzaSyDVR2fXPoEVoCNLIqagX5GQzna3feez4lI&libraries=places`,
       () => handleScriptLoad(setQuery1, setQuery, autoCompleteRef1, autoCompleteRef)
       );   
   }, []);  
