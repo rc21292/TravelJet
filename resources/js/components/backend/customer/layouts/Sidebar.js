@@ -41,7 +41,7 @@ function Sidebar(props) {
       }
       });
 
-    axios.get('/api/countNotificationsByUserId/'+userId)
+    axios.get('/api/countNotificationsByCustomerId/'+userId)
     .then(result=>{
       setCountNotice(result.data)
     });

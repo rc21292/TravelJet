@@ -455,7 +455,16 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'data' => $agent_profile,
-            'message' => 'Bid Edited successfully!'
+        ], 201);
+    }
+
+    public function getAgentProfileByUserId($id)
+    {
+        return $agent_profile = AgentProfile::where('user_id',$id)->select('profile')->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => $agent_profile,
         ], 201);
     }
 
@@ -466,7 +475,6 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'data' => $user_profile,
-            'message' => 'Bid Edited successfully!'
         ], 201);
     }
 

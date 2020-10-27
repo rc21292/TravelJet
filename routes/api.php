@@ -79,7 +79,8 @@ Route::get('quotations/checkQuotaions/{id}','QuotationController@checkQuotaions'
 Route::get('quotations/getQuotationByBookingUserId/{id}/{user_id}','QuotationController@getQuotationByBookingUserId');
 Route::get('quotations/getQuotationPayment/{id}/{user_id}','QuotationController@getQuotationPayment');
 Route::delete('queries/delete/{id}','Api\QueryController@destroy');
-Route::get('countNotificationsByUserId/{id}','NoticeController@countNotificationsByUserId');
+Route::get('countNotificationsByCustomerId/{id}','NoticeController@countNotificationsByCustomerId');
+Route::get('countNotificationsByAgentId/{id}','NoticeController@countNotificationsByAgentId');
 
 /*users apis*/
 Route::delete('users/deletePortfolioImage/{id}','UserController@deletePortfolioImage');
@@ -88,6 +89,7 @@ Route::get('users/getCancelReasons','UserController@getCancelReasons');
 /*agent profiles apis*/
 Route::get('users/getAgentProfile/{id}','UserController@getAgentProfile');
 Route::get('users/getCustomerProfile/{id}','UserController@getCustomerProfile');
+Route::get('users/getAgentProfileByUserId/{id}','UserController@getAgentProfileByUserId');
 Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 
 Route::post('users/update/{id}','UserController@update');

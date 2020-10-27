@@ -497,90 +497,12 @@ const handleRemovePaymentFields = (index, event) => {
                                     </div>
                                     <div className="book-locationPanel">
                                       <div className="selectAddress">
-                                        <select className="select-state" value={quotationDetails.pickup_state} disabled>
-                                          <option value="Andhra Pradesh">Delhi NCR</option>
-                                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                          <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                          <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                          <option value="Assam">Assam</option>
-                                          <option value="Bihar">Bihar</option>
-                                          <option value="Chandigarh">Chandigarh</option>
-                                          <option value="Chhattisgarh">Chhattisgarh</option>
-                                          <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
-                                          <option value="Daman and Diu">Daman and Diu</option>
-                                          <option value="Delhi NCR">Delhi NCR</option>
-                                          <option value="Lakshadweep">Lakshadweep</option>
-                                          <option value="Puducherry">Puducherry</option>
-                                          <option value="Goa">Goa</option>
-                                          <option value="Gujarat">Gujarat</option>
-                                          <option value="Haryana">Haryana</option>
-                                          <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                          <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                          <option value="Jharkhand">Jharkhand</option>
-                                          <option value="Karnataka">Karnataka</option>
-                                          <option value="Kerala">Kerala</option>
-                                          <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                          <option value="Maharashtra">Maharashtra</option>
-                                          <option value="Manipur">Manipur</option>
-                                          <option value="Meghalaya">Meghalaya</option>
-                                          <option value="Mizoram">Mizoram</option>
-                                          <option value="Nagaland">Nagaland</option>
-                                          <option value="Odisha">Odisha</option>
-                                          <option value="Punjab">Punjab</option>
-                                          <option value="Rajasthan">Rajasthan</option>
-                                          <option value="Sikkim">Sikkim</option>
-                                          <option value="Tamil Nadu">Tamil Nadu</option>
-                                          <option value="Telangana">Telangana</option>
-                                          <option value="Tripura">Tripura</option>
-                                          <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                          <option value="Uttarakhand">Uttarakhand</option>
-                                          <option value="West Bengal">West Bengal</option>
-                                        </select>
-                                        <input type="text" name="searchArea" value={quotationDetails.pickup_location} placeholder="Pandav Nagar" className="startpoint form-control" disabled />
+                                        <input type="text" name="searchArea" value={quotationDetails.pickup_location} placeholder="Pandav Nagar" className="form-control" disabled />
                                       </div>
                                     </div>
                                     <div className="editpickup" style={(!editData.pickup) ? {display:'none'} : {display:'block'} }>
                                       <div className="book-locationPanel">
                                         <div className="selectAddress">
-                                          <select className="select-state" value={quotationDetails.pickup_state} name="pickup_state" onChange={handleInputsChanges}>
-                                            <option value="Andhra Pradesh">Delhi NCR</option>
-                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                            <option value="Assam">Assam</option>
-                                            <option value="Bihar">Bihar</option>
-                                            <option value="Chandigarh">Chandigarh</option>
-                                            <option value="Chhattisgarh">Chhattisgarh</option>
-                                            <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
-                                            <option value="Daman and Diu">Daman and Diu</option>
-                                            <option value="Delhi NCR">Delhi NCR</option>
-                                            <option value="Lakshadweep">Lakshadweep</option>
-                                            <option value="Puducherry">Puducherry</option>
-                                            <option value="Goa">Goa</option>
-                                            <option value="Gujarat">Gujarat</option>
-                                            <option value="Haryana">Haryana</option>
-                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                            <option value="Jharkhand">Jharkhand</option>
-                                            <option value="Karnataka">Karnataka</option>
-                                            <option value="Kerala">Kerala</option>
-                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                            <option value="Maharashtra">Maharashtra</option>
-                                            <option value="Manipur">Manipur</option>
-                                            <option value="Meghalaya">Meghalaya</option>
-                                            <option value="Mizoram">Mizoram</option>
-                                            <option value="Nagaland">Nagaland</option>
-                                            <option value="Odisha">Odisha</option>
-                                            <option value="Punjab">Punjab</option>
-                                            <option value="Rajasthan">Rajasthan</option>
-                                            <option value="Sikkim">Sikkim</option>
-                                            <option value="Tamil Nadu">Tamil Nadu</option>
-                                            <option value="Telangana">Telangana</option>
-                                            <option value="Tripura">Tripura</option>
-                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                            <option value="Uttarakhand">Uttarakhand</option>
-                                            <option value="West Bengal">West Bengal</option>
-                                          </select>
                                           <input type="text" 
                                           onChange={event => setQuery(event.target.value)}
                                           value={query}
@@ -588,7 +510,7 @@ const handleRemovePaymentFields = (index, event) => {
                                           ref={autoCompleteRef} 
                                           name="pickup_location" 
                                           placeholder="Starting point.." 
-                                          className="startpoint form-control" 
+                                          className="form-control" 
                                         />
                                         </div>
                                       </div>
@@ -602,95 +524,17 @@ const handleRemovePaymentFields = (index, event) => {
                                     </div>
                                     <div className="book-destinationPanel">
                                       <div className="selectAddress">
-                                        <select className="select-state" value={quotationDetails.destination_state} disabled>
-                                          <option value="Andhra Pradesh">Manali</option>
-                                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                          <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                          <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                          <option value="Assam">Assam</option>
-                                          <option value="Bihar">Bihar</option>
-                                          <option value="Chandigarh">Chandigarh</option>
-                                          <option value="Chhattisgarh">Chhattisgarh</option>
-                                          <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
-                                          <option value="Daman and Diu">Daman and Diu</option>
-                                          <option value="Delhi NCR">Delhi NCR</option>
-                                          <option value="Lakshadweep">Lakshadweep</option>
-                                          <option value="Puducherry">Puducherry</option>
-                                          <option value="Goa">Goa</option>
-                                          <option value="Gujarat">Gujarat</option>
-                                          <option value="Haryana">Haryana</option>
-                                          <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                          <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                          <option value="Jharkhand">Jharkhand</option>
-                                          <option value="Karnataka">Karnataka</option>
-                                          <option value="Kerala">Kerala</option>
-                                          <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                          <option value="Maharashtra">Maharashtra</option>
-                                          <option value="Manipur">Manipur</option>
-                                          <option value="Meghalaya">Meghalaya</option>
-                                          <option value="Mizoram">Mizoram</option>
-                                          <option value="Nagaland">Nagaland</option>
-                                          <option value="Odisha">Odisha</option>
-                                          <option value="Punjab">Punjab</option>
-                                          <option value="Rajasthan">Rajasthan</option>
-                                          <option value="Sikkim">Sikkim</option>
-                                          <option value="Tamil Nadu">Tamil Nadu</option>
-                                          <option value="Telangana">Telangana</option>
-                                          <option value="Tripura">Tripura</option>
-                                          <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                          <option value="Uttarakhand">Uttarakhand</option>
-                                          <option value="West Bengal">West Bengal</option>
-                                        </select>
-                                        <input type="text" name="searchArea" value={quotationDetails.drop_location} placeholder="Manali Bus Stand" className="startpoint form-control" disabled />
+                                        <input type="text" name="searchArea" value={quotationDetails.drop_location} placeholder="Manali Bus Stand" className="form-control" disabled />
                                       </div>
                                     </div>
                                     <div className="editdrp" style={(!editData.drop) ? {display:'none'} : {display:'block'} }>
                                       <div className="book-destinationPanel">
                                         <div className="selectAddress">
-                                          <select className="select-state" value={quotationDetails.destination_state} name="destination_state" onChange={handleInputsChanges}>
-                                            <option value="Andhra Pradesh">Manali</option>
-                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                            <option value="Assam">Assam</option>
-                                            <option value="Bihar">Bihar</option>
-                                            <option value="Chandigarh">Chandigarh</option>
-                                            <option value="Chhattisgarh">Chhattisgarh</option>
-                                            <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
-                                            <option value="Daman and Diu">Daman and Diu</option>
-                                            <option value="Delhi NCR">Delhi NCR</option>
-                                            <option value="Lakshadweep">Lakshadweep</option>
-                                            <option value="Puducherry">Puducherry</option>
-                                            <option value="Goa">Goa</option>
-                                            <option value="Gujarat">Gujarat</option>
-                                            <option value="Haryana">Haryana</option>
-                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                            <option value="Jharkhand">Jharkhand</option>
-                                            <option value="Karnataka">Karnataka</option>
-                                            <option value="Kerala">Kerala</option>
-                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                            <option value="Maharashtra">Maharashtra</option>
-                                            <option value="Manipur">Manipur</option>
-                                            <option value="Meghalaya">Meghalaya</option>
-                                            <option value="Mizoram">Mizoram</option>
-                                            <option value="Nagaland">Nagaland</option>
-                                            <option value="Odisha">Odisha</option>
-                                            <option value="Punjab">Punjab</option>
-                                            <option value="Rajasthan">Rajasthan</option>
-                                            <option value="Sikkim">Sikkim</option>
-                                            <option value="Tamil Nadu">Tamil Nadu</option>
-                                            <option value="Telangana">Telangana</option>
-                                            <option value="Tripura">Tripura</option>
-                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                            <option value="Uttarakhand">Uttarakhand</option>
-                                            <option value="West Bengal">West Bengal</option>
-                                          </select>
                                           <input
                                           ref={autoCompleteRef1}
                                           onChange={event => setQuery1(event.target.value)}
                                           value={query1}
-                                          className="form-control startpoint"
+                                          className="form-control"
                                           name="drop_location"
                                           onTouchEnd={(event) => handleChange(event.target.value)}
                                           placeholder="Droping point.."

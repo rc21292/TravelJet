@@ -592,6 +592,12 @@ function QuotationDetaills({id}) {
                             <td></td>
                             <td></td>
                           </tr>
+                          <tr>
+                            <td>Notes</td>
+                            <td>{quotation1.notes} </td>
+                            <td></td>
+                            <td></td>
+                          </tr>
                         </tbody>
                       </table>
                       </div>

@@ -69,7 +69,7 @@ class Index extends Component {
                   <Header user_id={user_id}/> 
                   <div className="container">
                         <div id="wrapper">
-                              <Sidebar/>
+                              <Sidebar user_id={user_id}/>
                               <div id="content-wrapper">
                                     <div id="content">
                                           <div className="container-fluid">
