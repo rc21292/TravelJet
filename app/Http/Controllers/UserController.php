@@ -742,6 +742,53 @@ class UserController extends Controller
         return response()->json($filename);
     }
 
+    public function deleteAgentImages(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        $user_profile = AgentProfile::select('id')->where('user_id', $id)->first();
+        if (!empty($user_profile->id)) {
+            $profile = AgentProfile::find($user_profile->id);
+        } else {
+            $profile = $this;
+        }
+
+        $old_path = Helper::PublicPath() . '/uploads/users/temp';
+        if ($request['type'] == 'profile') {
+            $files = glob(Helper::PublicPath() . '/uploads/users/'.$profile->user_id.'/'.$request->type.'/*');
+            foreach($files as $file){
+                if(is_file($file))
+                    unlink($file);
+            }
+            $profile->profile = '';
+        } else if ($request['type'] == 'passport_size_photo') {
+            $files = glob(Helper::PublicPath() . '/uploads/users/'.$profile->user_id.'/'.$request->type.'/*');
+            foreach($files as $file){
+                if(is_file($file))
+                    unlink($file);
+            }
+            $profile->passport_size_photo = '';
+        } else if ($request['type'] == 'signature_photo') {
+            $files = glob(Helper::PublicPath() . '/uploads/users/'.$profile->user_id.'/'.$request->type.'/*');
+            foreach($files as $file){
+                if(is_file($file))
+                    unlink($file);
+            }
+            $profile->signature_photo = '';
+        } else if ($request['type'] == 'business_logo') {
+            $files = glob(Helper::PublicPath() . '/uploads/users/'.$profile->user_id.'/'.$request->type.'/*');
+            foreach($files as $file){
+                if(is_file($file))
+                    unlink($file);
+            }
+            $profile->business_logo = '';
+        }
+
+        $profile->save();
+        return response()->json('deleted');
+    }
+
+
 
     public function updateAgentProfile(Request $request, $id)
     {

@@ -65,10 +65,10 @@ function Payouts(props) {
   const requestPayout = (event) => { 
 
     if (saveData == '') {
-      setError('please Enter Amount!');
+      setError('Please Enter Amount!');
       return false;
     }else if (saveData > balance) {
-      setError('please enter Amount less than or equal to the Wallet Balance!');
+      setError('Please enter Amount less than or equal to the Wallet Balance!');
       return false;
     }else{
        setError('');

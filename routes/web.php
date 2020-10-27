@@ -31,6 +31,7 @@ Route::get('/DriveWithUs', function () { return view('welcome'); });
 Route::get('/HowitWorks', function () { return view('welcome'); });
 Route::get('/browse-bookings', function () { return view('welcome'); });
 Route::get('/booking-details/{id}', function () { return view('welcome'); });
+Route::get('/download-quote/{id}', function () { return view('welcome'); });
 Route::get('/customer-booking/{id}', function () { return view('welcome'); });
 Route::get('/cancelled-booking/{id}', function () { return view('welcome'); });
 Route::get('/profile/{id}', function () { return view('welcome'); });

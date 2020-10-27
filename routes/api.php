@@ -94,6 +94,7 @@ Route::post('users/saveAgentProfile/{id}','UserController@saveAgentProfile');
 
 Route::post('users/update/{id}','UserController@update');
 Route::post('users/updateAgentProfile/{id}','UserController@updateAgentProfile');
+Route::post('users/deleteAgentImages/{id}','UserController@deleteAgentImages');
 Route::post('users/updateCustomerProfile/{id}','UserController@updateCustomerProfile');
 Route::get('users/getbalance/{id}','UserController@balance');
 Route::post('users/save_razorpay_details','UserController@save_razorpay_details');

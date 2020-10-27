@@ -346,7 +346,7 @@ function QuotationDetaills({id}) {
                   return (
           <div key={l} style={(voucher_id == l ) ? {display:'block'} : {display:'none'} }>
            
-            <div className="wt-rightarea"> <a href="#"><span>Download Quote{quotation3.id}</span></a>
+            <div className="wt-rightarea"> <a href={"/download-quote/"+quotation3.id}><span>Download Quote</span></a>
               <i className="fa fa-inr" /> {quotation3.total_payment}/- Total <span>Exclusive of Convenience Fee</span>
             </div>
             </div>

@@ -102,6 +102,19 @@ function Profile() {
     history.push('/agent/change-password')   
   };  
 
+
+  const handleDeleteClick = (type) => {  
+    if(window.confirm('Are you sure you want to delete ?')) {
+      const query = {
+        type : type,
+      }
+      axios.post('/api/users/deleteAgentImages/'+user.id,query).then(result=>
+      {
+        setProfileData({...profileData, [type] : ''});
+      });
+    }
+  };  
+
   const saveProfile = (event) => {
     event.preventDefault();
     var data = new FormData();
@@ -200,7 +213,7 @@ function Profile() {
                 <div className="form-row">
                   <div className="form-group col-md-3">
                     <div className="uploadprofile">
-                      <label htmlFor="inputname3" className="col-form-label">Upload Profile Photo</label>
+                      <label htmlFor="inputname3" className="col-form-label">Upload Profile Photo <a onClick={() => handleDeleteClick('profile')} className="change"><i class="fa fa-trash" aria-hidden="true"></i></a></label>
                       <div className="upload-field2">
                         <input type="text" className="form-control" />
                         <ul className="list-inline upload-icon2">
@@ -217,7 +230,7 @@ function Profile() {
                   </div>
                   <div className="form-group col-md-9">
                     <label htmlFor="inputname3" className="col-form-label">About us</label>
-                    <textarea onChange={handleChange} name="about" value={((profileData.about == 'null' || profileData.about == null) ? '' : profileData.about)} rows={4} cols={50} placeholder="About us" className="form-control" />
+                    <textarea onChange={handleChange} name="about" value={((profileData.about == 'null' || profileData.about == null) ? '' : profileData.about)} rows={5} cols={50} placeholder="About us" className="form-control" />
                   </div>
                 </div>
                 <div className="form-row">
@@ -329,7 +342,7 @@ function Profile() {
                     <div className="col-sm-5">
                       <div className="row">
                         <div className="col-md-6">
-                          <label htmlFor="inputname3" className="col-form-label">Passport Photo</label>
+                          <label htmlFor="inputname3" className="col-form-label">Passport Photo <a onClick={() => handleDeleteClick('passport_size_photo')} className="change"><i class="fa fa-trash" aria-hidden="true"></i></a></label>
                           <div className="upload-field2">
                             <input type="text" className="form-control" />
                             <ul className="list-inline upload-icon2">
@@ -344,7 +357,7 @@ function Profile() {
                           </div>
                         </div>
                         <div className="col-md-6">
-                          <label htmlFor="inputname3" className="col-form-label">Upload Signature</label>
+                          <label htmlFor="inputname3" className="col-form-label">Upload Signature <a onClick={() => handleDeleteClick('signature_photo')}> <i class="fa fa-trash" aria-hidden="true"></i></a></label>
                           <div className="upload-field2">
                             <input type="text" className="form-control" />
                             <ul className="list-inline upload-icon2">
@@ -580,7 +593,7 @@ function Profile() {
                     </div>
                     <div className="row col-sm-12">
                     <div className="col-md-3">
-                          <label htmlFor="inputname3" className="col-form-label">Business Logo</label>
+                          <label htmlFor="inputname3" className="col-form-label">Business Logo <a onClick={() => handleDeleteClick('business_logo')} className="change"><i class="fa fa-trash" aria-hidden="true"></i></a></label>
                           <div className="upload-field2">
                             <input type="text" className="form-control" />
                             <ul className="list-inline upload-icon2">
