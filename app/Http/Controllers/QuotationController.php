@@ -198,16 +198,16 @@ class QuotationController extends Controller
         UserTransaction::create(['user_id' => $booking->user_id, 'receiver_id' =>  $quotation->user_id, 'description' => $pay_message_agent , 'type' => 'deposit' , 'amount' => $request->total_amount]);
 
         /*agent to admin commission*/
-        $admin_am = ((($quotation->total_payment)*10)/100);
+        $admin_am = ((($quotation->payment)*15)/100);
         $user_admin = User::find(1)->first();
         $user_admin->deposit($admin_am);
         $pay_message_admin = "Recived Rs. $admin_am from  <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a> as commission";
 
-        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($request->total_amount)*10)/100)]);    
+        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => 1, 'description' => $pay_message_admin , 'type' => 'deposit' , 'amount' => ((($quotation->payment)*15)/100)]);    
 
         /*notice to admin for commission*/    
         $total_cost = $request->total_amount;
-        $commision = ((($request->total_amount)*10)/100);
+        $commision = ((($quotation->payment)*15)/100);
 
         $message = "Commision Rs. $commision Recived from <a href='/profile/".$user_agent->id."'> ".$user_agent->name." </a> <span> for booking </span> <a href='/bookings/".$quotation->booking_id."'>".$booking->booking_name."</a>";
 
@@ -218,10 +218,10 @@ class QuotationController extends Controller
         /*end notice to admin for commission*/    
 
         /*commission from agent to admin*/
-        $user_agent->withdraw(((($quotation->total_payment)*10)/100));
+        $user_agent->withdraw(((($quotation->payment)*15)/100));
         
         $pay_message_agent_admin = "Paid Rs. $admin_am commision to Travel Jet for booking <a href='/bookings/". $quotation->booking_id."'>".$booking->booking_name."</a>";
-        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($quotation->total_payment)*10)/100)]);   
+        UserTransaction::create(['user_id' => $quotation->user_id, 'receiver_id' => $quotation->user_id, 'description' => $pay_message_agent_admin , 'type' => 'withdraw' , 'amount' => ((($quotation->payment)*15)/100)]);   
 
         $message_tra = "Paid for ".$booking->booking_name;
         WalletTransaction::create(['user_id' => $booking->user_id, 'receiver_id' => $quotation->user_id, 'booking_id' => $quotation->booking_id, 'transaction_id' => $request->payment_id, 'booking_name' => $booking->booking_name, 'amount' => $request->total_amount , 'status' => 1 , 'type' => 'withdraw', 'description' => $message_tra, 'created_at' => \Carbon\Carbon::now()]);

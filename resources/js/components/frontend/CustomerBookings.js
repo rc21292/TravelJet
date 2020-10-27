@@ -54,8 +54,8 @@ function CustomerBookings({match}) {
       const result2 = await axios('/api/quotations/getQuotationByBookingId/'+match.params.id+'?status=awarded');  
       setQuotationData(result2.data);  
       let pay = result2.data.payment;
-      setPayment_sc(((parseInt(pay)*5)/100));  
-      setPayment_gst(((parseInt(pay)*10)/100));  
+      setPayment_sc(((parseInt(pay)*10)/100));  
+      setPayment_gst(((parseInt(pay)*5)/100));  
 
         axios.get('/api/users/show/'+result2.data.user_id)
         .then(response=>{

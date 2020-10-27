@@ -45,7 +45,7 @@ const [csvData, setCsvData] = useState([]);
         setUser(AppState.user);
          axios('/api/transaction_history/'+AppState.user.id).then(result=>{
       setBookingData(result.data.user_transactions.data);  
-      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
+      setCsvReport({...csvReport,data:result.data.user_transaction_data});  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setFromCount(result.data.user_transactions.from);  
@@ -62,7 +62,7 @@ const [csvData, setCsvData] = useState([]);
   axios.get('/api/transaction_history/'+user.id+'?transation_type='+searchTransactionType+'&from_date='+searchDateFrom+'&to_date='+searchDateTo+'&page='+pageNumber)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
-     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
+     setCsvReport({...csvReport,data:result.data.user_transaction_data}); 
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
@@ -83,9 +83,6 @@ const [csvData, setCsvData] = useState([]);
       done();
     });
   }
-
-console.log(csvData);
-console.log(csvReport);
 
 const onChangeSearchTransactionType = e => {
     const searchTransactionType = e.target.value;
@@ -109,7 +106,7 @@ const onChangeSearchTransactionType = e => {
     axios.get('/api/transaction_history/'+user.id)
   .then(result=>{
      setBookingData(result.data.user_transactions.data);  
-     setCsvReport({...csvReport,data:result.data.user_transactions.data}); 
+     setCsvReport({...csvReport,data:result.data.user_transaction_data}); 
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);
@@ -125,7 +122,7 @@ const onChangeSearchTransactionType = e => {
     axios(`/api/transaction_history/${user.id}?transation_type=${searchTransactionType}&from_date=${searchDateFrom}&to_date=${searchDateTo}`)
     .then(result => {
       setBookingData(result.data.user_transactions.data); 
-      setCsvReport({...csvReport,data:result.data.user_transactions.data});  
+      setCsvReport({...csvReport,data:result.data.user_transaction_data});  
       setItemsCountPerPage(result.data.user_transactions.per_page);  
       setTotalItemsCount(result.data.user_transactions.total);  
       setActivePage(result.data.user_transactions.current_page);

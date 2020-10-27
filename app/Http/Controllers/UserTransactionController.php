@@ -70,8 +70,11 @@ class UserTransactionController extends Controller
             $to_date = date('Y-m-d', strtotime($request->to_date));
             $user_transaction_s->where('created_at','LIKE', '%'.$to_date.'%');
         }
+        $user_transaction_data = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->get();
 
-        $user_transactions = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->paginate(10);
+        $user_transactions = $user_transaction_s->select('user_transactions.*', DB::raw("DATE_FORMAT(user_transactions.created_at, '%d-%m-%Y') as created_on"))->paginate(8);
+
+
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         
@@ -94,9 +97,18 @@ class UserTransactionController extends Controller
 
         }
 
+        foreach ($user_transaction_data as $key => $value) {
+
+            if ($value->description) {
+                $user_transaction_data[$key]['description_data'] =strip_tags($value->description);
+            }                 
+
+        }
+
         return response()->json([
             'success' => true,
             'user_transactions' => $user_transactions,
+            'user_transaction_data' => $user_transaction_data,
             'transation_type' => $transation_type,
             'from_date' => $from_date,
             'to_date' => $to_date,

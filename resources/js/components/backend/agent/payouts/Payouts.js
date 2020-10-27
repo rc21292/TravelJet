@@ -62,10 +62,13 @@ function Payouts(props) {
     setSaveData(event.target.value);
   }
 
-  const requestPayout = (event) => {  
+  const requestPayout = (event) => { 
 
     if (saveData == '') {
       setError('please Enter Amount!');
+      return false;
+    }else if (saveData > balance) {
+      setError('please enter Amount less than or equal to the Wallet Balance!');
       return false;
     }else{
        setError('');
@@ -154,6 +157,7 @@ function Payouts(props) {
                   </tr>  
                   })
                 }
+                {payoutsData.length > 0 ? '' :<tr><td colSpan={7} style={{ color:'red',textAlign:'center'}}>There are no payouts in the list.</td></tr>}
               </tbody>
             </table>
           </div>

@@ -112,8 +112,8 @@ function Bookings({match}) {
       const result2 = axios.get('/api/quotations/getQuotationByBookingId/'+match.params.id+'?status=awarded').then((result2) => {   
       setQuotationData(result2.data);  
       let pay = result2.data.payment;
-      setPayment_sc(((parseInt(pay)*5)/100));  
-      setPayment_gst(((parseInt(pay)*10)/100));  
+      setPayment_sc(((parseInt(pay)*10)/100));  
+      setPayment_gst(((parseInt(pay)*5)/100));  
     });
 
     const GetData = async () => { 

@@ -28,7 +28,7 @@ function Sidebar() {
 <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
 <div className="bg-white py-2 collapse-inner rounded">
 <a className="collapse-item" href="/agent/personal-information">Profile Information</a>
-<a className="collapse-item" href="/agent/portfolio">portfolio</a>
+<a className="collapse-item" href="/agent/portfolio">Portfolio</a>
 </div>
 </div>
 </li>
