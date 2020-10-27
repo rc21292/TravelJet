@@ -134,6 +134,26 @@ class QuotationController extends Controller
         ], 200);
     }
 
+
+    public function getPaymentStatus(Request $request, $id)
+    {
+        $result = Booking::
+            join('quotations', 'bookings.id' ,'quotations.booking_id')
+            ->select('quotations.payments_status')
+            ->where('quotations.id',$id)->where('quotations.status','booked')
+            ->first();
+            $status = 'paid';
+            foreach (json_decode($result->payments_status) as $key => $value) {
+                if ($value == 'unpaid') {
+                   $status = 'unpaid';
+                   break;
+                }else{
+                    continue;
+                }
+            }
+            return $status;
+    }
+
     public function awardBooking(Request $request, $id)
     {
         DB::table('quotations')

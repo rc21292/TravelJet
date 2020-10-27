@@ -175,7 +175,7 @@ function Booked({match}) {
                               </div>
                               <div className="bookeddetail conformbooked">
                                 <ul className="list-unstyled">
-                                    <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">{paymentStatus?'paid':'unpaid'}</div></span></li>
+                                    <li><span><div className="oneway"> {bookingData.booking_type}</div><div className="paiddiv">{paymentStatus}</div></span></li>
                                   <li><span><div className="bktitle">Booking Title:  {bookingData.booking_name}</div></span></li>
                                   <li><span><p style={{ width:'25%'}}>Pickup Location: </p><strong style={{ color: '#222' }}>{bookingData.from_places}</strong></span></li>
                                   <li><span><p style={{ width:'25%'}}>Drop Location: </p><strong style={{ color: '#222' }}>{bookingData.to_places}</strong></span></li>

@@ -190,6 +190,18 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    function getAgentPortfolio($id)
+    {
+        $user = DB::table('profile_portfolios')->where('user_id',$id)->latest()->get();
+        return response()->json($user);
+    }
+
+    public function showPortfolio($id)
+    {
+         $user = DB::table('profile_portfolios')->where('id',$id)->first();
+        return response()->json($user);
+    }
+
     function getCancelReasons()
     {
         $user = DB::table('cancel_reasons')->latest()->get();
@@ -456,6 +468,42 @@ class UserController extends Controller
             'data' => $user_profile,
             'message' => 'Bid Edited successfully!'
         ], 201);
+    }
+
+
+    public function updatePortfolioImages(Request $request)
+    {
+        if (!empty($request->image)){
+        $path = Helper::PublicPath() . '/uploads/users/portfolios/'.$request['user_id'];
+            $profile_image = $request['image'];
+            $image_size = array(
+                'medium' => array(
+                    'width' => 700,
+                    'height' => 600,
+                ),              
+            );
+            $image_name = time().''.$profile_image->getClientOriginalName();
+            Helper::uploadTempImageWithSize($path, $profile_image, $image_name, $image_size);
+            DB::table('profile_portfolios')->where('id',$request->id)->update(
+                [
+                    'title' => $request->title,
+                    'image' => $image_name,
+                    'detail' => $request->detail,
+                    "created_at" => \Carbon\Carbon::now(), 
+                    'updated_at' => \Carbon\Carbon::now()
+                ]
+            );
+        }else{
+            DB::table('profile_portfolios')->where('id',$request->id)->update(
+                [
+                    'title' => $request->title,
+                    'detail' => $request->detail,
+                    "created_at" => \Carbon\Carbon::now(), 
+                    'updated_at' => \Carbon\Carbon::now()
+                ]
+            );
+        }
+        return 'Success';
     }
 
 
@@ -808,5 +856,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function deletePortfolio($id)
+    {
+         DB::table('profile_portfolios')->where('id', $id)->delete();
     }
 }

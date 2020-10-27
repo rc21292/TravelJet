@@ -100,11 +100,15 @@ Route::get('users/agenProfile/{id}','UserController@agenProfile');
 Route::get('users/countSoldTrips/{id}','UserController@countSoldTrips');
 Route::get('users/getprofile/{id}','UserController@getProfile');
 Route::get('users/getProfilePortfolio/{id}','UserController@getProfilePortfolio');
+Route::get('users/getAgentPortfolio/{id}','UserController@getAgentPortfolio');
+Route::get('users/showPortfolio/{id}','UserController@showPortfolio');
 Route::get('users/getPortfolioById/{id}','UserController@getPortfolioById');
 Route::get('users','UserController@index');
 
 Route::post('users/insertImages','UserController@insertImages');
 Route::post('users/insertPortfolioImages','UserController@insertPortfolio');
+Route::post('users/updatePortfolioImages','UserController@updatePortfolioImages');
+Route::delete('users/deletePortfolio/{id}','UserController@deletePortfolio');
 
 Route::post('sendotp', 'LoginController@otp');
 Route::post('verifyotp', 'LoginController@verify');
