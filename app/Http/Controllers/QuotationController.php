@@ -484,13 +484,13 @@ class QuotationController extends Controller
 
                 if ($quotation->payments_status) {
                     $rr =(array)json_decode($quotation->payments_status);
-                    $kkk[$key]['status'] =$rr[$value['payment']];
-                    $kkk[$key]['payment'] =$value['payment'];
+                    $kkk[$key]['status'] = @$rr[$value['payment']];
+                    $kkk[$key]['payment'] = @$value['payment'];
                     $kkk[$key]['date'] =@$value['date'];
                 }else{
                     $kkk[$key]['status'] ='unpaid';
-                    $kkk[$key]['payment'] =$value['payment'];
-                    $kkk[$key]['date'] =@$value['date'];
+                    $kkk[$key]['payment'] = @$value['payment'];
+                    $kkk[$key]['date'] = @$value['date'];
                 }
 
             }
