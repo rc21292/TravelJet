@@ -49,7 +49,7 @@ class NoticeController extends Controller
 
             Notice::whereIn('receiver_id',[0,$user_id])->whereIn('type', ['job_post','award'])->update(['status'=>1]);
 
-            return $notices = $this->notice::whereIn('type', ['job_post','award'])->where('created_at','>=',$user_created_at)->whereIn('receiver_id',[0,$user_id])->orderBy('created_at','DESC')->get();
+            return $notices = $this->notice::whereIn('type', ['job_post','award'])->where('created_at','>=',$user_created_at)->whereIn('receiver_id',[0,$user_id])->orderBy('created_at','DESC')->paginate(15);
         } elseif ($user_data->role === 'admin') {
 
             Notice::where('receiver_id',1)->update(['status'=>1]);

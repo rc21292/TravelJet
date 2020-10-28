@@ -18,53 +18,45 @@ function DownloadQuote({match}) {
 
   const [user, setUser] = useState(false);
 
-  const [invoiceData, setInvoiceData] = useState({});
-
   const [bookingData, setBookingData] = useState({}); 
-  const [invoiceId, setInvoiceId] = useState(''); 
-  const [customer, setCustomer] = useState({});      
-  const [address, setAddress] = useState({});  
-  const [error, setError] = useState('');   
 
-  const [invoiceDetail, setInvoiceDetail] = useState([]);
+  const [quoteId, setQuoteId] = useState(''); 
+  const [agent, setAgent] = useState({});
 
-  useEffect(() => {  
+  const [stopages, setStopages] = useState([]);  
+  const [quotationData, setQuotationData] = useState([]); 
 
-    let invoice_id = match.params.id;  
-    setInvoiceId(invoice_id);
+  useEffect(() => {
+
+    let id = match.params.id;  
+    setQuoteId(id);
 
     let stateqq = localStorage["appState"];
     if (stateqq) {
       let AppState = JSON.parse(stateqq);
       setUser(AppState.user);
-      axios('/api/invoices/show/'+invoice_id).then(result=>{
-        if (result.data) {
-          setInvoiceData(result.data);   
-          axios('/api/invoices/invoiceDetails/'+invoice_id).then(result=>{
-            if (result.data) {
-              setInvoiceDetail(result.data);          
-            }
-          }); 
-          axios.get('/api/getAgentAddresses/'+AppState.user.id)
-          .then(response=>{
-            setAddress(response.data);
-          });        
-        }
+      axios.get('/api/quotations/getQuotationByBookingId/'+id).then(result=>{
+        setQuotationData(result.data);
       });
+
+      const result1 = axios('/api/queries/getStopagesData/'+id).then(result1=>{ 
+      setStopages(result1.data.stopages);  
+    });
     }   
 
   }, []);  
 		return (
-      <>
-      <Pdf targetRef={ref} filename={"invoice_"+match.params.id+".pdf"}>
+         <div className="quotation" >
+         <Pdf targetRef={ref} filename={"invoice_"+match.params.id+".pdf"}>
               {({ toPdf }) => <button onClick={toPdf}>Download Pdf</button>}
             </Pdf>
-         <div className="quotation" ref={ref}>
-        <div className="quotationpdf">
+         <div className="container">
+          <div className="row">
+        <div className="quotationpdf" ref={ref}>
           <table className="table table-head">
             <tbody>
               <tr>
-                <td className="logo"><img src="http://13.235.238.138/frontend/image/logo.png" alt="logo" /></td>
+                <td className="logo"><img src="/frontend/image/logo.png" alt="logo" /></td>
                 <td className="quotitle" style={{paddingTop: '13px', fontSize: '20px'}}><b>Quotation for Round Trip to Jammu</b></td>
                 <td className="quo-amt" style={{color: '#007bff', width: '100%', textAlign: 'center'}}><span style={{display: 'table', margin: '0 auto', color: '#007bff', fontSize: '13px'}}>Total Cost</span><b style={{color: '#007bff', fontSize: '22px'}}><i>₹ 17250</i></b></td>
               </tr>
@@ -270,8 +262,9 @@ function DownloadQuote({match}) {
             </table>
           </div>
         </div>
+        </div>
+        </div>
       </div>
-      </>
 		);
 	
 }

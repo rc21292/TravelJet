@@ -148,6 +148,11 @@ function Home(props) {
                     })
                   }    
                  </ul>
+                  <ul className="list-unstyled">
+                    <div className="placebidbtn">
+                      <a href="/agent/notifications" className="btn btn-primary">View More</a>
+                    </div>
+                  </ul>  
               </div>
             </div>
           </div>

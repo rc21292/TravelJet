@@ -152,6 +152,7 @@ const onChangeSearchTransactionType = e => {
                 <div className="col-sm-4">
                   <div className="form-group">
                   <select className="form-control" name="transation_type" value={searchTransactionType} onChange={onChangeSearchTransactionType}>
+                    <option value="">All</option>
                     <option value="deposit">Deposit</option>
                     <option value="withdraw">Withdraw</option>
                   </select>
