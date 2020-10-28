@@ -55,25 +55,23 @@ function Notifications(props) {
                 return  <li key={idx} dangerouslySetInnerHTML={{__html: query.data}} ></li>
                 })
               }  
-            </ul>
-            <ul className="list-unstyled clearfix">
-            <li>
-             <Pagination 
-                activePage={activePage}
-                itemsCountPerPage={itemsCountPerPage}
-                totalItemsCount={totalItemsCount}
-                pageRangeDisplayed={pageRangeDisplayed}
-                onChange={handlePageChange}
-                itemClass="page-item"
-                linkClass="page-link"
-                prevPageText="Prev"
-                nextPageText="Next"
-                lastPageText="Last"
-                firstPageText="First"
-                />
-                </li>
-            </ul>            
+            </ul>             
           </div>
+          <div style={{marginTop:'-15px', marginLeft:'20px'}}>
+          <Pagination 
+            activePage={activePage}
+            itemsCountPerPage={itemsCountPerPage}
+            totalItemsCount={totalItemsCount}
+            pageRangeDisplayed={pageRangeDisplayed}
+            onChange={handlePageChange}
+            itemClass="page-item"
+            linkClass="page-link"
+            prevPageText="Prev"
+            nextPageText="Next"
+            lastPageText="Last"
+            firstPageText="First"
+            />          
+        </div>
         </div>
       </div>
   )  
