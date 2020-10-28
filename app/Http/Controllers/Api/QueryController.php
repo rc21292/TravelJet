@@ -385,6 +385,14 @@ class QueryController extends Controller
             ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions','quotations.id')
             ->where('bookings.id',$id)->where('quotations.status','awarded')
             ->first();
+            if (!$result) {
+                $result = Booking::
+                    join('quotations', 'bookings.id' ,'quotations.booking_id')
+                    ->leftjoin('quotation_details', 'quotation_details.quotation_id' ,'quotations.id')
+                    ->select('bookings.*','quotations.payment_status','quotation_details.inclusions','quotation_details.exclusions','quotations.id')
+                    ->where('bookings.id',$id)
+                    ->first();
+            }
         }else if ($request->type=='cancel') {
         DB::connection()->enableQueryLog();
             $result = Booking::
