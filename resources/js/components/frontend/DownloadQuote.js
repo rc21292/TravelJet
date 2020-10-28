@@ -55,7 +55,11 @@ function DownloadQuote({match}) {
 
   }, []);  
 		return (
-         <div className="quotation">
+      <>
+      <Pdf targetRef={ref} filename={"invoice_"+match.params.id+".pdf"}>
+              {({ toPdf }) => <button onClick={toPdf}>Download Pdf</button>}
+            </Pdf>
+         <div className="quotation" ref={ref}>
         <div className="quotationpdf">
           <table className="table table-head">
             <tbody>
@@ -245,7 +249,7 @@ function DownloadQuote({match}) {
                   <td>24-Aug-2020</td>
                 </tr>
               </tbody>
-              <tbody className="totalpay">
+              <tbody className="totalpay-pdf">
                 <tr>
                   <td>Total Amount of whole Trip</td>
                   <td>₹ 15000</td>
@@ -267,6 +271,7 @@ function DownloadQuote({match}) {
           </div>
         </div>
       </div>
+      </>
 		);
 	
 }
