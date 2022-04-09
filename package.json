@@ -25,7 +25,7 @@
         "sass-loader": "^8.0.0"
     },
     "dependencies": {
-        "moment": "^2.27.0",
+        "moment": "^2.29.2",
         "react-csv": "^2.0.3",
         "react-flash-message": "^1.0.2",
         "react-js-pagination": "^3.0.3",
